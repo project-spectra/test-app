@@ -1,6 +1,8 @@
 {
-    "main": "app.js",
-    "android": {
-        "v8Flags": "--expose_gc"
-    }
+  "android": {
+    "v8Flags": "--expose_gc"
+  },
+  "main": "main",
+  "name": "nv-test",
+  "version": "1.0.0"
 }
