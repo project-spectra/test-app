@@ -9,7 +9,7 @@
           <Button text="Start Recording" @tap="start" />
           <Button text="Stop Recording" @tap="stop" />
           <Button class="btn btn-primary" :text="isPlaying ? 'Pause' : 'Play'" @tap="playPause" />
-          <Button text="Big Dog Small Dog" @tap="$navigateTo(Dog)" />
+          <Button text="Big Dog Small Dog" @tap="goToDog" />
         </StackLayout>
       </TabViewItem>
       
@@ -120,6 +120,10 @@
             console.log("Player error", err);
         });
         }
+      },
+
+      goToDog() {
+        this.$navigateTo(Dog);
       }
     }
   }
