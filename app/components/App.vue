@@ -9,6 +9,7 @@
           <Button text="Start Recording" @tap="start" />
           <Button text="Stop Recording" @tap="stop" />
           <Button class="btn btn-primary" :text="isPlaying ? 'Pause' : 'Play'" @tap="playPause" />
+          <Button text="Big Dog Small Dog" @tap="$navigateTo(Dog)" />
         </StackLayout>
       </TabViewItem>
       
@@ -24,6 +25,8 @@
 </template>
 
 <script>
+  import Dog from '@/components/Dog'
+
   var fs = require('file-system');
   var permissions = require('nativescript-permissions');
   var audio = require('nativescript-audio');
