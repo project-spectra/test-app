@@ -1,33 +1,37 @@
 <template>
-  <Page>
+  <Page ref="page">
     <ActionBar title="Big Dog Small Dog"/>
       <StackLayout>
         <Label text="Hello World" />
-        <Image id="dogImg" src="~/assets/images/dog.jpg" stretch="none" @tap="animateDog" />
+        <Image ref="dimage" src="~/assets/images/dog.jpg" stretch="none" horizontalAlignment="center" verticalAlignment="center" @tap="animateDog" />
       </StackLayout>
   </Page>
 </template>
 
 <script>
-import { AnimationCurve } from 'ui/enums';
+import * as animation from "tns-core-modules/ui/animation";
+var enums = require("tns-core-modules/ui/enums");
+var dogImg;
 
 export default {
     data: () => ({
 
     }),
     mounted() {
+      dogImg = this.$refs.dimage;
     },
   methods: {
     animateDog(args) {
-      dogImg.animate({
+      console.log("dog clicked");
+      dogImg.nativeView.animate({
         duration: 3000,
-        curve: AnimationCurve.easeInOut,
+        curve: enums.AnimationCurve.easeInOut,
         scale: { x: 2, y: 2}
       }).then(() => {
         // Reset animation
         setTimeout(() => {
-            view.scaleX = 1;
-            view.scaleY = 1;
+            dogImg.nativeView.scaleX = 1;
+            dogImg.nativeView.scaleY = 1;
         }, 1000)
     })
     }

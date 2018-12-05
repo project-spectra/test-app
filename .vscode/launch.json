@@ -36,6 +36,7 @@
             "appRoot": "${workspaceRoot}",
             "sourceMaps": true,
             "watch": true,
+            "tnsArgs": ["--bundle"],
             "sourceMapPathOverrides": {
                 "webpack:///*": "${workspaceRoot}/src/*"
             }
