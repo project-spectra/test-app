@@ -4,7 +4,7 @@ const webpack = require("webpack");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
-const TerserPlugin = require('terser-webpack-plugin');
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const NsVueTemplateCompiler = require("nativescript-vue-template-compiler");
@@ -111,7 +111,7 @@ module.exports = env => {
             "fs": "empty",
             "__dirname": false,
         },
-        devtool: "eval-source-map",
+        devtool: "none",
         optimization: {
             splitChunks: {
                 cacheGroups: {
@@ -130,10 +130,10 @@ module.exports = env => {
             },
             minimize: Boolean(production),
             minimizer: [
-                new TerserPlugin({
+                new UglifyJsPlugin({
                     parallel: true,
                     cache: true,
-                    terserOptions: {
+                    uglifyOptions: {
                         output: {
                             comments: false,
                         },
@@ -143,8 +143,6 @@ module.exports = env => {
                             'collapse_vars': platform !== "android",
                             sequences: platform !== "android",
                         },
-                        safari10: platform === "ios",
-                        keep_fnames: true,
                     },
                 }),
             ],

@@ -10,19 +10,23 @@
       "version": "4.2.0"
     },
     "tns-android": {
-      "version": "4.2.0"
+      "version": "5.0.0"
     }
   },
   "dependencies": {
     "@vue/devtools": "5.0.0-beta.3",
+    "ajv": "^6.6.1",
+    "ajv-keywords": "^3.2.0",
     "electron": "^3.0.6",
+    "nativescript": "^5.0.3",
     "nativescript-audio": "^5.0.1",
     "nativescript-socket.io": "^0.9.0",
     "nativescript-theme-core": "^1.0.4",
     "nativescript-toast": "^1.4.6",
     "nativescript-vue": "^2.0.0",
     "nativescript-vue-devtools": "^1.0.0",
-    "tns-core-modules": "^4.2.1",
+    "tns-android": "^5.0.0",
+    "tns-core-modules": "^5.0.5",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
@@ -43,7 +47,7 @@
     "sass-loader": "^7.1.0",
     "terser-webpack-plugin": "^1.1.0",
     "vue-loader": "^15.2.6",
-    "webpack": "^4.16.4",
+    "webpack": "^4.27.1",
     "webpack-bundle-analyzer": "~2.13.1",
     "webpack-cli": "^3.1.0"
   }
