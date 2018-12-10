@@ -10,6 +10,7 @@
           <Button text="Stop Recording" @tap="stop" />
           <Button class="btn btn-primary" :text="isPlaying ? 'Pause' : 'Play'" @tap="playPause" />
           <Button text="Big Dog Small Dog" @tap="goToDog" />
+          <Button text="Conversation" @tap="goToConvo" />
         </StackLayout>
       </TabViewItem>
       
@@ -26,6 +27,7 @@
 
 <script>
   import Dog from '@/components/Dog'
+  import Convo from '@/components/Convo'
 
   var fs = require('file-system');
   var permissions = require('nativescript-permissions');
@@ -122,8 +124,12 @@
         }
       },
 
+      //Navigation buttons
       goToDog() {
         this.$navigateTo(Dog);
+      },
+      goToConvo() {
+        this.$navigateTo(Convo);
       }
     }
   }
