@@ -1,33 +1,34 @@
 <template>
   <Page class="page">
-    <ActionBar title="Vue Audio Test" class="action-bar" />
-    
-    <TabView height="100%">
-    
-      <TabViewItem title="Record">
-        <StackLayout>
-          <Button text="Start Recording" @tap="start" />
-          <Button text="Stop Recording" @tap="stop" />
-          <Button class="btn btn-primary" :text="isPlaying ? 'Pause' : 'Play'" @tap="playPause" />
-          <Button text="Big Dog Small Dog" @tap="goToDog" />
-          <Button text="Conversation" @tap="goToConvo" />
+    <ActionBar title="Project Spectra" class="action-bar" />
+      <StackLayout>
+        <StackLayout class="input-field">
+          <Label text="Name" class="label font-weight-bold m-b-5" />
+          <TextField class="input" hint="What is your name?" autocorrect="false" v-model="input.name" />
+          <StackLayout class="hr-light"></StackLayout>
         </StackLayout>
-      </TabViewItem>
-      
-      <TabViewItem title="Play">
-        <StackLayout>
-          <!-- <Progress :value="progress" /> -->
+        <GridLayout rows="auto, auto" columns="*, *">
+          <Button text="Save" @tap="save" class="btn btn-primary" row="0" col="0" />
+          <Button text="Load" @tap="load" class="btn btn-primary" row="0" col="1" />
+          <Button text="clear" @tap="clear" class="btn btn-primary" row="1" col="0" colSpan="2" />
+        </GridLayout>
+        
+        <Label text="Recorder" class="label font-weight-bold m-b-5" />
+        <Button text="Start Recording" @tap="start" />
+        <Button text="Stop Recording" @tap="stop" />
+        <Button class="btn btn-primary" :text="isPlaying ? 'Pause' : 'Play'" @tap="playPause" />
 
-        </StackLayout>
-      </TabViewItem>
-    
-    </TabView>
+        <Label text="Exercises" class="label font-weight-bold m-b-5" />
+        <Button text="Big Dog Small Dog" @tap="goToDog" />
+        <Button text="Conversation" @tap="goToConvo" />
+      </StackLayout>
   </Page>
 </template>
 
 <script>
   import Dog from '@/components/Dog'
   import Convo from '@/components/Convo'
+  import * as ApplicationSettings from "application-settings";
 
   var fs = require('file-system');
   var permissions = require('nativescript-permissions');
@@ -59,14 +60,25 @@
         progress: 0,
         isPlaying: false,
         isRecording: false,
+        input: {
+          name: "",
+          firstLoad: true,
+        }
     }),
     mounted() {
-
+      this.$store.subscribe((mutations, state) => {
+        ApplicationSettings.setString("store", JSON.stringify(state));
+        this.input.name = state.name;
+        this.input.firstLoad = state.firstLoad;
+      });
     },
     destroyed() {
 
     },
+
     methods: {
+
+      //Recorder methods
       start() {
         console.log('start button pressed');
           
@@ -124,7 +136,19 @@
         }
       },
 
-      //Navigation buttons
+      //Vuex methods
+      save() {
+        this.$store.commit("save", this.input);
+      },
+      load() {
+        this.$store.commit("load");
+      },
+      clear() {
+        this.input.name = "";
+        this.input.firstLoad = true;
+      },
+
+      //Navigation methods
       goToDog() {
         this.$navigateTo(Dog);
       },
