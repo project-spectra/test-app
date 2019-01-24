@@ -14,9 +14,12 @@
         </GridLayout>
         
         <Label text="Recorder" class="label font-weight-bold m-b-5" />
+        <!--
         <Button text="Start Recording" @tap="start" />
         <Button text="Stop Recording" @tap="stop" />
         <Button class="btn btn-primary" :text="isPlaying ? 'Pause' : 'Play'" @tap="playPause" />
+        -->
+        <audio-recorder></audio-recorder>
 
         <Label text="Exercises" class="label font-weight-bold m-b-5" />
         <Button text="Big Dog Small Dog" @tap="goToDog" />
@@ -28,6 +31,7 @@
 <script>
   import Dog from '@/components/Dog'
   import Convo from '@/components/Convo'
+  import AudioRecorder from '@/components/AudioRecorder'
   import * as ApplicationSettings from "application-settings";
 
   var fs = require('file-system');
@@ -55,6 +59,7 @@
   };
 
   export default {
+    components: { AudioRecorder },
     data: () => ({
         msg: 'Hello World!',
         progress: 0,
