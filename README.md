@@ -24,7 +24,9 @@ tns run <platform> --bundle
 # Planned features
 
 'Big Dog Small Dog' voice training exercise
+
 Conversational practice exercise
+
 Customizable goals and feedback, with an emphasis on user empowerment and agency
 
 Contributions invited!
