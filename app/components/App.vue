@@ -3,17 +3,7 @@
     <ActionBar title="Project Spectra" class="action-bar" />
       <GridLayout>
 
-        <StackLayout class="content p-20">
-          <StackLayout class="input-field">
-            <Label id="greeting" v-model="welcomeText" />
-            <TextField v-if="noName" class="input" hint="What is your name?" autocorrect="false" v-model="input.name"></TextField>
-          </StackLayout>
-          <GridLayout v-if="noName" id="nameControls" rows="auto, auto" columns="*, *">
-            <Button text="Save" @tap="save" class="btn btn-primary" row="0" col="0" />
-            <Button text="Load" @tap="load" class="btn btn-primary" row="0" col="1" />
-            <Button text="clear" @tap="clear" class="btn btn-primary" row="1" col="0" colSpan="2" />
-          </GridLayout>
-          
+        <StackLayout class="content p-20">          
           <Label text="Recorder" class="label font-weight-bold m-b-5" />
           <!-- <audio-recorder></audio-recorder> !-->
 
@@ -26,8 +16,20 @@
         <!-- Welcome Dialog !-->
         <AbsoluteLayout class="dialog-wrapper">
           <StackLayout class="dialog">
-            <Label class="h3" textWrap="true" text="Welcome + Explain purpose of app" />
+
+            <Label class="h3" id="greeting" textWrap="true" v-model="welcomeText" />
+
+            <StackLayout class="input-field">
+              <TextField v-if="noName" class="input" hint="What is your name?" autocorrect="false" v-model="input.name"></TextField>
+            </StackLayout>
+            <GridLayout v-if="noName" id="nameControls" rows="auto, auto" columns="*, *">
+              <Button text="Save" @tap="save" class="btn btn-primary" row="0" col="0" />
+              <Button text="Load" @tap="load" class="btn btn-primary" row="0" col="1" />
+              <Button text="clear" @tap="clear" class="btn btn-primary" row="1" col="0" colSpan="2" />
+            </GridLayout>
+            
             <Button class="btn btn-primary" text="Next" @tap="closeDialog" />
+
           </StackLayout>
         </AbsoluteLayout>
 
