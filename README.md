@@ -2,6 +2,10 @@
 
 > A native application built with NativeScript-Vue, which records and plays back audio using the device's microphone.
 
+# Development Environment Setup
+
+Use the tutorial here to get started: https://nativescript-vue.org/en/docs/getting-started/installation/
+
 ## Usage
 
 ``` bash
@@ -17,3 +21,12 @@ tns debug <platform> --bundle
 # Build, watch for changes and run the application
 tns run <platform> --bundle
 ```
+# Planned features
+
+'Big Dog Small Dog' voice training exercise
+
+Conversational practice exercise
+
+Customizable goals and feedback, with an emphasis on user empowerment and agency
+
+Contributions invited!
