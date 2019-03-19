@@ -73,6 +73,8 @@
           this.noName = false;
         }
       });
+
+      this.$store.commit("load");
     },
     destroyed() {
 
