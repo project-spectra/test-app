@@ -1,8 +1,11 @@
 import Vue from 'nativescript-vue'
 import Vuex from 'vuex';
 import App from './components/App'
+import Loading from "./components/Loading";
+
 import VueDevtools from 'nativescript-vue-devtools'
 import { store } from './store.js'
+import Welcome from "./components/OnboardingScreens/Welcome";
 
 if(TNS_ENV !== 'production') {
   Vue.use(VueDevtools)
@@ -14,5 +17,11 @@ Vue.config.silent = false;
 
 new Vue({
   store,
-  render: h => h('frame', [h(App)])
-}).$start()
+  //  https://github.com/vuejs-templates/webpack-simple/issues/29
+  //  creates a root frame element; each frame has its own navigation hierarchy
+  render: h => {
+    store.commit("load");
+    // console.log(store.state.firstLoad);
+    return h('Frame', [h(store.state.firstLoad ? Welcome : App)])
+  }
+}).$start();
