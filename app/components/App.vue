@@ -3,7 +3,7 @@
     <ActionBar title="Project Spectra" class="action-bar" />
       <GridLayout>
 
-        <StackLayout class="content p-20">          
+        <StackLayout class="content p-20">
           <!-- <Label text="Recorder" class="label font-weight-bold m-b-5" />
           <audio-recorder></audio-recorder> !-->
 
@@ -11,6 +11,7 @@
           <Button text="Big Dog Small Dog" @tap="goToDog" />
           <Button text="Conversation" @tap="goToConvo" />
           <Button text="Settings" @tap="showDialog" />
+          <Button text="Clear Settings (Debug)" @tap="clearSettings" />
         </StackLayout>
 
         <!-- Welcome Dialog !-->
@@ -27,7 +28,7 @@
               <Button text="Load" @tap="load" class="btn btn-primary" row="0" col="1" />
               <Button text="clear" @tap="clear" class="btn btn-primary" row="1" col="0" colSpan="2" />
             </GridLayout>
-            
+
             <Button class="btn btn-primary" text="Close" @tap="closeDialog" />
 
           </StackLayout>
@@ -63,14 +64,14 @@
       //Subscribe to the store
       this.$store.subscribe((mutations, state) => {
         ApplicationSettings.setString("store", JSON.stringify(state));
-        
+
         this.input.name = state.name;
         this.input.firstLoad = state.firstLoad;
-        
+
         //Check to see if a name has been entered
         if (state.name === "") {
           this.welcomeText = "Welcome to Spectra!";
-          this.dialogOpen = true;     
+          this.dialogOpen = true;
         } else {
           this.welcomeText = "Welcome back, " + state.name + "!";
           this.noName = false;
@@ -97,6 +98,10 @@
         this.input.name = "";
         this.input.firstLoad = true;
         this.noName = true;
+      },
+
+      clearSettings() {
+        this.$store.commit("save", {});
       },
 
       //Dialog methods

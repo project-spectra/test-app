@@ -6,12 +6,20 @@
             <TextView text="Set a Goal" editable="false" id="welcome"/>
 
             <TextView text="What do you want to do with your voice?" editable="false" id="question"/>
+
+            <!--https://docs.nativescript.org/vuejs/ns-ui/DataForm/getting-started#add-raddataform-to-the-page-->
+            <RadDataForm style="background-color: #C9C9C9" :source="form" :metadata="formMetadata"
+                         @propertyCommitted="onFormPropertyCommitted" />
+
+            <Label text='You can change this at any time in Settings'
+                   style="font-style: italic"/>
+
             <!--Empty placeholder (there is no equivalent of div in NS..) -->
             <StackLayout style="flex-grow: 1"/>
 
             <FlexboxLayout justifyContent="space-between" flexDirection="row">
                 <SpectraActionButton type='warning' text="Return" @tap="onReturn" />
-                <SpectraActionButton :isEnabled="this.boxesChecked === 5" text="OK" @tap="onOK" />
+                <SpectraActionButton text="All Set :)" @tap="onOK" />
             </FlexboxLayout>
 
         </FlexboxLayout>
@@ -24,21 +32,66 @@
 
     import SpectraActionButton from "@/components/UIControls/SpectraActionButton";
     import SpectraTextView from "@/components/UIControls/SpectraTextView";
+    import {AVAILABLE_GOALS} from "@/utils/Constants";
+
+    import App from "@/components/App";
+
+    import {PropertyConverter} from 'nativescript-ui-dataform'
+
+    /*Sun May 05 2019 01:54:28 GMT+0800 Transfusion: the converter property which transforms the objects backing
+    each selection item in the picker into the desired format for the model backing the form doesn't seem to work
+    perhaps because it has been intercepted by the onFormPropertyCommitted method*/
+
+    /*class GoalsConverter {
+        constructor() {}
+
+        convertFrom(id) {
+            return AVAILABLE_GOALS.find((goal) => goal.id === id).name
+        }
+
+        convertTo(name) {
+            return AVAILABLE_GOALS.find((goal) => goal.name === name).id
+        }
+    }*/
 
     export default {
         components: {
             SpectraActionButton,
-            SpectraTextView
+            SpectraTextView,
         },
         methods: {
             onOK: function(){
-
+                if (this.form.goal === 'Sample Goal') {this.form.goal = 'sample_goal';}
+                this.$store.commit("save", {...this.$store.state, goal: this.form.goal, firstLoad: false});
+                this.$navigateTo(App);
             },
 
             onReturn: function(){
                 this.$navigateBack();
             },
 
+            // https://stackoverflow.com/questions/54605451/nativescript-vue-dataform-does-not-update-the-source-data
+            onFormPropertyCommitted: function(data) {
+                let editedObject = JSON.parse(data.object.editedObject);
+                this.form = {goal: AVAILABLE_GOALS.find((goal) => goal.name === editedObject.goal).id}
+            }
+        },
+        data() {
+            return {form: {
+                goal: 'Sample Goal'
+            }, formMetadata: {
+                    'isReadOnly': false,
+                commitMode: 'immediate',
+                validationMode: 'immediate',
+                propertyAnnotations: [
+                    {name: 'goal',
+                    displayName: 'Your Goal',
+                    index: 0,
+                    editor: 'Picker',
+                    valuesProvider: AVAILABLE_GOALS.map(goal => goal.name),
+                    /*converter: new GoalsConverter()*/}
+                ]
+            }}
         }
     }
 

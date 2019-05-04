@@ -31,7 +31,6 @@
     import SpectraTextView from "@/components/UIControls/SpectraTextView";
     import SpectraActionButton from "@/components/UIControls/SpectraActionButton";
 
-    // import App from "@/components/App";
     import VocalHealthWarnings from "@/components/OnboardingScreens/VocalHealthWarnings";
 
     export default {

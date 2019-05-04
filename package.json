@@ -23,6 +23,7 @@
     "nativescript-socket.io": "^0.9.0",
     "nativescript-theme-core": "^1.0.4",
     "nativescript-toast": "^1.4.6",
+    "nativescript-ui-dataform": "^4.0.0",
     "nativescript-vue": "^2.0.0",
     "nativescript-vue-devtools": "^1.0.0",
     "tns-android": "^5.0.0",

@@ -1,11 +1,15 @@
 import Vue from 'nativescript-vue'
 import Vuex from 'vuex';
 import App from './components/App'
-import Loading from "./components/Loading";
 
 import VueDevtools from 'nativescript-vue-devtools'
 import { store } from './store.js'
 import Welcome from "./components/OnboardingScreens/Welcome";
+
+import RadDataForm from 'nativescript-ui-dataform/vue';
+
+Vue.use(RadDataForm);
+
 
 if(TNS_ENV !== 'production') {
   Vue.use(VueDevtools)
