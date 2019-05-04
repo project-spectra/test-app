@@ -15,13 +15,21 @@ Vue.use(Vuex);
 // Vue.config.silent = (TNS_ENV === 'production')
 Vue.config.silent = false;
 
+// https://github.com/nstudio/nativescript-checkbox
+Vue.registerElement('CheckBox', () => require('nativescript-checkbox').CheckBox, {
+    model: {
+        prop: 'checked',
+        event: 'checkedChange'
+    }
+});
+
 new Vue({
   store,
   //  https://github.com/vuejs-templates/webpack-simple/issues/29
   //  creates a root frame element; each frame has its own navigation hierarchy
   render: h => {
     store.commit("load");
-    // console.log(store.state.firstLoad);
+    console.log(store.state.firstLoad);
     return h('Frame', [h(store.state.firstLoad ? Welcome : App)])
   }
 }).$start();

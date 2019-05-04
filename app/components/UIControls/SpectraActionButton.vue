@@ -1,6 +1,6 @@
 <!--Spectra-themed Action Button-->
 <template>
-    <Button :text="text" :isEnabled="isEnabled" class="spectra-action-button" :style="style" @tap="tap" />
+    <Button :text="text" :isEnabled="isEnabled" :class="styleClass" :style="style" @tap="tap" />
 </template>
 
 
@@ -9,7 +9,7 @@
         // https://stackoverflow.com/questions/42872002/in-vue-js-component-how-to-use-props-in-css
         // https://github.com/NativeScript/NativeScript/issues/4864 (Can't parameterize pseudo selectors without fiddling..)
 
-        props: ['text', 'isEnabled', /*'color', */'animateOnHover'],
+        props: ['text', 'isEnabled', 'type', /*'color', */'animateOnHover'],
 
         components: {
 
@@ -20,7 +20,7 @@
                 // return {'background': 'red'};
                 return {
                     // '--color': this.color,
-                    'border-color': '#A7C6BE',
+                    // 'border-color': '#A7C6BE',
                     'border-width': '2dp',
                     'border-radius': '2dp',
                     // 'background-color': 'transparent',
@@ -30,15 +30,20 @@
                     'text-transform': 'none',
                 }
                 // return `border-color: ${this.color}; border-width: 2dp; background-color: transparent; font-size: 20em; min-height: 60dp; text-transform: none; font-weight: bold; borderRadius: 3dp;`
+            },
+
+            styleClass() {
+                switch(this.type) {
+                    case 'warning':
+                        return 'spectra-action-button-warning';
+                    default:
+                        return 'spectra-action-button';
+                }
             }
         },
         data() {
             return {
-                name: '',
-                WELCOME_TEXT:
-                    "Welcome! This free, open-source voice training app was made by and for the LGBTQ community to " +
-                    "support our self-determination.\n\nIf you have feedback for us or if you are interested in joining " +
-                    "the development team, ",
+
             }
         },
         methods: {
@@ -51,6 +56,18 @@
 </script>
 
 <style scoped>
+    Button.spectra-action-button-warning {
+        border-color: #F8AF51;
+    }
+
+    Button.spectra-action-button-warning:active {
+        background-color: #F8AF51;
+    }
+
+    Button.spectra-action-button {
+        border-color: #A7C6BE;
+    }
+
     Button.spectra-action-button:active {
         background-color: #A7C6BE;
     }

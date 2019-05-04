@@ -16,7 +16,9 @@
             <Label :text="this.name === '' ? 'You can change this at any time in Settings' : 'Whoa, great name!'"
                    style="font-style: italic"/>
 
-            <FlexboxLayout  alignSelf="flex-end" flexDirection="row">
+            <StackLayout style="flex-grow: 1"/>
+
+            <FlexboxLayout alignSelf="flex-end" flexDirection="row">
                 <SpectraActionButton alignSelf="flex-end" :isEnabled="this.name !== ''" text="Ready" @tap="onReady" />
             </FlexboxLayout>
         </FlexboxLayout>
@@ -29,7 +31,8 @@
     import SpectraTextView from "@/components/UIControls/SpectraTextView";
     import SpectraActionButton from "@/components/UIControls/SpectraActionButton";
 
-    import App from "@/components/App";
+    // import App from "@/components/App";
+    import VocalHealthWarnings from "@/components/OnboardingScreens/VocalHealthWarnings";
 
     export default {
         components: {
@@ -47,8 +50,9 @@
         },
         methods: {
             onReady: function(){
-                this.$store.commit("save", {name: this.name, firstLoad: false});
-                this.$navigateTo(App);
+                // firstLoad must explicitly be true in order for main.js to not conditionally route to App
+                this.$store.commit("save", {name: this.name, firstLoad: true});
+                this.$navigateTo(VocalHealthWarnings);
             }
         }
     }
