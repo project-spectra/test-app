@@ -63,7 +63,7 @@
             onOK: function(){
                 if (this.form.goal === 'Sample Goal') {this.form.goal = 'sample_goal';}
                 this.$store.commit("save", {...this.$store.state, goal: this.form.goal, firstLoad: false});
-                this.$navigateTo(App);
+                this.$navigateTo(App, {clearHistory: true});
             },
 
             onReturn: function(){
@@ -73,7 +73,7 @@
             // https://stackoverflow.com/questions/54605451/nativescript-vue-dataform-does-not-update-the-source-data
             onFormPropertyCommitted: function(data) {
                 let editedObject = JSON.parse(data.object.editedObject);
-                this.form = {goal: AVAILABLE_GOALS.find((goal) => goal.name === editedObject.goal).id}
+                this.form.goal = AVAILABLE_GOALS.find((goal) => goal.name === editedObject.goal).id
             }
         },
         data() {
