@@ -1,178 +1,92 @@
+<!-- I assume this will be the landing page for users to navigate to settings and exercises. -->
+
 <template>
-  <Page class="page" :class="{ dialogOpen: dialogOpen }">
-    <ActionBar title="Project Spectra" class="action-bar" />
-      <GridLayout>
+  <Page actionBarHidden="true" class="page">
+    <FlexboxLayout style="flex: 1;" flexDirection="column" id="container">
+      <TextView :text="'Project\nSpectra'" editable="false" id="project-spectra-title"/>
 
-        <StackLayout class="content p-20">
-          <!-- <Label text="Recorder" class="label font-weight-bold m-b-5" />
-          <audio-recorder></audio-recorder> !-->
+      <TextView editable="false" style="background-color: transparent;">
+        <Span text="Current Goal: " />
+        <Span :text="currentGoalName + '\n\n'" style="font-style: italic; font-weight: bold;" />
+        <Span text="(Complete each exercise twice in a row, two times per day)" style="font-size: 13em;"/>
+      </TextView>
 
-          <Label text="Exercises" class="label font-weight-bold m-b-5" />
-          <Button text="Big Dog Small Dog" @tap="goToDog" />
-          <Button text="Conversation" @tap="goToConvo" />
-          <Button text="Settings" @tap="showDialog" />
-          <Button text="Clear Settings (Debug)" @tap="clearSettings" />
-        </StackLayout>
+      <FlexboxLayout flexDirection="row" style="align-self: center;">
+        <SpectraProgressBox class="current-progress-box"/>
+        <SpectraProgressBox class="current-progress-box"/>
+        <SpectraProgressBox class="current-progress-box" percentage="25"/>
+        <SpectraProgressBox class="current-progress-box" percentage="65"/>
+      </FlexboxLayout>
+      <!--<TextView editable="false" text="(Complete each exercise twice in a row, two times per day)")-->
+                <!--style="font-size: 15em; background-color: transparent;"/>-->
+      <Label style="align-self: center; font-style: italic;" text="Nice, you're on your way." />
 
-        <!-- Welcome Dialog !-->
-        <AbsoluteLayout class="dialog-wrapper">
-          <StackLayout class="dialog">
+      <!--Empty placeholder (there is no equivalent of div in NS..) -->
+      <StackLayout style="flex-grow: 1"/>
+      <SpectraMajorButton text="Exercises" alignSelf="flex-end" style="width: 80%" @tap="onExercises"/>
 
-            <Label class="h3" id="greeting" textWrap="true" v-model="welcomeText" />
+      <StackLayout style="height: 25dp" />
 
-            <StackLayout class="input-field">
-              <TextField v-if="noName" class="input" hint="What is your name?" autocorrect="false" v-model="input.name"></TextField>
-            </StackLayout>
-            <GridLayout v-if="noName" id="nameControls" rows="auto, auto" columns="*, *">
-              <Button text="Save" @tap="save" class="btn btn-primary" row="0" col="0" />
-              <Button text="Load" @tap="load" class="btn btn-primary" row="0" col="1" />
-              <Button text="clear" @tap="clear" class="btn btn-primary" row="1" col="0" colSpan="2" />
-            </GridLayout>
+      <FlexboxLayout flexDirection="row" justifyContent="flex-begin">
+        <SpectraMinorButton text="Settings" style="width: 80%" @tap="onExercises"/>
+      </FlexboxLayout>
 
-            <Button class="btn btn-primary" text="Close" @tap="closeDialog" />
-
-          </StackLayout>
-        </AbsoluteLayout>
-
-      </GridLayout>
+      <!--Empty placeholder (there is no equivalent of div in NS..) -->
+      <StackLayout style="height: 10dp" />
+    </FlexboxLayout>
   </Page>
 </template>
 
 <script>
-  import Dog from '@/components/Dog'
-  import Convo from '@/components/Convo'
-  import AudioRecorder from '@/components/AudioRecorder'
-  import * as ApplicationSettings from "application-settings";
+  import {AVAILABLE_GOALS} from "@/utils/Constants";
+  import SpectraProgressBox from "@/components/UIControls/SpectraProgressBox";
+  import {Config} from "@/utils/Config";
+  import SpectraMajorButton from "@/components/UIControls/SpectraMajorButton";
+  import SpectraMinorButton from "@/components/UIControls/SpectraMinorButton";
+
+  import ActiveExercises from '@/components/ActiveExercises';
 
   export default {
-    components: { AudioRecorder },
-    data () {
-      return {
-        msg: 'Hello World!',
-        progress: 0,
-        input: {
-          name: "",
-          firstLoad: true,
-        },
-        noName: true,
-        dialogOpen: false,
-        welcomeText: "Welcome to Spectra!",
-      };
-    },
-
-    mounted() {
-      //Subscribe to the store
-      this.$store.subscribe((mutations, state) => {
-        ApplicationSettings.setString("store", JSON.stringify(state));
-
-        this.input.name = state.name;
-        this.input.firstLoad = state.firstLoad;
-
-        //Check to see if a name has been entered
-        if (state.name === "") {
-          this.welcomeText = "Welcome to Spectra!";
-          this.dialogOpen = true;
-        } else {
-          this.welcomeText = "Welcome back, " + state.name + "!";
-          this.noName = false;
+      components: {
+          SpectraMinorButton,
+          SpectraMajorButton,
+        SpectraProgressBox
+      },
+      computed: {
+        currentGoalName() {
+            let currentGoalId = this.$store.state.goal;
+            return AVAILABLE_GOALS.find( ({id}) => id === currentGoalId).name;
         }
-
-      });
-
-      //Load any existing data
-      this.$store.commit("load");
-    },
-    destroyed() {
-
-    },
-
-    methods: {
-      //Vuex methods
-      save() {
-        this.$store.commit("save", this.input);
       },
-      load() {
-        this.$store.commit("load");
-      },
-      clear() {
-        this.input.name = "";
-        this.input.firstLoad = true;
-        this.noName = true;
-      },
-
-      clearSettings() {
-        this.$store.commit("save", {});
-      },
-
-      //Dialog methods
-      showDialog() {
-        this.dialogOpen = true;
-      },
-      closeDialog() {
-        this.dialogOpen = false;
-      },
-
-      //Navigation methods
-      goToDog() {
-        this.$navigateTo(Dog);
-      },
-      goToConvo() {
-        this.$navigateTo(Convo);
+      methods: {
+          onExercises() {
+              this.$navigateTo(ActiveExercises);
+          }
       }
-    }
   }
 </script>
 
 <style scoped>
-  @keyframes show {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
+  Page {
+    background-color: #E8E8E8;
   }
 
-  .dialogOpen .content,
-  .dialogOpen .action-bar {
-    opacity: 0.2;
+  #container {
+    padding: 15em;
   }
 
-  .dialogOpen .dialog-wrapper {
-    visibility: visible;
-    animation-name: show;
-    animation-duration: 0.3s;
-    animation-fill-mode: forwards;
+  #project-spectra-title {
+    font-size: 45em;
+    font-family: 'serif';
+    font-weight: 700;
+    color: #000;
+    border-width: 0;
+    background-color: transparent;
+    border-color: #E8E8E8;
   }
 
-	.dialog-wrapper {
-		visibility: collapse;
-		opacity: 0;
-	}
-
-	.dialog {
-		border-width: 1 0 1 0;
-		border-color: black;
-		background-color: white;
-		width: 100%;
-		margin-top: 100;
-		padding: 20;
-	}
-
-	.dialog Label {
-		margin: 0 15 15 15;
-		color: black;
-	}
-
-  ActionBar {
-      background-color: #53ba82;
-      color: #ffffff;
+  .current-progress-box {
+    margin: 7dp;
   }
 
-  .message {
-      vertical-align: center;
-      text-align: center;
-      font-size: 20;
-      color: #333333;
-  }
 </style>
