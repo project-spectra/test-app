@@ -8,3 +8,17 @@
 
 // Global SCSS styling
 // @see https://docs.nativescript.org/ui/styling
+
+// https://medium.com/@JCAguilera/fontawesome-5-and-nativescript-22653f2b3bac
+
+.far {
+  font-family: Font Awesome 5 Free, fa-regular-400;
+}
+
+.fab {
+  font-family: Font Awesome 5 Brands, fa-brands-400;
+}
+
+.fas {
+  font-family: Font Awesome 5 Free, fa-solid-900;
+}

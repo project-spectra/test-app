@@ -18,8 +18,10 @@ export const store = new Vuex.Store({
       }
     },
     save(state, data) {
-      state.name = data.name;
-      state.firstLoad = data.firstLoad;
+        /*state.name = data.name;
+        state.firstLoad = data.firstLoad;*/
+        Object.assign(state, data);
+        ApplicationSettings.setString("store", JSON.stringify(state));
     }
   }
 });
