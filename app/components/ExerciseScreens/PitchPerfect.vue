@@ -8,23 +8,25 @@
             </TextView>
 
 
-            <StackLayout flexGrow="1" :style="exerciseAreaStyle">
-                <StackLayout style="margin-top: 15dp; margin-left: 15dp; margin-right: 15dp; font-size: 15em; background-color: white;">
+
+                <!--<StackLayout style="margin-top: 15dp; margin-left: 15dp; margin-right: 15dp; font-size: 15em; background-color: white;">
                     <TextView :text="pitchPerfectReminder" style="background-color: transparent;" editable="false"/>
                 </StackLayout>
 
-                <!--the timer-->
+                &lt;!&ndash;the timer&ndash;&gt;
                 <TextView horizontalAlignment="center" :text="timeCounterFormatted" editable="false" id="timer" />
 
-                <!--the inner ring, absolutely positioned-->
+                &lt;!&ndash;the inner ring, absolutely positioned&ndash;&gt;
                 <FlexboxLayout :style="micIconBgStyle" justifyContent="center">
                     <FlexboxLayout alignSelf="center" :style="micIconBgInlayStyle" justifyContent="center" >
                         <Label :text="'\uf130'" :style="micIconStyle" alignSelf="center" class="fas" />
                     </FlexboxLayout>
-                </FlexboxLayout>
+                </FlexboxLayout>-->
+
+            <!--<MicRecorder />-->
+            <IntroNotePicker />
 
 
-            </StackLayout>
 
             <StackLayout style="flex-grow: 1"/>
 
@@ -39,16 +41,23 @@
 
 <script>
     import SpectraActionButton from "@/components/UIControls/SpectraActionButton";
+    import MicRecorder from '@/components/ExerciseScreens/PitchPerfectComponents/MicRecorder';
+
     import {Config} from "@/utils/Config";
+    import IntroNotePicker from "@/components/ExerciseScreens/PitchPerfectComponents/IntroNotePicker";
+
+
+    import Level1 from './PitchPerfectLevels/Level1';
 
     export default {
-        components: {SpectraActionButton},
+        components: {IntroNotePicker, SpectraActionButton, MicRecorder},
         methods: {
             onBack: function() {
                 this.$navigateBack();
             },
             onLetsGo: function() {
-
+                // the note that the user selected above
+                this.$navigateTo(Level1, {props: {targetNote: 'D3'}});
             },
             startExercise(){
 
@@ -59,7 +68,7 @@
             }
         },
         computed: {
-            exerciseAreaStyle() {
+            /*exerciseAreaStyle() {
                 return {
                     'background-color': Config.primaryColor,
                     'border-radius': '5dp',
@@ -93,14 +102,14 @@
                 return {
                     'font-size': '35em',
                 }
-            }
+            }*/
         },
         data() {
             return {
-                pitchPerfectReminder: 'Start and end the exercise by touching the mic icon.',
+                /*pitchPerfectReminder: 'Start and end the exercise by touching the mic icon.',
                 timeCounter: 0,
                 // representing seconds as HH:mm:ss
-                timeCounterFormatted: new Date(0 * 1000).toISOString().substr(11, 8)
+                timeCounterFormatted: new Date(0 * 1000).toISOString().substr(11, 8)*/
             }
         }
     }
@@ -132,14 +141,14 @@
         border-color: #E8E8E8;
     }
 
-    #timer {
+    /*#timer {
         font-family: 'monospace';
         font-size: 20em;
-        /*align-self: center;*/
+        !*align-self: center;*!
         color: #AC2535;
         font-weight: bold;
         background-color: transparent;
 
-    }
+    }*/
 
 </style>
