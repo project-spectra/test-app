@@ -22,6 +22,7 @@
     "nativescript-checkbox": "^3.0.3",
     "nativescript-permissions": "^1.3.6",
     "nativescript-socket.io": "^0.9.0",
+    "nativescript-spectra-bdsd-plugin": "file:../spectra-bdsd-plugin/src",
     "nativescript-spectra-pitch-perfect-plugin": "file:../spectra-pitch-perfect-plugin/src",
     "nativescript-theme-core": "^1.0.4",
     "nativescript-toast": "^1.4.6",
