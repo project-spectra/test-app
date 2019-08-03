@@ -1,7 +1,7 @@
 <!-- I assume this will be the landing page for users to navigate to settings and exercises. -->
 
 <template>
-  <Page actionBarHidden="true" class="page">
+  <Page @loaded="onPageLoaded" actionBarHidden="true" class="page">
     <FlexboxLayout style="flex: 1;" flexDirection="column" id="container">
       <TextView :text="'Project\nSpectra'" editable="false" id="project-spectra-title"/>
 
@@ -59,6 +59,9 @@
         }
       },
       methods: {
+          onPageLoaded: function(args) {
+              console.log(this.$store.state);
+          },
           onExercises() {
               this.$navigateTo(ActiveExercises);
           }
