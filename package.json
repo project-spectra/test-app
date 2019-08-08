@@ -33,7 +33,7 @@
     "nativescript-vue-devtools": "^1.0.0",
     "timer-machine": "^1.1.0",
     "tns-android": "^5.0.0",
-    "tns-core-modules": "6.0.1",
+    "tns-core-modules": "^6.0.1",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
