@@ -20,7 +20,7 @@ Vue.use(Vuex);
 Vue.config.silent = false;
 
 // https://github.com/nstudio/nativescript-checkbox
-Vue.registerElement('CheckBox', () => require('nativescript-checkbox').CheckBox, {
+Vue.registerElement('CheckBox', () => require('@nstudio/nativescript-checkbox').CheckBox, {
     model: {
         prop: 'checked',
         event: 'checkedChange'

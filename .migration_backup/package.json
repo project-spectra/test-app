@@ -7,14 +7,13 @@
   "nativescript": {
     "id": "org.nativescript.application",
     "tns-ios": {
-      "version": "6.0.1"
+      "version": "4.2.0"
     },
     "tns-android": {
-      "version": "6.0.0"
+      "version": "5.0.0"
     }
   },
   "dependencies": {
-    "@nstudio/nativescript-checkbox": "^1.0.0",
     "@vue/devtools": "^5.1.0",
     "ajv": "^6.6.1",
     "ajv-keywords": "^3.2.0",
@@ -26,12 +25,12 @@
     "nativescript-spectra-pitch-perfect-plugin": "file:../spectra-pitch-perfect-plugin/src",
     "nativescript-theme-core": "^1.0.4",
     "nativescript-toast": "^1.4.6",
-    "nativescript-ui-dataform": "5.0.0",
+    "nativescript-ui-dataform": "^4.0.0",
     "nativescript-vue": "^2.0.0",
     "nativescript-vue-devtools": "^1.0.0",
     "timer-machine": "^1.1.0",
     "tns-android": "^5.0.0",
-    "tns-core-modules": "^6.0.1",
+    "tns-core-modules": "^5.0.5",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
@@ -46,8 +45,6 @@
     "css-loader": "^1.0.0",
     "lazy": "1.0.11",
     "nativescript-dev-webpack": "^1.0.3",
-    "nativescript-socketio": "^3.3.1",
-    "nativescript-toasty": "^2.0.1",
     "nativescript-vue-template-compiler": "^2.0.0",
     "nativescript-worker-loader": "~0.9.0",
     "node-sass": "^4.12.0",
