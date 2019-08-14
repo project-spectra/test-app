@@ -5,7 +5,7 @@
       <TextView :text="'Settings'"
       editable="false" id="settings-title" />
 
-      <StackLayout orientation="vertical" horizontalAlignment="center" id="settings-buttons">
+      <StackLayout orientation="vertical" horizontalAlignment="center" style="padding: 10em;" id="settings-buttons">
         <SpectraActionButton text="Change your goals" style="width: 80%" type="settings-orange" @tap="onGoalChange "/>
 
         <SpectraActionButton text="Change your name" style="width: 80%" type="settings-green" @tap="onNameChange"/>
@@ -23,6 +23,7 @@
 <script>
   import SpectraActionButton from "./UIControls/SpectraActionButton";
   import App from "./App";
+  import SetAGoal from "./OnboardingScreens/SetAGoal";
 
   export default {
     components: {
@@ -30,7 +31,8 @@
     },
     methods: {
       onGoalChange() {
-
+        this.$store.dispatch('setGoal', '');
+        this.$navigateTo(SetAGoal, {clearHistory: true});
       },
       onNameChange() {
 
