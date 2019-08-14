@@ -56,6 +56,7 @@
       computed: {
         currentGoalName() {
             let currentGoalId = this.$store.state.goal;
+            console.log(currentGoalId);
             return AVAILABLE_GOALS.find( ({id}) => id === currentGoalId).name;
         }
       },

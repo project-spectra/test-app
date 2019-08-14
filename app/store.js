@@ -7,7 +7,8 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
   state: {
     name: "",
-    firstLoad: true
+    firstLoad: true,
+    goal: ""
   },
   mutations: {
     load(state) {
@@ -18,10 +19,33 @@ export const store = new Vuex.Store({
       }
     },
     save(state, data) {
-        /*state.name = data.name;
-        state.firstLoad = data.firstLoad;*/
         Object.assign(state, data);
         ApplicationSettings.setString("store", JSON.stringify(state));
+    },
+    setName(state, name) {
+      state.name = name;
+    },
+    setGoal(state, goal) {
+      state.goal = goal;
+    },
+    setFirstLoad(state, firstLoad) {
+      state.firstLoad = firstLoad;
+    }
+  },
+
+  getters: {
+    //
+  },
+
+  actions: {
+    setName(context, name) {
+      context.commit('setName', name);
+    },
+    setGoal(context, goal) {
+      context.commit('setGoal', goal);
+    },
+    setFirstLoad(context, firstLoad) {
+      context.commit('setFirstLoad', firstLoad);
     }
   }
 });

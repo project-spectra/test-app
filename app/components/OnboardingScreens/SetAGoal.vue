@@ -11,7 +11,7 @@
             <RadDataForm style="background-color: #C9C9C9" :source="form" :metadata="formMetadata"
                          @propertyCommitted="onFormPropertyCommitted" />
 
-            <Label text='You can change this at any time in Settings'
+            <Label text='You can change your goal at any time in Settings'
                    style="font-style: italic"/>
 
             <!--Empty placeholder (there is no equivalent of div in NS..) -->
@@ -61,8 +61,19 @@
         },
         methods: {
             onOK: function(){
-                if (this.form.goal === 'Sample Goal') {this.form.goal = 'sample_goal';}
-                this.$store.commit("save", {...this.$store.state, goal: this.form.goal, firstLoad: false});
+                if (this.form.goal === 'Explore my voice') {
+                  this.form.goal = 'explore_voice';
+                } else if (this.form.goal === 'More Masculine Sound') {
+                  this.form.goal = 'more_masc_sound';
+                } else if (this.form.goal === 'More Feminine Sound') {
+                  this.form.goal = 'more_fem_sound';
+                } else if (this.form.goal === 'More Androgynous Sound') {
+                  this.form.goal = 'androgyn_sound';
+                }
+
+                this.$store.dispatch('setGoal', this.form.goal);
+                this.$store.dispatch('setFirstLoad', false);
+                //this.$store.commit("save", {...this.$store.state, goal: this.form.goal, firstLoad: false});
                 this.$navigateTo(App, {clearHistory: true});
             },
 
@@ -72,7 +83,7 @@
 
             // https://stackoverflow.com/questions/54605451/nativescript-vue-dataform-does-not-update-the-source-data
             onFormPropertyCommitted: function(data) {
-                let editedObject = JSON.parse(data.object.editedObject);
+                let editedObject = JSON.parse                        (data.object.editedObject);
                 this.form.goal = AVAILABLE_GOALS.find((goal) => goal.name === editedObject.goal).id
             }
         },
@@ -87,6 +98,7 @@
                     {name: 'goal',
                     displayName: 'Your Goal',
                     index: 0,
+                    hintText: 'Choose a goal...', //Not working for some reason
                     editor: 'Picker',
                     valuesProvider: AVAILABLE_GOALS.map(goal => goal.name),
                     /*converter: new GoalsConverter()*/}
