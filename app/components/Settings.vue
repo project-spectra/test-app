@@ -24,6 +24,7 @@
   import SpectraActionButton from "./UIControls/SpectraActionButton";
   import App from "./App";
   import SetAGoal from "./OnboardingScreens/SetAGoal";
+  var dialogs = require("tns-core-modules/ui/dialogs");
 
   export default {
     components: {
@@ -35,13 +36,25 @@
         this.$navigateTo(SetAGoal, {clearHistory: true});
       },
       onNameChange() {
-
+        dialogs.prompt({
+          title: "What name should we call you?",
+          message: "Enter it below!",
+          okButtonText: "Done",
+          cancelButtonText: "Cancel",
+          defaultText: "",
+          inputType: "text"
+        }).then(function (r) {
+          console.log("Dialog result: " + r.result + ", text: " + r.text);
+          if (r.result) {
+            this.$store.dispatch('setName', r.text);
+          }
+        })
       },
       onCredits() {
 
       },
       onFeedback() {
-
+        //implement a mailto
       },
       onBack() {
         this.$navigateTo(App);
