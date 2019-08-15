@@ -40,10 +40,31 @@
                         <FlexboxLayout flexDirection="column" justifyContent="space-between"
                                        :style="pitchIndicatorContainerStyle" backgroundColor="#72C8B2">
 
+                            <!--<StackLayout class="hr-dark" style="height: 3dp;"/>
+                            <FlexboxLayout flexDirection="row" alignItems="center">
+                                <StackLayout class="hr-dark" style="background-color: darkgreen; box-shadow: 5px 5px 10px; height: 3dp;"></StackLayout>
+
+                                <FlexboxLayout flexDirection="row" flexGrow="1" :style="noteCircleLegendStyle">
+
+                                    <Label text="D#1" alignSelf="center" style="font-weight: bold; font-size: 15em" />
+
+                                </FlexboxLayout>
+                            </FlexboxLayout>
+
                             <StackLayout class="hr-dark" style="height: 3dp;"/>
-                            <StackLayout class="hr-dark" style="background-color: darkgreen; box-shadow: 5px 5px 10px; height: 3dp;"/>
-                            <StackLayout class="hr-dark" style="height: 3dp;"/>
-                            <StackLayout class="hr-dark" style="height: 3dp;"/>
+                            <StackLayout class="hr-dark" style="height: 3dp;"/>-->
+
+                            <PitchPerfectIndicatorRow :note="this.rungs[0]"
+                                                      :showNote="!hasAccidental(this.rungs[0])" color="black"/>
+                            <PitchPerfectIndicatorRow :note="this.rungs[1]"
+                                                      :showNote="!hasAccidental(this.rungs[1])" :color="this.isPitchAcceptable() ? 'green' : 'red'"/>
+                            <PitchPerfectIndicatorRow :note="this.rungs[2]"
+                                                      :showNote="!hasAccidental(this.rungs[2])" color="black"/>
+                            <PitchPerfectIndicatorRow :note="this.rungs[3]"
+                                                      :showNote="!hasAccidental(this.rungs[3])" color="black"/>
+
+
+
                         </FlexboxLayout>
 
                         <StackLayout style="min-width: 15dp"/>
@@ -70,6 +91,7 @@
     import {Config} from "@/utils/Config";
     import IntroNotePickerButton from "@/components/ExerciseScreens/PitchPerfectComponents/IntroNotePickerButton";
     import SpectraActionButton from "@/components/UIControls/SpectraActionButton";
+    import PitchPerfectIndicatorRow from "@/components/ExerciseScreens/PitchPerfectComponents/PitchPerfectIndicatorRow";
     import { SpectraPitchPerfectPlugin } from 'nativescript-spectra-pitch-perfect-plugin';
     import {getFrequency} from '@/utils/Utils';
 
@@ -83,19 +105,25 @@
 
     // import * as THREE from 'three';
     import {MathUtils} from "@/utils/Utils";
-
+    import { transpose, Interval, hasAccidental } from 'music-fns';
+    import {PITCH_PERFECT_RUNG_HEIGHT_DP} from "@/utils/Constants";
 
     let _nativePluginInstance = new SpectraPitchPerfectPlugin();
 
     export default {
         props: ['targetNote'],
-        components: {IntroNotePickerButton, SpectraActionButton},
+        components: {PitchPerfectIndicatorRow, IntroNotePickerButton, SpectraActionButton},
         data() {
+            let targetPitchHz = getFrequency(this.targetNote);
+
+            let whoteNoteBelowTargetPitchHz = getFrequency(transpose(this.targetNote, -Interval.TONE));
+
             return {
+                hasAccidental,
                 screenHeightDIPs: platformModule.screen.mainScreen.heightDIPs,
                 pitchIndicatorContainerHeightDIPs: platformModule.screen.mainScreen.heightDIPs * 0.40,
 
-                targetPitchHz: getFrequency(this.targetNote),
+                targetPitchHz: targetPitchHz,
 
                 /*arrowInterpolateFunction: interpolate({
                     inputRange: [getFrequency(this.targetNote), getFrequency(this.targetNote) - 50],
@@ -104,7 +132,11 @@
                     clamp: false,
                 }),*/
 
-                arrowInterpolateFunction: MathUtils.interpolateLinear(getFrequency(this.targetNote), getFrequency(this.targetNote) - 55,
+                /*arrowInterpolateFunction: MathUtils.interpolateLinear(getFrequency(this.targetNote), getFrequency(this.targetNote) - 55,
+                    (1/3), 1),*/
+
+                // the bottom line should always be two semitones below the green line
+                arrowInterpolateFunction: MathUtils.interpolateLinear(targetPitchHz, whoteNoteBelowTargetPitchHz,
                     (1/3), 1),
 
                 currentPitchHz: getFrequency(this.targetNote),
@@ -129,10 +161,17 @@
                     'color': this.isPitchAcceptable() ? 'darkgreen' : '#bc3141'
                 }
             },
+            rungs() { // each rung on the metaphorical pitch ladder - Transfusion
+                return [transpose(this.targetNote, Interval.SEMITONE),
+                        this.targetNote,
+                        transpose(this.targetNote, -Interval.SEMITONE),
+                        transpose(this.targetNote, -Interval.TONE)];
+            },
             arrowOffset() {
                 // console.log(this.arrowInterpolateFunction(this.currentPitchHz));
-                let calculatedOffset = (this.pitchIndicatorContainerHeightDIPs - 40 - 40) *
-                    this.arrowInterpolateFunction(this.currentPitchHz) - 25 + 40;
+                // minus padding-top minus padding-bottom - half of the row height twice (one for the top rung and another for the bottom)
+                let calculatedOffset = (this.pitchIndicatorContainerHeightDIPs - 40 - 40 - (PITCH_PERFECT_RUNG_HEIGHT_DP / 2) - (PITCH_PERFECT_RUNG_HEIGHT_DP / 2)) *
+                    this.arrowInterpolateFunction(this.currentPitchHz) - 25 + 40 + (PITCH_PERFECT_RUNG_HEIGHT_DP / 2);
 
                 // indicator shouldn't be higher than the container!
                 return `${ Math.min(   Math.max(-20, calculatedOffset)  ,  this.pitchIndicatorContainerHeightDIPs - 30)     }dp`
@@ -157,7 +196,7 @@
                     'padding-top': '40dp',
                     'padding-bottom': '40dp'
                 }
-            }
+            },
         },
 
         methods: {

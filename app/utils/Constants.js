@@ -11,3 +11,6 @@ export const AVAILABLE_GOALS = [{
     id: 'another_sample_goal',
     name: 'Another Sample Goal'
 }];
+
+
+export const PITCH_PERFECT_RUNG_HEIGHT_DP = 40;
