@@ -5,17 +5,29 @@
       <TextView :text="'Settings'"
       editable="false" id="settings-title" />
 
-      <StackLayout orientation="vertical" horizontalAlignment="center" style="padding: 10em;" id="settings-buttons">
+
         <SpectraActionButton text="Change your goals" style="width: 80%" type="settings-orange" @tap="onGoalChange "/>
+
+      <!--Empty placeholder (there is no equivalent of div in NS..) -->
+      <StackLayout style="flex-grow: 1"/>
 
         <SpectraActionButton text="Change your name" style="width: 80%" type="settings-green" @tap="onNameChange"/>
 
+              <!--Empty placeholder (there is no equivalent of div in NS..) -->
+      <StackLayout style="flex-grow: 1"/>
+
         <SpectraActionButton text="View credits" style="width: 80%" type="settings-orange" @tap="onCredits"/>
+
+              <!--Empty placeholder (there is no equivalent of div in NS..) -->
+      <StackLayout style="flex-grow: 1"/>
 
         <SpectraActionButton text="Share feedback" style="width: 80%" type="settings-green" @tap="onFeedback"/>
 
+              <!--Empty placeholder (there is no equivalent of div in NS..) -->
+      <StackLayout style="flex-grow: 1"/>
+
         <SpectraActionButton text="Back" style="width: 50%" type="settings-orange" @tap="onBack"/>
-      </StackLayout>
+
     </FlexboxLayout>
   </Page>
 </template>
