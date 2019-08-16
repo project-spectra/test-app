@@ -38,6 +38,7 @@
 
     import App from "@/components/App";
     import Dog from "@/components/Dog";
+    import BDSDInfo from '@/components/ExerciseScreens/BDSDInfo';
 
     import PitchPerfect from "@/components/ExerciseScreens/PitchPerfect";
 
@@ -70,7 +71,8 @@
             },
 
             onBDSDTap: function() {
-                this.$navigateTo(Dog);
+                // this.$navigateTo(Dog);
+                this.$navigateTo(BDSDInfo);
             },
 
             onPitchPerfect: function(){

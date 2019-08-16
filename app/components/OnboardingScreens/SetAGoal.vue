@@ -13,13 +13,17 @@
 
             <Label text='You can change your goal at any time in Settings'
                    style="font-style: italic"/>
-
+                   
+            <check-box text='Select a specific pitch' checkPadding="25dp" :style="checkboxStyle"
+                       :fillColor="Config.primaryColor" @checkedChange="onSpecificPitchCheck($event)"
+                       checked="false" />
+                       
             <!--Empty placeholder (there is no equivalent of div in NS..) -->
             <StackLayout style="flex-grow: 1"/>
 
             <FlexboxLayout justifyContent="space-between" flexDirection="row">
                 <SpectraActionButton type='warning' text="Return" @tap="onReturn" />
-                <SpectraActionButton text="All Set :)" @tap="onOK" />
+                <SpectraActionButton :text="nextButtonText" @tap="onOK" />
             </FlexboxLayout>
 
         </FlexboxLayout>
@@ -33,9 +37,9 @@
     import SpectraActionButton from "@/components/UIControls/SpectraActionButton";
     import SpectraTextView from "@/components/UIControls/SpectraTextView";
     import {AVAILABLE_GOALS} from "@/utils/Constants";
-
+    import {Config} from "@/utils/Config";
     import App from "@/components/App";
-
+    import SpecificPitchPicker from "@/components/OnboardingScreens/SpecificPitchPicker";
     import {PropertyConverter} from 'nativescript-ui-dataform'
 
     /*Sun May 05 2019 01:54:28 GMT+0800 Transfusion: the converter property which transforms the objects backing
@@ -72,9 +76,13 @@
                 }
 
                 this.$store.dispatch('setGoal', this.form.goal);
-                this.$store.dispatch('setFirstLoad', false);
-                //this.$store.commit("save", {...this.$store.state, goal: this.form.goal, firstLoad: false});
-                this.$navigateTo(App, {clearHistory: true});
+                this.$store.dispatch('setFirstLoad', this.selectSpecificPitchChecked);
+                
+                if (this.selectSpecificPitchChecked) {
+                    this.$navigateTo(SpecificPitchPicker);
+                } else {
+                    this.$navigateTo(App, {clearHistory: true});
+                }
             },
 
             onReturn: function(){
@@ -85,10 +93,35 @@
             onFormPropertyCommitted: function(data) {
                 let editedObject = JSON.parse                        (data.object.editedObject);
                 this.form.goal = AVAILABLE_GOALS.find((goal) => goal.name === editedObject.goal).id
+            },
+
+            onSpecificPitchCheck: function($event) {
+                // https://github.com/bradmartin/nativescript-checkbox
+                this.selectSpecificPitchChecked = $event.value;
+                console.log(this.selectSpecificPitchChecked);
             }
         },
+        computed: {
+            checkboxStyle(){
+                return {
+                    "font-size": '17em',
+                    // "font-style": "italic",
+                }
+            },
+            nextButtonText() {
+                if (this.selectSpecificPitchChecked) {
+                    return "Next"
+                } else {
+                    return "All Set :)"
+                }
+            }
+
+        },
         data() {
-            return {form: {
+            return {
+                Config,
+                selectSpecificPitchChecked: false,
+                form: {
                 goal: 'Sample Goal'
             }, formMetadata: {
                     'isReadOnly': false,
