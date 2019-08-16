@@ -9,11 +9,11 @@
                 <Span text="let us know." textDecoration="Underline" />
             </TextView>
 
-            <Label text="What should we call you?" style="font-weight: 600; color: #000; font-size: 15em; padding-bottom: 5em;"/>
+            <Label text="What name should we call you?" style="font-weight: 600; color: #000; font-size: 15em; padding-bottom: 5em;"/>
 
             <SpectraTextView v-model="name" />
 
-            <Label :text="this.name === '' ? 'You can change this at any time in Settings' : 'Whoa, great name!'"
+            <Label :text="this.name === '' ? 'You can change your name at any time in the Settings.' : 'Whoa, great name!'"
                    style="font-style: italic"/>
 
             <StackLayout style="flex-grow: 1"/>
@@ -50,7 +50,9 @@
         methods: {
             onReady: function(){
                 // firstLoad must explicitly be true in order for main.js to not conditionally route to App
-                this.$store.commit("save", {name: this.name, firstLoad: true});
+                this.$store.dispatch("setName", this.name);
+                this.$store.dispatch("setFirstLoad", true);
+                //this.$store.commit("save", {name: this.name, firstLoad: true});
                 this.$navigateTo(VocalHealthWarnings);
             }
         }

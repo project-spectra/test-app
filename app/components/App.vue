@@ -28,7 +28,7 @@
       <StackLayout style="height: 25dp" />
 
       <FlexboxLayout flexDirection="row" justifyContent="flex-begin">
-        <SpectraMinorButton text="Settings" style="width: 80%" @tap="onExercises"/>
+        <SpectraMinorButton text="Settings" style="width: 80%" @tap="onSettings"/>
       </FlexboxLayout>
 
       <!--Empty placeholder (there is no equivalent of div in NS..) -->
@@ -45,6 +45,7 @@
   import SpectraMinorButton from "@/components/UIControls/SpectraMinorButton";
 
   import ActiveExercises from '@/components/ActiveExercises';
+  import Settings from '@/components/Settings';
 
   export default {
       components: {
@@ -55,6 +56,7 @@
       computed: {
         currentGoalName() {
             let currentGoalId = this.$store.state.goal;
+            console.log(currentGoalId);
             return AVAILABLE_GOALS.find( ({id}) => id === currentGoalId).name;
         }
       },
@@ -64,6 +66,10 @@
           },
           onExercises() {
               this.$navigateTo(ActiveExercises);
+          },
+
+          onSettings() {
+              this.$navigateTo(Settings);
           }
       }
   }

@@ -14,6 +14,7 @@
             <Label text='You can change your goal at any time in Settings'
                    style="font-style: italic"/>
 
+
             <check-box text='Select a specific pitch' checkPadding="25dp" :style="checkboxStyle"
                        :fillColor="Config.primaryColor" @checkedChange="onSpecificPitchCheck($event)"
                        checked="false" />
@@ -92,7 +93,7 @@
 
             // https://stackoverflow.com/questions/54605451/nativescript-vue-dataform-does-not-update-the-source-data
             onFormPropertyCommitted: function(data) {
-                let editedObject = JSON.parse(data.object.editedObject);
+                let editedObject = JSON.parse                        (data.object.editedObject);
                 this.form.goal = AVAILABLE_GOALS.find((goal) => goal.name === editedObject.goal).id
             },
 
@@ -132,6 +133,7 @@
                     {name: 'goal',
                     displayName: 'Your Goal',
                     index: 0,
+                    hintText: 'Choose a goal...', //Not working for some reason
                     editor: 'Picker',
                     valuesProvider: AVAILABLE_GOALS.map(goal => goal.name),
                     /*converter: new GoalsConverter()*/}
