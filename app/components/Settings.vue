@@ -43,7 +43,7 @@
           cancelButtonText: "Cancel",
           defaultText: "",
           inputType: "text"
-        }).then(function (r) {
+        }).then(r => {
           console.log("Dialog result: " + r.result + ", text: " + r.text);
           if (r.result) {
             this.$store.dispatch('setName', r.text);
