@@ -6,11 +6,11 @@
 
             <TextView :text="REMINDER_TEXT" editable="false" id="reminder"/>
 
-            <StackLayout style="padding: 15em;">
+            <StackLayout style="padding: 10em;">
                 <check-box text='Make sure it feels "easy" when you talk.' checkPadding="25dp" :style="checkboxStyle"
                            :fillColor="Config.primaryColor" @checkedChange="onCheckboxPressed($event)"
                            checked="false" />
-                <check-box text='If it feels "effortful" where is the effort? Relax that area.' checkPadding="25dp" :style="checkboxStyle"
+                <check-box text='If you feel tension while talking, try to relax the part of your body that feels strained.' checkPadding="25dp" :style="checkboxStyle"
                            :fillColor="Config.primaryColor"  @checkedChange="onCheckboxPressed($event)"
                            checked="false" />
                 <check-box text='If your voice is sore, take a voice "nap!"' checkPadding="25dp" :style="checkboxStyle"
@@ -57,13 +57,13 @@
                 boxesChecked: 0,
                 WELCOME_TEXT: `Welcome to our community, ${this.$store.state.name}!`,
                 REMINDER_TEXT:
-                    "It's important to keep in mind these tips for general vocal health. Let us know you understand the following points:"
+                    "It's important to keep in mind these tips for general vocal health. Let us know you understand the following points by checking each box:"
             }
         },
         computed: {
             checkboxStyle(){
                 return {
-                    "font-size": '17em',
+                    "font-size": '15em',
                     "font-style": "italic",
                 }
             }

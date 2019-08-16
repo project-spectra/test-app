@@ -1,7 +1,7 @@
 <template>
     <Page actionBarHidden="true" class="page">
         <FlexboxLayout style="flex: 1;" flexDirection="column" id="container">
-            <TextView :text="'Pitch\nPerfect'" editable="false" id="pitch-perfect-title"/>
+            <TextView :text="'Pitch Perfect'" editable="false" id="pitch-perfect-title"/>
 
             <TextView editable="false" id="project-spectra-desc">
                 <Span text="This exercise will strengthen and balance the muscles of the voicebox." />

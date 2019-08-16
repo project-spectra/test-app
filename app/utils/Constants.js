@@ -5,9 +5,9 @@ export const AVAILABLE_GOALS = [{
     id: 'more_fem_sound',
     name: 'More Feminine Sound'
 }, {
-    id: 'sample_goal',
-    name: 'Sample Goal'
+    id: 'androgyn_sound',
+    name: 'More Androgynous Sound'
 }, {
-    id: 'another_sample_goal',
-    name: 'Another Sample Goal'
+    id: 'explore_voice',
+    name: 'Exploring my voice'
 }];
