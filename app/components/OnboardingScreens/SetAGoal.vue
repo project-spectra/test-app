@@ -11,19 +11,20 @@
             <RadDataForm style="background-color: #C9C9C9" :source="form" :metadata="formMetadata"
                          @propertyCommitted="onFormPropertyCommitted" />
 
+            <Label text='You can change your goal at any time in Settings'
+                   style="font-style: italic"/>
+
             <check-box text='Select a specific pitch' checkPadding="25dp" :style="checkboxStyle"
                        :fillColor="Config.primaryColor" @checkedChange="onSpecificPitchCheck($event)"
                        checked="false" />
-
-            <Label text='You can change this at any time in Settings'
-                   style="font-style: italic"/>
 
             <!--Empty placeholder (there is no equivalent of div in NS..) -->
             <StackLayout style="flex-grow: 1"/>
 
             <FlexboxLayout justifyContent="space-between" flexDirection="row">
                 <SpectraActionButton type='warning' text="Return" @tap="onReturn" />
-                <SpectraActionButton :text="nextButtonText" @tap="onOK" />
+                <SpectraActionButton :text="nextButtonText" @tap="onOK"
+                                     :isEnabled="this.form.goal !== 'select_a_goal'" />
             </FlexboxLayout>
 
         </FlexboxLayout>
@@ -65,9 +66,19 @@
         },
         methods: {
             onOK: function(){
-                if (this.form.goal === 'Sample Goal') {this.form.goal = 'sample_goal';}
-                this.$store.commit("save", {...this.$store.state, goal: this.form.goal,
-                    firstLoad: this.selectSpecificPitchChecked});
+                if (this.form.goal === 'Explore my voice') {
+                  this.form.goal = 'explore_voice';
+                } else if (this.form.goal === 'More Masculine Sound') {
+                  this.form.goal = 'more_masc_sound';
+                } else if (this.form.goal === 'More Feminine Sound') {
+                  this.form.goal = 'more_fem_sound';
+                } else if (this.form.goal === 'More Androgynous Sound') {
+                  this.form.goal = 'androgyn_sound';
+                }
+
+                this.$store.dispatch('setGoal', this.form.goal);
+                this.$store.dispatch('setFirstLoad', this.selectSpecificPitchChecked);
+
                 if (this.selectSpecificPitchChecked) {
                     this.$navigateTo(SpecificPitchPicker);
                 } else {
@@ -112,7 +123,7 @@
                 Config,
                 selectSpecificPitchChecked: false,
                 form: {
-                goal: 'Sample Goal'
+                goal: 'select_a_goal',
             }, formMetadata: {
                     'isReadOnly': false,
                 commitMode: 'immediate',
