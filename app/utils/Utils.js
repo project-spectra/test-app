@@ -22,6 +22,14 @@ export const getFrequency = function (note) {
     return 440 * Math.pow(2, (keyNumber- 49) / 12);
 };
 
+let noteStrings = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+
+// todo: refactor with divmod
+export function noteFromPitch( frequency ) {
+    let noteNum = 12 * (Math.log(frequency / 440) / Math.log(2));
+    let note = Math.round( noteNum ) + 69;
+    return noteStrings[note % 12] + (Math.floor(note / 12) - 1)
+}
 
 export const MathUtils = {
     interpolateLinear: (X1, X2, Y1, Y2) => {

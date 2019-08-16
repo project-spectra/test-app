@@ -238,7 +238,6 @@
             },
 
             onNavigatedTo: function(args) {
-                console.log('janoasjdfoiasdf');
                 console.log(args);
             }
         }
