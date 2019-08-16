@@ -36,6 +36,10 @@
                 switch(this.type) {
                     case 'warning':
                         return 'spectra-action-button-warning';
+                    case 'settings-green':
+                        return 'settings-button-green';
+                    case 'settings-orange':
+                        return 'settings-button-orange';
                     default:
                         return 'spectra-action-button';
                 }
@@ -66,6 +70,14 @@
 
     Button.spectra-action-button {
         border-color: #A7C6BE;
+    }
+
+    Button.settings-button-green {
+        background-color: #72C8B2;
+    }
+
+    Button.settings-button-orange {
+        background-color: #F7AF51;
     }
 
     Button.spectra-action-button:active {
