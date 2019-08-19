@@ -1,6 +1,6 @@
 import Vue from 'nativescript-vue'
 import Vuex from 'vuex';
-import * as ApplicationSettings from "application-settings";
+import * as ApplicationSettings from "tns-core-modules/application-settings";
 
 Vue.use(Vuex);
 
@@ -8,7 +8,11 @@ export const store = new Vuex.Store({
   state: {
     name: "",
     firstLoad: true,
-    goal: ""
+    goal: "",
+    pitchPerfectCompleted: 0,
+    slideCompleted: 0,
+    bdsdCompleted: 0,
+    convoPracticeDone: 0
   },
   mutations: {
     load(state) {
@@ -30,6 +34,22 @@ export const store = new Vuex.Store({
     },
     setFirstLoad(state, firstLoad) {
       state.firstLoad = firstLoad;
+    },
+    setExerciseCompletion(state, exercise, num) {
+      switch (exercise) {
+        case pitchPerfect:
+          state.pitchPerfectCompleted = num;
+          break;
+        case slide:
+          state.slideCompleted = num;
+          break;
+        case bdsd:
+          state.bdsdCompleted = num;
+          break;
+        case convo:
+          state.convoPracticeDone = num;
+          break;
+      }
     }
   },
 
@@ -48,6 +68,10 @@ export const store = new Vuex.Store({
     },
     setFirstLoad(context, firstLoad) {
       context.commit('setFirstLoad', firstLoad);
+      context.commit('save');
+    },
+    setExerciseCompletion(context, exercise, num) {
+      context.commit('setExerciseCompletion', exercise, num);
       context.commit('save');
     }
   }
