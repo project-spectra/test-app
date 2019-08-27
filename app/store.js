@@ -18,8 +18,8 @@ export const store = new Vuex.Store({
         );
       }
     },
-    save(state, data) {
-        Object.assign(state, data);
+    save(state) {
+        // Object.assign(state, data);
         ApplicationSettings.setString("store", JSON.stringify(state));
     },
     setName(state, name) {
@@ -40,12 +40,15 @@ export const store = new Vuex.Store({
   actions: {
     setName(context, name) {
       context.commit('setName', name);
+      context.commit('save');
     },
     setGoal(context, goal) {
       context.commit('setGoal', goal);
+      context.commit('save');
     },
     setFirstLoad(context, firstLoad) {
       context.commit('setFirstLoad', firstLoad);
+      context.commit('save');
     }
   }
 });
