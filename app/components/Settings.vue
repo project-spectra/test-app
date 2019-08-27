@@ -23,7 +23,7 @@
 <script>
   import SpectraActionButton from "./UIControls/SpectraActionButton";
   import App from "./App";
-  import SetAGoal from "./OnboardingScreens/SetAGoal";
+  import ChangeGoal from "./ChangeGoal";
   var dialogs = require("tns-core-modules/ui/dialogs");
 
   export default {
@@ -32,8 +32,7 @@
     },
     methods: {
       onGoalChange() {
-        this.$store.dispatch('setGoal', '');
-        this.$navigateTo(SetAGoal, {clearHistory: true});
+        this.$navigateTo(ChangeGoal, {clearHistory: true});
       },
       onNameChange() {
         dialogs.prompt({
