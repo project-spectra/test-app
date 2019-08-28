@@ -35,8 +35,8 @@
 <script>
   import SpectraActionButton from "./UIControls/SpectraActionButton";
   import App from "./App";
-  import SetAGoal from "./OnboardingScreens/SetAGoal";
-  var dialogs = require("tns-core-modules/ui/dialogs");
+  import ChangeGoal from "./ChangeGoal";
+  const dialogs = require("tns-core-modules/ui/dialogs");
 
   export default {
     components: {
@@ -44,8 +44,7 @@
     },
     methods: {
       onGoalChange() {
-        this.$store.dispatch('setGoal', '');
-        this.$navigateTo(SetAGoal, {clearHistory: true});
+        this.$navigateTo(ChangeGoal, {clearHistory: true});
       },
       onNameChange() {
         dialogs.prompt({
@@ -59,14 +58,34 @@
           console.log("Dialog result: " + r.result + ", text: " + r.text);
           if (r.result) {
             this.$store.dispatch('setName', r.text);
+
+            dialogs.alert({
+              title: "Name changed!",
+              message: "Great to meet you, " + r.text + "!",
+              okButtonText: "Okay"
+            }).then(function () {
+              console.log("Dialog closed!");
+            });
           }
         })
       },
       onCredits() {
-
+        dialogs.alert({
+              title: "Credits",
+              message: "Project Spectra is a group of independent developers and designers seeking to build free & open-source software for voice training. While we believe that anyone, regardless of identity, should be able to use and benefit from our work, we are specifically interested in supporting the self-determination of transgender & gender non-conforming people.",
+              okButtonText: "Okay"
+            }).then(function () {
+              console.log("Dialog closed!");
+            });
       },
       onFeedback() {
-        //implement a mailto
+        dialogs.alert({
+              title: "Share Feedback",
+              message: "Experiencing problems with the app? Have ideas on how it could be improved? Want to join us and help with development?\n\nReach us at projectspectra.app@gmail.com !", //TODO: implement a mail-to link
+              okButtonText: "Okay"
+            }).then(function () {
+              console.log("Dialog closed!");
+            });
       },
       onBack() {
         this.$navigateTo(App);
