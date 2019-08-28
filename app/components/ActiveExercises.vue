@@ -17,9 +17,9 @@
             <ExerciseProgressRow class="exercise-progress-row" text="Warm-up: Hold That Note!" percentage="0" progressText=""/>
 
             <Label style="font-style: italic" text="Two times per day" />
-            <ExerciseProgressRow @tap="onPitchPerfect" class="exercise-progress-row" text="Pitch Perfect: Strengthen your voice" percentage="33" progressText="1/2" />
-            <ExerciseProgressRow percentage="0" class="exercise-progress-row" text="Slide: Move smoothly between notes" progressText="0/2" />
-            <ExerciseProgressRow @tap="onBDSDTap" class="exercise-progress-row" text="Big Dog/Small Dog: Larynx Training" progressText="2/2" />
+            <ExerciseProgressRow @tap="onPitchPerfect" class="exercise-progress-row" text="Pitch Perfect: Strengthen your voice" percentage="33" :progressText="pitchPerfectCompleted + '/2'" />
+            <ExerciseProgressRow percentage="0" class="exercise-progress-row" text="Slide: Move smoothly between notes" :progressText="slideCompleted + '/2'" />
+            <ExerciseProgressRow @tap="onBDSDTap" class="exercise-progress-row" text="Big Dog/Small Dog: Larynx Training" :progressText="bdsdCompleted + '/2'" />
 
             <Label style="font-style: italic" text="Any time" />
             <ExerciseProgressRow percentage="0" class="exercise-progress-row" text="Conversational Practice: Talk to a bot" progressText="" />
