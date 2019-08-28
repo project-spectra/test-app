@@ -10,16 +10,22 @@
             </TextView>
 
             <StackLayout style="height: 10dp" />
-            <ExerciseProgressRow @tap="onPitchPerfect" class="exercise-progress-row" text="Pitch Perfect: Practice holding a note"
-                                 percentage="33" progressText="1/3" />
+
+            <!-- Exercises !-->
+            <Label style="font-style: italic" text="Do this first to avoid vocal strain" />
+            
+            <ExerciseProgressRow class="exercise-progress-row" text="Warm-up: Hold That Note!" percentage="0" progressText=""/>
+
+
+            <Label style="font-style: italic" text="Two times per day" />
+            <ExerciseProgressRow @tap="onPitchPerfect" class="exercise-progress-row" text="Pitch Perfect: Strengthen your voice" percentage="33" progressText="1/2" />
             <ExerciseProgressRow percentage="0" class="exercise-progress-row" text="Slide: Move smoothly between notes" progressText="0/2" />
             <ExerciseProgressRow @tap="onBDSDTap" class="exercise-progress-row" text="Big Dog/Small Dog: Larynx Training" progressText="2/2" />
+
+            <Label style="font-style: italic" text="Any time" />
             <ExerciseProgressRow percentage="50" class="exercise-progress-row" text="Conversational Practice: Talk to a bot" progressText="1/2" />
 
             <StackLayout style="height: 10dp;"/>
-
-            <Label text="See all exercises"
-                   :style="allExercisesLinkStyle"/>
 
             <!--Empty placeholder (there is no equivalent of div in NS..) -->
             <StackLayout style="flex-grow: 1"/>

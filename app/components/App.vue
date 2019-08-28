@@ -7,19 +7,17 @@
 
       <TextView editable="false" style="background-color: transparent;">
         <Span text="Current Goal: " />
-        <Span :text="currentGoalName + '\n\n'" style="font-style: italic; font-weight: bold;" />
-        <Span text="(Complete each exercise twice in a row, two times per day)" style="font-size: 13em;"/>
+        <Span :text="currentGoalName + '\n'" style="font-style: italic; font-weight: bold;" />
       </TextView>
 
       <FlexboxLayout flexDirection="row" style="align-self: center;">
-        <SpectraProgressBox class="current-progress-box"/>
-        <SpectraProgressBox class="current-progress-box"/>
-        <SpectraProgressBox class="current-progress-box" percentage="25"/>
-        <SpectraProgressBox class="current-progress-box" percentage="65"/>
+        <SpectraProgressBox class="current-progress-box" :percentage=percentExercisesCompleted />
       </FlexboxLayout>
-      <!--<TextView editable="false" text="(Complete each exercise twice in a row, two times per day)")-->
-                <!--style="font-size: 15em; background-color: transparent;"/>-->
+
+      <Label style="align-self: center; font-style:italic" :text="numExercisesCompleted + '/6 exercises completed!'" />
+      <!-- TODO: dynamic encouragement text
       <Label style="align-self: center; font-style: italic;" text="Nice, you're on your way." />
+      -->
 
       <!--Empty placeholder (there is no equivalent of div in NS..) -->
       <StackLayout style="flex-grow: 1"/>
@@ -51,13 +49,21 @@
       components: {
           SpectraMinorButton,
           SpectraMajorButton,
-        SpectraProgressBox
+          SpectraProgressBox
       },
       computed: {
         currentGoalName() {
             let currentGoalId = this.$store.state.goal;
             console.log(currentGoalId);
             return AVAILABLE_GOALS.find( ({id}) => id === currentGoalId).name;
+        },
+        numExercisesCompleted() {
+            return this.$store.state.pitchPerfectCompleted + this.$store.state.slideCompleted + this.$store.state.bdsdCompleted;
+        },
+        percentExercisesCompleted() {
+            let completed = this.$store.state.pitchPerfectCompleted + this.$store.state.slideCompleted + this.$store.state.bdsdCompleted;
+            console.log("completed " + completed + " exercises");
+            return 100*(completed / 6); //at 2 exercises per day
         }
       },
       methods: {

@@ -11,8 +11,7 @@ export const store = new Vuex.Store({
     goal: "",
     pitchPerfectCompleted: 0,
     slideCompleted: 0,
-    bdsdCompleted: 0,
-    convoPracticeDone: 0
+    bdsdCompleted: 0
   },
   mutations: {
     load(state) {
@@ -45,9 +44,6 @@ export const store = new Vuex.Store({
           break;
         case bdsd:
           state.bdsdCompleted = num;
-          break;
-        case convo:
-          state.convoPracticeDone = num;
           break;
       }
     }
