@@ -16,14 +16,13 @@
             
             <ExerciseProgressRow class="exercise-progress-row" text="Warm-up: Hold That Note!" percentage="0" progressText=""/>
 
-
             <Label style="font-style: italic" text="Two times per day" />
             <ExerciseProgressRow @tap="onPitchPerfect" class="exercise-progress-row" text="Pitch Perfect: Strengthen your voice" percentage="33" progressText="1/2" />
             <ExerciseProgressRow percentage="0" class="exercise-progress-row" text="Slide: Move smoothly between notes" progressText="0/2" />
             <ExerciseProgressRow @tap="onBDSDTap" class="exercise-progress-row" text="Big Dog/Small Dog: Larynx Training" progressText="2/2" />
 
             <Label style="font-style: italic" text="Any time" />
-            <ExerciseProgressRow percentage="50" class="exercise-progress-row" text="Conversational Practice: Talk to a bot" progressText="1/2" />
+            <ExerciseProgressRow percentage="0" class="exercise-progress-row" text="Conversational Practice: Talk to a bot" progressText="" />
 
             <StackLayout style="height: 10dp;"/>
 
@@ -41,13 +40,10 @@
     import {AVAILABLE_GOALS} from "@/utils/Constants";
     import ExerciseProgressRow from "@/components/UIControls/ExerciseProgressRow";
     import SpectraActionButton from "@/components/UIControls/SpectraActionButton";
-
     import App from "@/components/App";
     import Dog from "@/components/Dog";
     import BDSDInfo from '@/components/ExerciseScreens/BDSDInfo';
-
     import PitchPerfect from "@/components/ExerciseScreens/PitchPerfect";
-
     import {Config} from "@/utils/Config";
 
     export default {
@@ -64,6 +60,15 @@
                     'text-decoration': 'underline',
                     'font-size': '15em'
                 }
+            },
+            pitchPerfectCompleted() {
+              return this.$store.state.pitchPerfectCompleted;
+            },
+            bdsdCompleted() {
+              return this.$store.state.bdsdCompleted;
+            },
+            slideCompleted() {
+              return this.$store.state.slideCompleted;
             }
         },
         data() {
@@ -77,7 +82,6 @@
             },
 
             onBDSDTap: function() {
-                // this.$navigateTo(Dog);
                 this.$navigateTo(BDSDInfo);
             },
 
