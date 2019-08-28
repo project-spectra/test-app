@@ -86,7 +86,7 @@
             },
 
             onReturn: function(){
-                this.$navigateTo();
+                this.$navigateTo(Settings);
             },
 
             // https://stackoverflow.com/questions/54605451/nativescript-vue-dataform-does-not-update-the-source-data
