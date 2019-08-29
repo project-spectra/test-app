@@ -17,9 +17,9 @@
             <ExerciseProgressRow class="exercise-progress-row" text="Warm-up: Hold That Note!" percentage="0" progressText=""/>
 
             <Label style="font-style: italic" text="Two times per day" />
-            <ExerciseProgressRow @tap="onPitchPerfect" class="exercise-progress-row" text="Pitch Perfect: Strengthen your voice" percentage="33" :progressText="pitchPerfectCompleted + '/2'" />
-            <ExerciseProgressRow percentage="0" class="exercise-progress-row" text="Slide: Move smoothly between notes" :progressText="slideCompleted + '/2'" />
-            <ExerciseProgressRow @tap="onBDSDTap" class="exercise-progress-row" text="Big Dog/Small Dog: Larynx Training" :progressText="bdsdCompleted + '/2'" />
+            <ExerciseProgressRow @tap="onPitchPerfect" class="exercise-progress-row" text="Pitch Perfect: Strengthen your voice" :percentage="pctPitchPerfectCompleted" :progressText="pitchPerfectCompleted + '/2'" />
+            <ExerciseProgressRow class="exercise-progress-row" text="Slide: Move smoothly between notes" :percentage="pctSlideCompleted" :progressText="slideCompleted + '/2'" />
+            <ExerciseProgressRow @tap="onBDSDTap" class="exercise-progress-row" text="Big Dog/Small Dog: Larynx Training" :percentage="pctBdsdCompleted" :progressText="bdsdCompleted + '/2'" />
 
             <Label style="font-style: italic" text="Any time" />
             <ExerciseProgressRow percentage="0" class="exercise-progress-row" text="Conversational Practice: Talk to a bot" progressText="" />
@@ -61,6 +61,7 @@
                     'font-size': '15em'
                 }
             },
+            //Get how many times an exercise has been completed to display a counter
             pitchPerfectCompleted() {
               return this.$store.state.pitchPerfectCompleted;
             },
@@ -69,11 +70,24 @@
             },
             slideCompleted() {
               return this.$store.state.slideCompleted;
-            }
+            },
+            //Get the % to indicate how far the ExerciseProgressRow should be filled in
+            pctPitchPerfectCompleted() {
+              return 100*(this.$store.state.pitchPerfectCompleted / 2);
+            },
+            pctBdsdCompleted() {
+              return 100*(this.$store.state.bdsdCompleted / 2);
+            },
+            pctSlideCompleted() {
+              return 100*(this.$store.state.slideCompleted / 2);
+            },
         },
         data() {
             return {
-                Config: Config
+                Config: Config,
+                pitchPerfectCompleted: this.$store.state.pitchPerfectCompleted,
+                bdsdCompleted: this.$store.state.bdsdCompleted,
+                slideCompleted: this.$store.state.slideCompleted
             }
         },
         methods: {
@@ -86,6 +100,9 @@
             },
 
             onPitchPerfect: function(){
+                //TEST INCREMENTING
+                console.log('Incrementing pitch perfect completion');
+                this.$store.dispatch('setPitchPerfectCompletion',this.$store.state.pitchPerfectCompleted + 1);
                 this.$navigateTo(PitchPerfect);
             }
         }

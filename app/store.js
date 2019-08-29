@@ -31,20 +31,29 @@ export const store = new Vuex.Store({
     setGoal(state, goal) {
       state.goal = goal;
     },
+    //Set how many times an exercise has been completed for daily tracking
     setFirstLoad(state, firstLoad) {
       state.firstLoad = firstLoad;
     },
-    setExerciseCompletion(state, exercise, num) {
-      switch (exercise) {
-        case pitchPerfect:
-          state.pitchPerfectCompleted = num;
-          break;
-        case slide:
-          state.slideCompleted = num;
-          break;
-        case bdsd:
-          state.bdsdCompleted = num;
-          break;
+    setPitchPerfectCompletion(state, value) {
+      if (value > 2) {
+        state.pitchPerfectCompleted = 2;
+      } else {
+        state.pitchPerfectCompleted = value;
+      }
+    },
+    setBdsdCompletion(state, value) {
+      if (value > 2) {
+        state.bdsdCompleted = 2;
+      } else {
+        state.bdsdCompleted = value;
+      }
+    },
+    setSlideCompletion(state, value) {
+      if (value > 2) {
+        state.slideCompleted = 2;
+      } else {
+        state.slideCompleted = value;
       }
     }
   },
@@ -66,8 +75,16 @@ export const store = new Vuex.Store({
       context.commit('setFirstLoad', firstLoad);
       context.commit('save');
     },
-    setExerciseCompletion(context, exercise, num) {
-      context.commit('setExerciseCompletion', exercise, num);
+    setPitchPerfectCompletion(context, value) {
+      context.commit('setPitchPerfectCompletion', value);
+      context.commit('save');
+    },
+    setBdsdCompletion(context, value) {
+      context.commit('setBdsdCompletion', value);
+      context.commit('save');
+    },
+    setSlideCompletion(context, value) {
+      context.commit('setSlideCompletion', value);
       context.commit('save');
     }
   }

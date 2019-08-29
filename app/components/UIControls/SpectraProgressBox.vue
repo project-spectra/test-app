@@ -15,8 +15,6 @@
         computed: {
             style() {
                 let percentage = this.percentage ? 100 - this.percentage : '0';
-
-                console.log(percentage);
                 
                 if (percentage == 0) {
                   return {
