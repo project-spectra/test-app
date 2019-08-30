@@ -41,7 +41,6 @@
     import ExerciseProgressRow from "@/components/UIControls/ExerciseProgressRow";
     import SpectraActionButton from "@/components/UIControls/SpectraActionButton";
     import App from "@/components/App";
-    import Dog from "@/components/Dog";
     import BDSDInfo from '@/components/ExerciseScreens/BDSDInfo';
     import PitchPerfect from "@/components/ExerciseScreens/PitchPerfect";
     import {Config} from "@/utils/Config";
@@ -61,25 +60,15 @@
                     'font-size': '15em'
                 }
             },
-            //Get how many times an exercise has been completed to display a counter
-            pitchPerfectCompleted() {
-              return this.$store.state.pitchPerfectCompleted;
-            },
-            bdsdCompleted() {
-              return this.$store.state.bdsdCompleted;
-            },
-            slideCompleted() {
-              return this.$store.state.slideCompleted;
-            },
             //Get the % to indicate how far the ExerciseProgressRow should be filled in
             pctPitchPerfectCompleted() {
-              return 100*(this.$store.state.pitchPerfectCompleted / 2);
+              return 100*(this.pitchPerfectCompleted / 2);
             },
             pctBdsdCompleted() {
-              return 100*(this.$store.state.bdsdCompleted / 2);
+              return 100*(this.bdsdCompleted / 2);
             },
             pctSlideCompleted() {
-              return 100*(this.$store.state.slideCompleted / 2);
+              return 100*(this.slideCompleted / 2);
             },
         },
         data() {
@@ -89,6 +78,11 @@
                 bdsdCompleted: this.$store.state.bdsdCompleted,
                 slideCompleted: this.$store.state.slideCompleted
             }
+        },
+        created() {
+            this.pitchPerfectCompleted = this.$store.state.pitchPerfectCompleted;
+            this.bdsdCompleted = this.$store.state.bdsdCompleted;
+            this.slideCompleted = this.$store.state.slideCompleted;
         },
         methods: {
             onMainMenu: function () {

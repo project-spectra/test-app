@@ -45,6 +45,8 @@
   import ActiveExercises from '@/components/ActiveExercises';
   import Settings from '@/components/Settings';
 
+  const moment = require("moment");
+
   export default {
       components: {
           SpectraMinorButton,
@@ -65,6 +67,23 @@
             console.log("completed " + completed + " exercises");
             return 100*(completed / 6); //at 2 exercises per day
         }
+      },
+      created() {
+        //Get the moment the app was opened
+        var openedTime = moment();
+        var lastOpened = this.$store.state.lastOpened;
+
+        //Check if it's the next day since the app was last  opened
+        if ( openedTime.isAfter(lastOpened, 'day') ) {
+
+          //Reset exercise completions
+          this.$store.dispatch('setPitchPerfectCompletion',0);
+          this.$store.dispatch('setSlideCompletion',0);
+          this.$store.dispatch('setBdsdCompletion',0);
+        };
+
+        //Set the last opened time to be the time the app was most recently opened
+        this.$store.dispatch('setLastOpened',openedTime);
       },
       methods: {
           onPageLoaded: function(args) {

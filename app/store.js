@@ -11,7 +11,8 @@ export const store = new Vuex.Store({
     goal: "",
     pitchPerfectCompleted: 0,
     slideCompleted: 0,
-    bdsdCompleted: 0
+    bdsdCompleted: 0,
+    lastOpened: 0
   },
   mutations: {
     load(state) {
@@ -34,6 +35,9 @@ export const store = new Vuex.Store({
     //Set how many times an exercise has been completed for daily tracking
     setFirstLoad(state, firstLoad) {
       state.firstLoad = firstLoad;
+    },
+    setLastOpened(state, lastOpened) {
+      state.lastOpened = lastOpened;
     },
     setPitchPerfectCompletion(state, value) {
       if (value > 2) {
@@ -75,6 +79,11 @@ export const store = new Vuex.Store({
       context.commit('setFirstLoad', firstLoad);
       context.commit('save');
     },
+    setLastOpened(context, lastOpened) {
+      context.commit('setLastOpened', lastOpened);
+      context.commit('save');
+    },
+    //Exercise completion
     setPitchPerfectCompletion(context, value) {
       context.commit('setPitchPerfectCompletion', value);
       context.commit('save');

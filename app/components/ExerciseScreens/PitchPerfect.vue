@@ -46,14 +46,14 @@
     import {Config} from "@/utils/Config";
     import IntroNotePicker from "@/components/ExerciseScreens/PitchPerfectComponents/IntroNotePicker";
 
-
     import Level1 from './PitchPerfectLevels/Level1';
+    import ActiveExercises from '../ActiveExercises';
 
     export default {
         components: {IntroNotePicker, SpectraActionButton, MicRecorder},
         methods: {
             onBack: function() {
-                this.$navigateBack();
+                this.$navigateTo(ActiveExercises);
             },
             onLetsGo: function() {
                 // the note that the user selected above
