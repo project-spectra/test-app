@@ -24,9 +24,17 @@
             style() {
                 let percentage = this.percentage ? 100 - this.percentage : '0';
 
-                if (percentage == 0) {
+                if (this.percentage == 0) {
                   return {
                       'background': `${Config.mutedColor}`,
+                      'border-radius': '7dp',
+                      'border-color': `${Config.primaryColor}`,
+                      'border-width': `2dp`,
+                    padding: '10dp'
+                  };
+                } else if (this.percentage == 100) {
+                  return {
+                      'background': `${Config.primaryColor}`,
                       'border-radius': '7dp',
                       'border-color': `${Config.primaryColor}`,
                       'border-width': `2dp`,
@@ -41,7 +49,7 @@
                         'border-color': `${Config.primaryColor}`,
                         'border-width': `2dp`,
                     padding: '10dp'
-                    }
+                    };
                 };
             }
         },
