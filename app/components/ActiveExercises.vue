@@ -14,11 +14,13 @@
             <!-- Exercises !-->
             <Label style="font-style: italic" text="Do this first to avoid vocal strain" />
             
-            <ExerciseProgressRow class="exercise-progress-row" text="Warm-up: Hold That Note!" percentage="0" progressText=""/>
+            <ExerciseProgressRow @tap="onHoldThatNote" class="exercise-progress-row" text="Warm-up: Hold That Note!" percentage="0" progressText=""/>
 
             <Label style="font-style: italic" text="Two times per day" />
             <ExerciseProgressRow @tap="onPitchPerfect" class="exercise-progress-row" text="Pitch Perfect: Strengthen your voice" :percentage="pctPitchPerfectCompleted" :progressText="pitchPerfectCompleted + '/2'" />
+
             <ExerciseProgressRow class="exercise-progress-row" text="Slide: Move smoothly between notes" :percentage="pctSlideCompleted" :progressText="slideCompleted + '/2'" />
+
             <ExerciseProgressRow @tap="onBDSDTap" class="exercise-progress-row" text="Big Dog/Small Dog: Larynx Training" :percentage="pctBdsdCompleted" :progressText="bdsdCompleted + '/2'" />
 
             <Label style="font-style: italic" text="Any time" />
@@ -43,6 +45,8 @@
     import App from "@/components/App";
     import BDSDInfo from '@/components/ExerciseScreens/BDSDInfo';
     import PitchPerfect from "@/components/ExerciseScreens/PitchPerfect";
+    import HoldThatNote from "@/components/ExerciseScreens/HoldThatNote";
+
     import {Config} from "@/utils/Config";
 
     export default {
@@ -85,6 +89,10 @@
             this.slideCompleted = this.$store.state.slideCompleted;
         },
         methods: {
+            onHoldThatNote: function () {
+                this.$navigateTo(HoldThatNote);
+            },
+
             onMainMenu: function () {
                 this.$navigateTo(App, {clearHistory: true});
             },
