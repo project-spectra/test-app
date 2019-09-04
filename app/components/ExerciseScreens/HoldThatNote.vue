@@ -18,7 +18,7 @@
             <FlexboxLayout justifyContent="space-between" flexDirection="row">
                 <SpectraActionButton type='warning' text="Back" @tap="onBack" />
 
-                <SpectraActionButton text= {{ this.started ? "Start" : "Stop" }} @tap="onStart" />
+                <SpectraActionButton :text="buttonText" @tap="onStart" />
             </FlexboxLayout>
         </FlexboxLayout>
     </Page>
@@ -50,16 +50,16 @@
           },
 
           onStart: function() {
-            console.log("start button pressed");
-            console.log("this.started: " + this.started);
             if ( !this.started ) {
               this.timeStarted = moment();
-              this.buttonText = "Stop";
+              this.buttonText = "Done";
               this.started = true;
             } else {
               var timeStopped = moment();
-              var timeHeld = timeStopped.diff(this.timeStarted);
+              var timeHeld = timeStopped.diff(this.timeStarted, 's');
               this.started = false;
+              this.buttonText = "Start";
+              console.log("Note was held for " + timeHeld + " seconds");
             }
           }
         }
