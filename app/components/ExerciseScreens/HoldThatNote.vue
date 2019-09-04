@@ -6,8 +6,19 @@
             <TextView editable="false" :text="INFO_TEXT" id="desc" />
 
             <StackLayout flexGrow="1" />
+
+            <FlexboxLayout flexDirection="row" justifyContent="space-around" >
+              <IntroNotePickerButton text="E3" />
+              <IntroNotePickerButton text="F3" />
+              <IntroNotePickerButton text="A3" />
+            </FlexboxLayout>
+
+            <StackLayout flexGrow="1" />
+
             <FlexboxLayout justifyContent="space-between" flexDirection="row">
                 <SpectraActionButton type='warning' text="Back" @tap="onBack" />
+
+                <SpectraActionButton text= {{ this.started ? "Start" : "Stop" }} @tap="onStart" />
             </FlexboxLayout>
         </FlexboxLayout>
     </Page>
@@ -15,20 +26,41 @@
 <script>
     import App from "@/components/App";
     import SpectraActionButton from "@/components/UIControls/SpectraActionButton";
+    import IntroNotePickerButton from "../ExerciseScreens/PitchPerfectComponents/IntroNotePickerButton";
+
+    const moment = require("moment");
 
     export default {
         components: {
           SpectraActionButton,
+          IntroNotePickerButton
         },
         data() {
           return {
+                buttonText: "Start",
+                started: false,
+                timeStarted: 0,
                 INFO_TEXT:
                     "In this vocal warmup, hold the sound 'eeee' for as long as possible. To hear an example, choose the note below that is most comfortable for you to hold right now.\n\nThis is a warmup, so don't worry about being exactly on pitch!",
           }
         },
         methods: {
-          onBack() {
+          onBack: function() {
+            this.$navigateBack();
+          },
 
+          onStart: function() {
+            console.log("start button pressed");
+            console.log("this.started: " + this.started);
+            if ( !this.started ) {
+              this.timeStarted = moment();
+              this.buttonText = "Stop";
+              this.started = true;
+            } else {
+              var timeStopped = moment();
+              var timeHeld = timeStopped.diff(this.timeStarted);
+              this.started = false;
+            }
           }
         }
     }
@@ -44,7 +76,7 @@
     }
 
     #title {
-        font-size: 30em;
+        font-size: 40em;
         font-family: serif;
         color: #000;
         font-weight: 700;
