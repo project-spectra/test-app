@@ -15,6 +15,10 @@
 
             <StackLayout flexGrow="1" />
 
+            <FlexboxLayout justifyContent="flex-end" flexDirection="row">
+              <TextView :text=" !this.started ? 'Tap Start as soon as you begin making sound.' : 'Tap Done when you stop making sound.' " editable="false" id="instructions-text"/>
+            </FlexboxLayout>
+
             <FlexboxLayout justifyContent="space-between" flexDirection="row">
                 <SpectraActionButton type='warning' text="Back" @tap="onBack" />
 
@@ -39,7 +43,7 @@
         },
         data() {
           return {
-                buttonText: "Start",
+                buttonText: "Start!",
                 started: false,
                 timeStarted: 0,
                 INFO_TEXT:
@@ -60,13 +64,13 @@
               var timeStopped = moment();
               var timeHeld = timeStopped.diff(this.timeStarted, 's');
               this.started = false;
-              this.buttonText = "Start";
+              this.buttonText = "Start!";
               var self = this; //so that we can navigate from within the dialog function
               console.log("Note was held for " + timeHeld + " seconds");
 
               //Dialog box telling the user how long they held the note for
               dialogs.confirm({
-                title: "Nice! " + timeHeld + " seconds!",
+                title: timeHeld === 1 ? "Nice! " + timeHeld + " second!" : "Nice! " + timeHeld + " seconds!",
                 message: "You did it! Take a few breaths before continuing.\n\nIf you're feeling strained, take a break.",
                 cancelButtonText: "Try a new exercise",
                 okButtonText: "Repeat this exercise"
@@ -103,6 +107,15 @@
         border-width: 0;
         background-color: transparent;
         border-color: #E8E8E8;
+    }
+
+    #instructions-text {
+      background-color: white;
+      font-size: 15em;
+      font-style: italic;
+      margin-bottom: 15em;
+      border-color: black;
+      border-width: 1;
     }
 
 </style>
