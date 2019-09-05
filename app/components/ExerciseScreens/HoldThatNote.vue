@@ -27,8 +27,10 @@
     import App from "@/components/App";
     import SpectraActionButton from "@/components/UIControls/SpectraActionButton";
     import IntroNotePickerButton from "../ExerciseScreens/PitchPerfectComponents/IntroNotePickerButton";
+    import ActiveExercises from "../ActiveExercises";
 
     const moment = require("moment");
+    const dialogs = require("tns-core-modules/ui/dialogs");
 
     export default {
         components: {
@@ -59,7 +61,21 @@
               var timeHeld = timeStopped.diff(this.timeStarted, 's');
               this.started = false;
               this.buttonText = "Start";
+              var self = this; //so that we can navigate from within the dialog function
               console.log("Note was held for " + timeHeld + " seconds");
+
+              //Dialog box telling the user how long they held the note for
+              dialogs.confirm({
+                title: "Nice! " + timeHeld + " seconds!",
+                message: "You did it! Take a few breaths before continuing.\n\nIf you're feeling strained, take a break.",
+                cancelButtonText: "Try a new exercise",
+                okButtonText: "Repeat this exercise"
+              }).then(function (result) {
+                if (!result) { //User hit try a new exercise
+                  //Return user to main exercises screen, otherwise do nothing
+                  self.$navigateTo(ActiveExercises);
+                }
+              });
             }
           }
         }
