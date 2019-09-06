@@ -7,15 +7,13 @@
 
             <!--animation goes here !--> 
             <AbsoluteLayout height="200em" backgroundColor="lightgray" margin="20em">
-              <Image ref="track" src="~/assets/images/track.png" left="75em" top="50em" stretch="fill" />
-              <Label ref="cartImageTest" left="75" top="155" width="10" height="10" backgroundColor="red"/>
+              <Image ref="track" width="200em" src="res://track" left="60em" top="35em" stretch="aspectFit" />
+              <Image ref="cartImageTest" src="res://cart" left="45" top="130" width="50" height="50"/>
 
-              <!-- signposting !-->
-              <Label left="95" top="145" width="10" height="10" backgroundColor="black" />
-              <Label left="115" top="65" width="10" height="10" backgroundColor="black" />
-              <Label left="155" top="38" width="10" height="10" backgroundColor="black" />
-
-
+              <!-- signposting to test the animation
+              <Label left="155" top="25" width="10" height="10" backgroundColor="black" />
+              <Label left="250" top="155" width="10" height="10" backgroundColor="black" />
+              !-->
             </AbsoluteLayout>
 
             <FlexboxLayout flexDirection="row" justifyContent="space-around" >
@@ -63,11 +61,36 @@
           },
 
           onStart: function() {
+            var self = this; //so we can navigate from within the dialog function
+
             //Run the animation
             console.log("Animation running...");
-            //cartImageTest.nativeView.animate({});
-          }
+            cartImageTest.nativeView.animate({
+              translate: {x: 90, y:-135},
+              rotate: 20,
+              duration: 1800,
+              curve: enums.AnimationCurve.linear
+            }).then( () => {
+              cartImageTest.nativeView.animate({
+                translate: {x: 200, y: 10},
+                rotate: 20,
+                duration: 1800,
+              }).then( () => {
+                //Show a dialog box
+                dialogs.confirm({
+                  title: "Done!",
+                  message: "You did it. Take a few deep breaths before continuing.",
+                  cancelButtonText: "Try a new exercise",
+                  okButtonText: "Repeat this exercise"
+                }).then(function (result) {
+                  if (!result) { //Try a new exercise
+                    self.$navigateTo(ActiveExercises);
+                  }
+              });
+            });
+          });
         }
+      }
     }
 </script>
 
