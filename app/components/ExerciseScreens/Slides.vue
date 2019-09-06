@@ -5,9 +5,18 @@
 
             <TextView editable="false" :text="INFO_TEXT" id="desc" />
 
-            <StackLayout flexGrow="1" />
-
             <!--animation goes here !--> 
+            <AbsoluteLayout height="200em" backgroundColor="lightgray" margin="20em">
+              <Image ref="track" src="~/assets/images/track.png" left="75em" top="50em" stretch="fill" />
+              <Label ref="cartImageTest" left="75" top="155" width="10" height="10" backgroundColor="red"/>
+
+              <!-- signposting !-->
+              <Label left="95" top="145" width="10" height="10" backgroundColor="black" />
+              <Label left="115" top="65" width="10" height="10" backgroundColor="black" />
+              <Label left="155" top="38" width="10" height="10" backgroundColor="black" />
+
+
+            </AbsoluteLayout>
 
             <FlexboxLayout flexDirection="row" justifyContent="space-around" >
               <IntroNotePickerButton text="Play an example  " />
@@ -28,8 +37,11 @@
     import SpectraActionButton from "@/components/UIControls/SpectraActionButton";
     import IntroNotePickerButton from "../ExerciseScreens/PitchPerfectComponents/IntroNotePickerButton";
     import ActiveExercises from "../ActiveExercises";
+    import * as animation from "tns-core-modules/ui/animation";
 
+    const enums = require("tns-core-modules/ui/enums");
     const dialogs = require("tns-core-modules/ui/dialogs");
+    var cartImageTest;
 
     export default {
         components: {
@@ -42,6 +54,9 @@
                     "Glide from your lowest comfortable note to your highest comfortable note, then back down again.",
           }
         },
+        mounted() {
+          cartImageTest = this.$refs.cartImageTest;
+        },
         methods: {
           onBack: function() {
             this.$navigateBack();
@@ -49,6 +64,8 @@
 
           onStart: function() {
             //Run the animation
+            console.log("Animation running...");
+            //cartImageTest.nativeView.animate({});
           }
         }
     }
