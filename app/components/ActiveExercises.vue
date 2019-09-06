@@ -19,7 +19,7 @@
             <Label style="font-style: italic" text="Two times per day" />
             <ExerciseProgressRow @tap="onPitchPerfect" class="exercise-progress-row" text="Pitch Perfect: Strengthen your voice" :percentage="pctPitchPerfectCompleted" :progressText="pitchPerfectCompleted + '/2'" />
 
-            <ExerciseProgressRow class="exercise-progress-row" text="Slide: Move smoothly between notes" :percentage="pctSlideCompleted" :progressText="slideCompleted + '/2'" />
+            <ExerciseProgressRow @tap="onSlides" class="exercise-progress-row" text="Slides: Move smoothly between notes" :percentage="pctSlideCompleted" :progressText="slideCompleted + '/2'" />
 
             <ExerciseProgressRow @tap="onBDSDTap" class="exercise-progress-row" text="Big Dog/Small Dog: Larynx Training" :percentage="pctBdsdCompleted" :progressText="bdsdCompleted + '/2'" />
 
@@ -46,6 +46,7 @@
     import BDSDInfo from '@/components/ExerciseScreens/BDSDInfo';
     import PitchPerfect from "@/components/ExerciseScreens/PitchPerfect";
     import HoldThatNote from "@/components/ExerciseScreens/HoldThatNote";
+    import Slides from "@/components/ExerciseScreens/Slides";
 
     import {Config} from "@/utils/Config";
 
@@ -91,6 +92,10 @@
         methods: {
             onHoldThatNote: function () {
                 this.$navigateTo(HoldThatNote);
+            },
+
+            onSlides: function() {
+                this.$navigateTo(Slides);
             },
 
             onMainMenu: function () {
