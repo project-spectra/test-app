@@ -8,7 +8,7 @@
             <!--animation goes here !--> 
             <AbsoluteLayout height="200em" backgroundColor="lightgray" margin="20em">
               <Image ref="track" width="200em" src="res://track" left="60em" top="35em" stretch="aspectFit" />
-              <Image ref="cartImageTest" src="res://cart" left="45" top="130" width="50" height="50"/>
+              <Image ref="cartImage" src="res://cart" left="45" top="130" width="50" height="50"/>
 
               <!-- signposting to test the animation
               <Label left="155" top="25" width="10" height="10" backgroundColor="black" />
@@ -39,7 +39,7 @@
 
     const enums = require("tns-core-modules/ui/enums");
     const dialogs = require("tns-core-modules/ui/dialogs");
-    var cartImageTest;
+    var cartImage;
 
     export default {
         components: {
@@ -53,7 +53,7 @@
           }
         },
         mounted() {
-          cartImageTest = this.$refs.cartImageTest;
+          cartImage = this.$refs.cartImage;
         },
         methods: {
           onBack: function() {
@@ -65,17 +65,20 @@
 
             //Run the animation
             console.log("Animation running...");
-            cartImageTest.nativeView.animate({
+            cartImage.nativeView.animate({
               translate: {x: 90, y:-135},
               rotate: 20,
               duration: 1800,
               curve: enums.AnimationCurve.linear
             }).then( () => {
-              cartImageTest.nativeView.animate({
+              cartImage.nativeView.animate({
                 translate: {x: 200, y: 10},
                 rotate: 20,
                 duration: 1800,
               }).then( () => {
+                //increment exercise tracking
+                this.$store.dispatch('setSlideCompletion',this.$store.state.slideCompleted + 1);
+
                 //Show a dialog box
                 dialogs.confirm({
                   title: "Done!",
@@ -85,6 +88,9 @@
                 }).then(function (result) {
                   if (!result) { //Try a new exercise
                     self.$navigateTo(ActiveExercises);
+                  } else {
+                    //reset the exercise
+
                   }
               });
             });
