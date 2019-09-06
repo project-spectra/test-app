@@ -87,10 +87,13 @@
                   okButtonText: "Repeat this exercise"
                 }).then(function (result) {
                   if (!result) { //Try a new exercise
-                    self.$navigateTo(ActiveExercises);
+                    self.$navigateTo(ActiveExercises, {clearHistory: true});
                   } else {
                     //reset the exercise
-
+                    cartImage.nativeView.animate({
+                      translate: {x: 0, y:0},
+                      duration: 10,
+                    });
                   }
               });
             });
