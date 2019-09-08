@@ -60,7 +60,7 @@ tns run <platform> --bundle
 - Even if you do not implement it yourself (which may often be the case), your contributions are extremely valuable - others interested in the implementation will get a head start where you left off and avoid "barking up the wrong tree" especially if you manage to document the pros and cons of various approaches.
 - The documentation should strive to be as self-contained as possible to lower the entry barrier for contributors.
 - Documenting algorithms which we implement by simply making use of other open source libraries is also appreciated; at the very least references to some papers would help shed light on their inner workings (e.g. the YIN algorithm for F0 detection.)
-- "Ten Physical Elements of the Voice and Two Cultural Elements of Speech that Are Relevant to Gender" can be found [here](https://docs.google.com/document/d/1fiWuHP2-scY6n1bJ5N4MYtnMJL5xyql7fKsbujmpCYE/edit?usp=sharing).
+- "Ten Physical Elements of the Voice and Two Cultural Elements of Speech that Are Relevant to Gender" can be found [here](https://docs.google.com/document/d/1fiWuHP2-scY6n1bJ5N4MYtnMJL5xyql7fKsbujmpCYE/view).
 
 ## iOS
 - Achieve full feature parity and consistent UX with the Android version.
@@ -73,7 +73,7 @@ tns run <platform> --bundle
     - Making existing documentation more accessible and user friendly by adding table of contents, examples, etc.
 
 
-To get in touch with us and learn more about our procedures, practices, and history, please read our [Onboarding Guide](http://tbd) and [Contributor's Covenant](http://tbd).
+To get in touch with us and learn more about our procedures, practices, and history, please read our [Onboarding Guide](https://docs.google.com/document/d/1-poyIcIj0BSHoWMEc8NA--XnNl2zCiyEonpMrjRFFVU/view) and [Contributor's Covenant](http://tbd).
 
 # Planned features
 
