@@ -2,12 +2,12 @@
     <Page @loaded="onPageLoaded"
           actionBarHidden="true" class="page">
         <FlexboxLayout style="flex: 1;" flexDirection="column" id="container">
-            <TextView :text="'Pitch Perfect: Level 1'" editable="false" id="pitch-perfect-level-1-title"/>
+            <TextView :text="'Pitch Perfect: Level ' + level" editable="false" id="pitch-perfect-level-1-title"/>
 
 
             <FlexboxLayout flexWrap="wrap" justifyContent="center" flexDirection="row" id="holdNoteInfo" >
                 <TextView text="Hold the note " editable="false" id="holdNoteText"/>
-                <IntroNotePickerButton selected="false" :text="targetNote" />
+                <IntroNotePickerButton selected="false" :text="currentNote" />
                 <TextView text=" as long as you can." editable="false" id="holdNoteText"/>
 
             </FlexboxLayout>
@@ -96,20 +96,9 @@
             return {
                 screenHeightDIPs: platformModule.screen.mainScreen.heightDIPs,
                 pitchIndicatorContainerHeightDIPs: platformModule.screen.mainScreen.heightDIPs * 0.40,
-                targetPitchHz: getFrequency(this.targetNote),
-
-                /*arrowInterpolateFunction: interpolate({
-                    inputRange: [getFrequency(this.targetNote), getFrequency(this.targetNote) - 50],
-                    // target note should be on the 2nd bar, the bottommost bar should represent some lower frequency
-                    outputRange: [(1/3), 1],
-                    clamp: false,
-                }),*/
-
-                arrowInterpolateFunction: MathUtils.interpolateLinear(getFrequency(this.targetNote), getFrequency(this.targetNote) - 55,
-                    (1/3), 1),
-
+                currentNote: this.targetNote,
                 currentPitchHz: getFrequency(this.targetNote),
-
+                level: 1,
                 EXERCISE_STATE_ENUM : {
                     HOLDING_NOTE: 1,
                     NO_NOTE: 2,
@@ -138,6 +127,9 @@
                 // indicator shouldn't be higher than the container!
                 return `${ Math.min(   Math.max(-20, calculatedOffset)  ,  this.pitchIndicatorContainerHeightDIPs - 30)     }dp`
             },
+            arrowInterpolateFunction() {
+                return MathUtils.interpolateLinear(getFrequency(this.currentNote), getFrequency(this.currentNote) - 55, (1/3), 1)
+            },
             pitchPerfectLevel1Style() {
                 return {
                     'background-color': '#72C8B2',
@@ -158,6 +150,9 @@
                     'padding-top': '40dp',
                     'padding-bottom': '40dp'
                 }
+            },
+            targetPitchHz() {
+                return getFrequency(this.currentNote)
             }
         },
         methods: {
@@ -209,19 +204,23 @@
                             this.exerciseStopwatch = new Timer();
 
                             var self = this;
+                            var name = this.$store.state.name;
                             //TODO: show a dialog then navigate to the next level
                             dialogs.confirm({
-                              title: timeHeld === 1 ? "Nice! " + timeHeld + " second!" : "Nice! " + timeHeld + " seconds!",
-                              message: "You did it! Take a few breaths before continuing.\n\nIf you're feeling strained, take a break.",
+                              title: timeHeld === 1 ? "Nice, " + timeHeld + " second!" : "Nice, " + timeHeld + " seconds!",
+                              message: "You did it, " + name + "! Take a few breaths before continuing.\n\nIf you're feeling strained, take a break.",
                               cancelButtonText: "Stop this exercise",
                               okButtonText: "Continue to the next level"
                             }).then(function (result) {
 
                               if (!result) { //Stop this exercise
                                 //Return user to main exercises screen
+                                _nativePluginInstance.stop();
                                 self.$navigateTo(ActiveExercises);
                               } else { //Continue to next level
-                                self.$navigateTo(Level2, {props: {targetNote: 'E3'}});
+                                //TODO logic to increase level and note depending on starting note
+                                self.currentNote = 'E3';
+                                self.level = 2;
                               }
                             });
                         }
