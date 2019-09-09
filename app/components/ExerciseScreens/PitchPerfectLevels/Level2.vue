@@ -2,7 +2,7 @@
     <Page @loaded="onPageLoaded"
           actionBarHidden="true" class="page">
         <FlexboxLayout style="flex: 1;" flexDirection="column" id="container">
-            <TextView :text="'Pitch Perfect: Level 1'" editable="false" id="pitch-perfect-level-1-title"/>
+            <TextView :text="'Pitch Perfect: Level 2'" editable="false" id="pitch-perfect-level-1-title"/>
 
 
             <FlexboxLayout flexWrap="wrap" justifyContent="center" flexDirection="row" id="holdNoteInfo" >
@@ -68,8 +68,6 @@
 
 <script>
     import {Config} from "@/utils/Config";
-    import ActiveExercises from "@/components/ActiveExercises";
-    import Level2 from "@/components/ExerciseScreens/PitchPerfectLevels/Level2";
     import IntroNotePickerButton from "@/components/ExerciseScreens/PitchPerfectComponents/IntroNotePickerButton";
     import SpectraActionButton from "@/components/UIControls/SpectraActionButton";
     import { SpectraPitchPerfectPlugin } from 'nativescript-spectra-pitch-perfect-plugin';
@@ -160,6 +158,7 @@
                 }
             }
         },
+
         methods: {
 
             onBack: function() {
@@ -221,13 +220,14 @@
                                 //Return user to main exercises screen
                                 self.$navigateTo(ActiveExercises);
                               } else { //Continue to next level
-                                self.$navigateTo(Level2, {props: {targetNote: 'E3'}});
+                                //self.$navigateTo(Level2, )
                               }
                             });
                         }
                     }, 750); //Test: Must hold longer than .75 seconds
                 }
             },
+
 
             onPageLoaded: function(args) {
                 console.log('onPageLoadedHmm');
