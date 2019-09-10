@@ -58,7 +58,6 @@
         methods: {
           onTapLow: function() {
             if ( !this.lowSelected ) { //if low is not selected
-              console.log('Low selected')
               this.lowSelected = true;
               this.medSelected = false;
               this.highSelected = false;
@@ -69,14 +68,24 @@
             //emit something
           },
           onTapMed: function() {
-            console.log('Medium selected')
-            this.medSelected = true;
-            //
+            if ( !this.medSelected ) { //if low is not selected
+              this.medSelected = true;
+              this.lowSelected = false;
+              this.highSelected = false;
+            } else {
+              this.medSelected = false;
+            }
+            
+            //emit something
           },
           onTapHigh: function() {
-            console.log('High selected')
-            this.highSelected = true;
-            //
+            if ( !this.highSelected ) { //if low is not selected
+              this.highSelected = true;
+              this.medSelected = false;
+              this.lowSelected = false;
+            } else {
+              this.highSelected = false;
+            }            //
           }
         }
     }
@@ -84,7 +93,7 @@
 </script>
 
 <style scoped>
-  IntroNotePickerButton.selectedButtonClass {
+  .selectedButtonClass {
     border-color: red;
     border-width: 2dp;
   }
