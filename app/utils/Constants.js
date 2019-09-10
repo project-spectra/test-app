@@ -38,23 +38,23 @@ export const PITCHPERFECT_NOTES = [{
   name: 'A3',
 },
 {
-  id: 'mid_1',
+  id: 'med_1',
   name: 'F3',
 },
 {
-  id: 'mid_2',
+  id: 'med_2',
   name: 'G3',
 },
 {
-  id: 'mid_3',
+  id: 'med_3',
   name: 'A3',
 },
 {
-  id: 'mid_4',
+  id: 'med_4',
   name: 'B3',
 },
 {
-  id: 'mid_5',
+  id: 'med_5',
   name: 'C4',
 },
 {

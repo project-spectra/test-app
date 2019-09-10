@@ -151,6 +151,16 @@
                     'padding-bottom': '40dp'
                 }
             },
+            pitchTrack() {
+                switch(this.targetNote) {
+                    case 'D3':
+                        return 'low'
+                    case 'F3':
+                        return 'med'
+                    case 'G3':
+                        return 'high'
+                }
+            },
             targetPitchHz() {
                 return getFrequency(this.currentNote)
             }
@@ -205,7 +215,8 @@
 
                             var self = this;
                             var name = this.$store.state.name;
-                            //TODO: show a dialog then navigate to the next level
+                            //Show a dialog then navigate to the next level
+                            //TODO add logic to stop after level 5 and increment exercise tracker
                             dialogs.confirm({
                               title: timeHeld === 1 ? "Nice, " + timeHeld + " second!" : "Nice, " + timeHeld + " seconds!",
                               message: "You did it, " + name + "! Take a few breaths before continuing.\n\nIf you're feeling strained, take a break.",
@@ -218,13 +229,18 @@
                                 _nativePluginInstance.stop();
                                 self.$navigateTo(ActiveExercises);
                               } else { //Continue to next level
-                                //TODO logic to increase level and note depending on starting note
-                                self.currentNote = 'E3';
-                                self.level = 2;
+                                //Increase level and note depending on pitch track
+                                self.level++;
+                                console.log('Moving up to level ' + self.level)
+                                console.log(PITCHPERFECT_NOTES.find( ({id}) => id === self.pitchTrack + '_' + self.level).name)
+
+                                //Get the next note from Constants
+                                self.currentNote = PITCHPERFECT_NOTES.find( ({id}) => id === self.pitchTrack + '_' + self.level).name;
+                                console.log('Next note is...' + self.currentNote)
                               }
                             });
                         }
-                    }, 750); //Test: Must hold longer than .75 seconds
+                    }, 1000); //Test: Must hold longer than 1 second? BUG: exercise end will trigger more than once accidentally.
                 }
             },
 
