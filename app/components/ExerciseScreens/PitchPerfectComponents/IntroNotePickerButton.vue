@@ -1,5 +1,5 @@
 <template>
-    <FlexboxLayout flexDirection="row" justifyContent="space-between" :style="style" @tap="onTap" >
+    <FlexboxLayout flexDirection="row" justifyContent="space-between" :style="style" :class="[selected ? selectedClass : '']" @tap="tap" >
         <Label :text="text" alignSelf="center" style="font-weight: bold; font-size: 20em" />
         <Label :text="'\uf028'" alignSelf="center" style="font-size: 20em;" class="fas" />
     </FlexboxLayout>
@@ -8,9 +8,12 @@
 <script>
 
     export default {
-        props: ['selected', 'text'],
-        components: {
-
+        props: ['text'],
+        components: {},
+        data() {
+          return {
+            selected: false
+          }
         },
         computed: {
             style() {
@@ -18,17 +21,30 @@
                     'background-color': '#C98DD8',
                     'padding': '15dp',
                     'min-width': '80dp',
-                    // 'height': '20dp',
                     'border-radius': '5dp',
-                    'box-shadow': '5px 5px 10px'
+                    'box-shadow': '5px 5px 10px',
                 }
+            },
+            selectedClass() {
+                return 'selectedButtonClass';
             }
         },
         methods: {
-          onTap: function() {
-            //TODO: Play the note indicated
+          tap: function() {
+            this.$emit('tap');
+            console.log('note picker button tapped')
+            this.selected = true;
+            //Play the note from asset file...
+            //var note = this.text;
+            
           }
         }
     }
 
 </script>
+
+<style scoped>
+  FlexboxLayout.selectedButtonClass {
+    border-color:red;
+  }
+</style>

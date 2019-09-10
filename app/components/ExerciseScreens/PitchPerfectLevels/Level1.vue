@@ -69,11 +69,11 @@
 <script>
     import {Config} from "@/utils/Config";
     import ActiveExercises from "@/components/ActiveExercises";
-    import Level2 from "@/components/ExerciseScreens/PitchPerfectLevels/Level2";
     import IntroNotePickerButton from "@/components/ExerciseScreens/PitchPerfectComponents/IntroNotePickerButton";
     import SpectraActionButton from "@/components/UIControls/SpectraActionButton";
     import { SpectraPitchPerfectPlugin } from 'nativescript-spectra-pitch-perfect-plugin';
     import {getFrequency} from '@/utils/Utils';
+    import {PITCHPERFECT_NOTES} from '@/utils/Constants';
 
     const dialogs = require("tns-core-modules/ui/dialogs");
     const Timer = require('timer-machine');

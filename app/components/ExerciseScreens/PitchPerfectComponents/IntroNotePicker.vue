@@ -20,9 +20,9 @@
         <StackLayout height="15dp"/>
 
         <FlexboxLayout flexDirection="row" justifyContent="space-around" >
-            <IntroNotePickerButton text="D" />
-            <IntroNotePickerButton text="F" />
-            <IntroNotePickerButton text="G" />
+            <IntroNotePickerButton text="D3" />
+            <IntroNotePickerButton text="F3" />
+            <IntroNotePickerButton text="G3" />
         </FlexboxLayout>
     </StackLayout>
 </template>
