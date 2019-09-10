@@ -9,12 +9,6 @@
 
     export default {
         props: ['text'],
-        components: {},
-        data() {
-          return {
-            selected: false
-          }
-        },
         computed: {
             style() {
                 return {
@@ -29,7 +23,6 @@
         methods: {
           tap: function() {
             this.$emit('tap');
-            this.selected ? this.selected = false : this.selected = true;
             //Play the note from asset file...
             //var note = this.text;
             
