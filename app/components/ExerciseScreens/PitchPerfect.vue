@@ -7,32 +7,13 @@
                 <Span text="This exercise will strengthen and balance the muscles of the voicebox." />
             </TextView>
 
-
-
-                <!--<StackLayout style="margin-top: 15dp; margin-left: 15dp; margin-right: 15dp; font-size: 15em; background-color: white;">
-                    <TextView :text="pitchPerfectReminder" style="background-color: transparent;" editable="false"/>
-                </StackLayout>
-
-                &lt;!&ndash;the timer&ndash;&gt;
-                <TextView horizontalAlignment="center" :text="timeCounterFormatted" editable="false" id="timer" />
-
-                &lt;!&ndash;the inner ring, absolutely positioned&ndash;&gt;
-                <FlexboxLayout :style="micIconBgStyle" justifyContent="center">
-                    <FlexboxLayout alignSelf="center" :style="micIconBgInlayStyle" justifyContent="center" >
-                        <Label :text="'\uf130'" :style="micIconStyle" alignSelf="center" class="fas" />
-                    </FlexboxLayout>
-                </FlexboxLayout>-->
-
-            <!--<MicRecorder />-->
-            <IntroNotePicker />
-
-
+            <IntroNotePicker @select-note="selectNote" @deselect-note="deselectNote" />
 
             <StackLayout style="flex-grow: 1"/>
 
             <FlexboxLayout justifyContent="space-between" flexDirection="row">
                 <SpectraActionButton type='warning' text="Back" @tap="onBack" />
-                <SpectraActionButton text="Let's go!" @tap="onLetsGo" />
+                <SpectraActionButton :isEnabled="this.selectedNote !== ''" text="Let's go!" @tap="onLetsGo" />
             </FlexboxLayout>
 
         </FlexboxLayout>
@@ -57,59 +38,19 @@
             },
             onLetsGo: function() {
                 // the note that the user selected above
-                this.$navigateTo(Level1, {props: {targetNote: 'D3'}});
+                this.$navigateTo(Level1, {props: {targetNote: this.selectedNote}});
             },
-            startExercise(){
-
+            selectNote(e) {
+                //Save the selected note
+                this.selectedNote = e;
             },
-
-            stopExercise(){
-
+            deselectNote() {
+                this.selectedNote = '';
             }
-        },
-        computed: {
-            /*exerciseAreaStyle() {
-                return {
-                    'background-color': Config.primaryColor,
-                    'border-radius': '5dp',
-                }
-            },
-            micIconBgStyle() {
-                return {
-                    'background-color': Config.mutedColor,
-                    'width': '150dp',
-                    'height': '150dp',
-                    'border-radius': '100%'
-
-                }
-            },
-            micIconBgInlayStyle() {
-                return {
-                    'background-color': 'rgba(255, 255, 255, 0.8)',
-                    'width': '60dp',
-                    'height': '60dp',
-                    'border-radius': '100%',
-                    position: 'absolute',
-                    left: '50%',
-                    right: '50%',
-                    'margin-left': '-30dp',
-                    'margin-right': '-30dp'
-
-
-                }
-            },
-            micIconStyle(){
-                return {
-                    'font-size': '35em',
-                }
-            }*/
         },
         data() {
             return {
-                /*pitchPerfectReminder: 'Start and end the exercise by touching the mic icon.',
-                timeCounter: 0,
-                // representing seconds as HH:mm:ss
-                timeCounterFormatted: new Date(0 * 1000).toISOString().substr(11, 8)*/
+                selectedNote: '',
             }
         }
     }
@@ -140,15 +81,5 @@
         background-color: transparent;
         border-color: #E8E8E8;
     }
-
-    /*#timer {
-        font-family: 'monospace';
-        font-size: 20em;
-        !*align-self: center;*!
-        color: #AC2535;
-        font-weight: bold;
-        background-color: transparent;
-
-    }*/
 
 </style>

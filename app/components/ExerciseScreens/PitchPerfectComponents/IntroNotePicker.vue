@@ -61,31 +61,35 @@
               this.lowSelected = true;
               this.medSelected = false;
               this.highSelected = false;
+
+              //emit to upper level component
+              this.$emit('select-note', 'D3');
             } else {
               this.lowSelected = false;
+              this.$emit('deselect-note');
             }
-
-            //emit something
           },
           onTapMed: function() {
             if ( !this.medSelected ) { //if low is not selected
               this.medSelected = true;
               this.lowSelected = false;
               this.highSelected = false;
+              this.$emit('select-note', 'F3');
             } else {
               this.medSelected = false;
-            }
-            
-            //emit something
+              this.$emit('deselect-note');              
+            }          
           },
           onTapHigh: function() {
             if ( !this.highSelected ) { //if low is not selected
               this.highSelected = true;
               this.medSelected = false;
               this.lowSelected = false;
+              this.$emit('select-note', 'G3');
             } else {
               this.highSelected = false;
-            }            //
+              this.$emit('deselect-note');
+            }
           }
         }
     }
@@ -94,7 +98,7 @@
 
 <style scoped>
   .selectedButtonClass {
-    border-color: red;
+    border-color: #72C8B2;
     border-width: 2dp;
   }
 </style>
