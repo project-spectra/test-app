@@ -213,32 +213,45 @@
                             this._continuousNoteMonitor = null;
                             this.exerciseStopwatch = new Timer();
 
-                            var self = this;
+                            var self = this; //So we can navigate from inside the dialog
                             var name = this.$store.state.name;
-                            //Show a dialog then navigate to the next level
-                            //TODO add logic to stop after level 5 and increment exercise tracker
-                            dialogs.confirm({
-                              title: timeHeld === 1 ? "Nice, " + timeHeld + " second!" : "Nice, " + timeHeld + " seconds!",
-                              message: "You did it, " + name + "! Take a few breaths before continuing.\n\nIf you're feeling strained, take a break.",
-                              cancelButtonText: "Stop this exercise",
-                              okButtonText: "Continue to the next level"
-                            }).then(function (result) {
+                            if (this.level < 5) { //User has more levels to go. Navigate to next level
 
-                              if (!result) { //Stop this exercise
-                                //Return user to main exercises screen
-                                _nativePluginInstance.stop();
-                                self.$navigateTo(ActiveExercises);
-                              } else { //Continue to next level
-                                //Increase level and note depending on pitch track
-                                self.level++;
-                                console.log('Moving up to level ' + self.level)
-                                console.log(PITCHPERFECT_NOTES.find( ({id}) => id === self.pitchTrack + '_' + self.level).name)
+                                dialogs.confirm({
+                                title: timeHeld === 1 ? "Nice, " + timeHeld + " second!" : "Nice, " + timeHeld + " seconds!",
+                                message: "You finished level " + self.level + ", " + name + "! Take a few breaths before continuing on.",
+                                cancelButtonText: "Stop this exercise",
+                                okButtonText: "Continue to the next level"
+                                }).then(function (result) {
 
-                                //Get the next note from Constants
-                                self.currentNote = PITCHPERFECT_NOTES.find( ({id}) => id === self.pitchTrack + '_' + self.level).name;
-                                console.log('Next note is...' + self.currentNote)
-                              }
-                            });
+                                if (!result) { //Stop this exercise
+                                    //Return user to main exercises screen
+                                    _nativePluginInstance.stop();
+                                    self.$navigateTo(ActiveExercises);
+                                } else { //Continue to next level
+                                    //Increase level and note depending on pitch track
+                                    self.level++;
+                                    console.log('Moving up to level ' + self.level)
+                                    console.log(PITCHPERFECT_NOTES.find( ({id}) => id === self.pitchTrack + '_' + self.level).name)
+
+                                    //Get the next note from Constants
+                                    self.currentNote = PITCHPERFECT_NOTES.find( ({id}) => id === self.pitchTrack + '_' + self.level).name;
+                                    console.log('Next note is...' + self.currentNote)
+                                }
+                                });
+
+                            } else { //User has reached the final level! Show dialog box to congratulate and increment exercise tracker
+                                this.$store.dispatch('setPitchPerfectCompletion',this.$store.state.pitchPerfectCompleted + 1);
+
+                                dialogs.alert({
+                                    title: timeHeld === 1 ? "Nice, " + timeHeld + " second!" : "Nice, " + timeHeld + " seconds!",
+                                    message: "You did it, " + name + "! If you're feeling strained, take a break before doing this or any other exercise.",
+                                    okButtonText: "Return to exercises screen",
+                                }).then(function() {
+                                    _nativePluginInstance.stop();
+                                    self.$navigateTo(ActiveExercises, {clearHistory: true});
+                                });
+                            }
                         }
                     }, 1000); //Test: Must hold longer than 1 second? BUG: exercise end will trigger more than once accidentally.
                 }

@@ -1,4 +1,4 @@
-# NativeScript-Vue Application
+# Project Spectra
 
 > A native application built with NativeScript-Vue, which records and plays back audio using the device's microphone.
 
