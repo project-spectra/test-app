@@ -30,8 +30,7 @@
 <script>
     import SpectraTextView from "@/components/UIControls/SpectraTextView";
     import SpectraActionButton from "@/components/UIControls/SpectraActionButton";
-
-    import VocalHealthWarnings from "@/components/OnboardingScreens/VocalHealthWarnings";
+    import Disclaimer from "@/components/OnboardingScreens/Disclaimer";
 
     export default {
         components: {
@@ -53,7 +52,7 @@
                 this.$store.dispatch("setName", this.name);
                 this.$store.dispatch("setFirstLoad", true);
                 //this.$store.commit("save", {name: this.name, firstLoad: true});
-                this.$navigateTo(VocalHealthWarnings);
+                this.$navigateTo(Disclaimer);
             }
         }
     }
