@@ -24,7 +24,7 @@
             <ExerciseProgressRow @tap="onBDSDTap" class="exercise-progress-row" text="Big Dog/Small Dog: Larynx Training" :percentage="pctBdsdCompleted" :progressText="bdsdCompleted + '/2'" />
 
             <Label style="font-style: italic" text="Any time" />
-            <ExerciseProgressRow percentage="0" class="exercise-progress-row" text="Conversational Practice: Talk to a bot" progressText="" />
+            <ExerciseProgressRow @tap="onConvoTap" percentage="0" class="exercise-progress-row" text="Conversational Practice: Talk to a bot" progressText="" />
 
             <StackLayout style="height: 10dp;"/>
 
@@ -47,6 +47,7 @@
     import PitchPerfect from "@/components/ExerciseScreens/PitchPerfect";
     import HoldThatNote from "@/components/ExerciseScreens/HoldThatNote";
     import Slides from "@/components/ExerciseScreens/Slides";
+    import Convo from "@/components/ExerciseScreens/Convo";
 
     import {Config} from "@/utils/Config";
 
@@ -104,6 +105,10 @@
 
             onBDSDTap: function() {
                 this.$navigateTo(BDSDInfo);
+            },
+
+            onConvoTap: function() {
+                this.$navigateTo(Convo);
             },
 
             onPitchPerfect: function(){

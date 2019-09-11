@@ -61,15 +61,16 @@
 
 <style scoped>
     Button.spectra-action-button-warning {
-        border-color: #F8AF51;
-    }
-
-    Button.spectra-action-button-warning:active {
         background-color: #F8AF51;
     }
 
+    Button.spectra-action-button-warning:active {
+        background-color: #F3D3A9;
+        border-color: #F8AF51;
+    }
+
     Button.spectra-action-button {
-        border-color: #A7C6BE;
+        background-color:  #72C8B2;
     }
 
     Button.settings-button-green {
@@ -77,10 +78,11 @@
     }
 
     Button.settings-button-orange {
-        background-color: #F7AF51;
+        background-color: #F3D3A9;
     }
 
     Button.spectra-action-button:active {
         background-color: #A7C6BE;
+        border-color: #72C8B2;
     }
 </style>

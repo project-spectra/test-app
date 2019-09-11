@@ -15,7 +15,7 @@
         computed: {
             style() {
                 return {
-                    'background-color': '#C98DD8',
+                    'background-color': '#B272C8',
                     'padding': '15dp',
                     'min-width': '80dp',
                     // 'height': '20dp',
