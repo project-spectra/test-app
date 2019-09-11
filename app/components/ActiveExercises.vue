@@ -107,9 +107,6 @@
             },
 
             onPitchPerfect: function(){
-                //TEST INCREMENTING
-                console.log('Incrementing pitch perfect completion');
-                this.$store.dispatch('setPitchPerfectCompletion',this.$store.state.pitchPerfectCompleted + 1);
                 this.$navigateTo(PitchPerfect);
             }
         }

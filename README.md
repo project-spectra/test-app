@@ -1,4 +1,4 @@
-# NativeScript-Vue Application
+# Project Spectra
 
 > Our goal is to work with trans people, clinical speech therapists, and trans voice experts to build a voice training app that doesn’t suck.
 

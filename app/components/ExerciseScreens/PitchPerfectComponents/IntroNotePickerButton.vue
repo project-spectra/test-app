@@ -1,5 +1,5 @@
 <template>
-    <FlexboxLayout flexDirection="row" justifyContent="space-between" :style="style" @tap="onTap" >
+    <FlexboxLayout flexDirection="row" justifyContent="space-between" :style="style" @tap="tap" >
         <Label :text="text" alignSelf="center" style="font-weight: bold; font-size: 20em" />
         <Label :text="'\uf028'" alignSelf="center" style="font-size: 20em;" class="fas" />
     </FlexboxLayout>
@@ -8,25 +8,24 @@
 <script>
 
     export default {
-        props: ['selected', 'text'],
-        components: {
-
-        },
+        props: ['text'],
         computed: {
             style() {
                 return {
                     'background-color': '#C98DD8',
                     'padding': '15dp',
                     'min-width': '80dp',
-                    // 'height': '20dp',
                     'border-radius': '5dp',
-                    'box-shadow': '5px 5px 10px'
+                    'box-shadow': '5px 5px 10px',
                 }
             }
         },
         methods: {
-          onTap: function() {
-            //TODO: Play the note indicated
+          tap: function() {
+            this.$emit('tap');
+            //Play the note from asset file...
+            //var note = this.text;
+            
           }
         }
     }

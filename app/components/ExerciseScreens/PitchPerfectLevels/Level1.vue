@@ -2,12 +2,12 @@
     <Page @loaded="onPageLoaded"
           actionBarHidden="true" class="page">
         <FlexboxLayout style="flex: 1;" flexDirection="column" id="container">
-            <TextView :text="'Pitch Perfect: Level 1'" editable="false" id="pitch-perfect-level-1-title"/>
+            <TextView :text="'Pitch Perfect: Level ' + level" editable="false" id="pitch-perfect-level-1-title"/>
 
 
             <FlexboxLayout flexWrap="wrap" justifyContent="center" flexDirection="row" id="holdNoteInfo" >
                 <TextView text="Hold the note " editable="false" id="holdNoteText"/>
-                <IntroNotePickerButton selected="false" :text="targetNote" />
+                <IntroNotePickerButton selected="false" :text="currentNote" />
                 <TextView text=" as long as you can." editable="false" id="holdNoteText"/>
 
             </FlexboxLayout>
@@ -68,12 +68,14 @@
 
 <script>
     import {Config} from "@/utils/Config";
+    import ActiveExercises from "@/components/ActiveExercises";
     import IntroNotePickerButton from "@/components/ExerciseScreens/PitchPerfectComponents/IntroNotePickerButton";
     import SpectraActionButton from "@/components/UIControls/SpectraActionButton";
     import { SpectraPitchPerfectPlugin } from 'nativescript-spectra-pitch-perfect-plugin';
     import {getFrequency} from '@/utils/Utils';
+    import {PITCHPERFECT_NOTES} from '@/utils/Constants';
 
-
+    const dialogs = require("tns-core-modules/ui/dialogs");
     const Timer = require('timer-machine');
 
     import * as permissions from 'nativescript-permissions';
@@ -94,21 +96,9 @@
             return {
                 screenHeightDIPs: platformModule.screen.mainScreen.heightDIPs,
                 pitchIndicatorContainerHeightDIPs: platformModule.screen.mainScreen.heightDIPs * 0.40,
-
-                targetPitchHz: getFrequency(this.targetNote),
-
-                /*arrowInterpolateFunction: interpolate({
-                    inputRange: [getFrequency(this.targetNote), getFrequency(this.targetNote) - 50],
-                    // target note should be on the 2nd bar, the bottommost bar should represent some lower frequency
-                    outputRange: [(1/3), 1],
-                    clamp: false,
-                }),*/
-
-                arrowInterpolateFunction: MathUtils.interpolateLinear(getFrequency(this.targetNote), getFrequency(this.targetNote) - 55,
-                    (1/3), 1),
-
+                currentNote: this.targetNote,
                 currentPitchHz: getFrequency(this.targetNote),
-
+                level: 1,
                 EXERCISE_STATE_ENUM : {
                     HOLDING_NOTE: 1,
                     NO_NOTE: 2,
@@ -137,6 +127,9 @@
                 // indicator shouldn't be higher than the container!
                 return `${ Math.min(   Math.max(-20, calculatedOffset)  ,  this.pitchIndicatorContainerHeightDIPs - 30)     }dp`
             },
+            arrowInterpolateFunction() {
+                return MathUtils.interpolateLinear(getFrequency(this.currentNote), getFrequency(this.currentNote) - 55, (1/3), 1)
+            },
             pitchPerfectLevel1Style() {
                 return {
                     'background-color': '#72C8B2',
@@ -157,9 +150,21 @@
                     'padding-top': '40dp',
                     'padding-bottom': '40dp'
                 }
+            },
+            pitchTrack() {
+                switch(this.targetNote) {
+                    case 'D3':
+                        return 'low'
+                    case 'F3':
+                        return 'med'
+                    case 'G3':
+                        return 'high'
+                }
+            },
+            targetPitchHz() {
+                return getFrequency(this.currentNote)
             }
         },
-
         methods: {
 
             onBack: function() {
@@ -200,17 +205,57 @@
                         if (!this.isPitchAcceptable()){
                             // stop the timer and reset the state
                             this.exerciseStopwatch.stop();
-                            console.log(this.exerciseStopwatch.time());
-                            alert('You held the note for ' + this.exerciseStopwatch.time() / 1000 + ' seconds.');
+                            var timeHeld = Math.round(this.exerciseStopwatch.time() / 1000,1);
+
+                            //Reset exercise data
                             this.exerciseState = this.EXERCISE_STATE_ENUM.NO_NOTE;
                             clearInterval(this._continuousNoteMonitor);
                             this._continuousNoteMonitor = null;
                             this.exerciseStopwatch = new Timer();
+
+                            var self = this; //So we can navigate from inside the dialog
+                            var name = this.$store.state.name;
+                            if (this.level < 5) { //User has more levels to go. Navigate to next level
+
+                                dialogs.confirm({
+                                title: timeHeld === 1 ? "Nice, " + timeHeld + " second!" : "Nice, " + timeHeld + " seconds!",
+                                message: "You finished level " + self.level + ", " + name + "! Take a few breaths before continuing on.",
+                                cancelButtonText: "Stop this exercise",
+                                okButtonText: "Continue to the next level"
+                                }).then(function (result) {
+
+                                if (!result) { //Stop this exercise
+                                    //Return user to main exercises screen
+                                    _nativePluginInstance.stop();
+                                    self.$navigateTo(ActiveExercises);
+                                } else { //Continue to next level
+                                    //Increase level and note depending on pitch track
+                                    self.level++;
+                                    console.log('Moving up to level ' + self.level)
+                                    console.log(PITCHPERFECT_NOTES.find( ({id}) => id === self.pitchTrack + '_' + self.level).name)
+
+                                    //Get the next note from Constants
+                                    self.currentNote = PITCHPERFECT_NOTES.find( ({id}) => id === self.pitchTrack + '_' + self.level).name;
+                                    console.log('Next note is...' + self.currentNote)
+                                }
+                                });
+
+                            } else { //User has reached the final level! Show dialog box to congratulate and increment exercise tracker
+                                this.$store.dispatch('setPitchPerfectCompletion',this.$store.state.pitchPerfectCompleted + 1);
+
+                                dialogs.alert({
+                                    title: timeHeld === 1 ? "Nice, " + timeHeld + " second!" : "Nice, " + timeHeld + " seconds!",
+                                    message: "You did it, " + name + "! If you're feeling strained, take a break before doing this or any other exercise.",
+                                    okButtonText: "Return to exercises screen",
+                                }).then(function() {
+                                    _nativePluginInstance.stop();
+                                    self.$navigateTo(ActiveExercises, {clearHistory: true});
+                                });
+                            }
                         }
-                    }, 500);
+                    }, 1000); //Test: Must hold longer than 1 second? BUG: exercise end will trigger more than once accidentally.
                 }
             },
-
 
             onPageLoaded: function(args) {
                 console.log('onPageLoadedHmm');
