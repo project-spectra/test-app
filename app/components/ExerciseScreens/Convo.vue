@@ -8,6 +8,8 @@
             <!--cat chat goes here !--> 
             <AbsoluteLayout height="200em" backgroundColor="lightgray" margin="20em">
 
+              <Image src="res://cat" left="200" top="-150" width="120em" stretch="aspectFit" />
+
             </AbsoluteLayout>
 
             <!--nav buttons--> 
