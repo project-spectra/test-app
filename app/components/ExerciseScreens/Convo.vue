@@ -31,6 +31,15 @@
 <script>
 
     import SpectraActionButton from "@/components/UIControls/SpectraActionButton";
+    import { alert } from 'tns-core-modules/ui/dialogs/dialogs';
+
+    //Initialize recorder
+    const fs = require('tns-core-modules/file-system');
+    const permissions = require('nativescript-permissions');
+    const audio = require('nativescript-audio');
+    const audioFolder = fs.knownFolders.temp();
+    const recordingPath = audioFolder.path + '/recording.mp3';
+    var recorder;
 
     export default {
       components: {SpectraActionButton},
@@ -41,11 +50,12 @@
                 ANSWERING_TEXT:
                     "Your voice is currently being recorded.\n\nWhen you're done responding to the question, tap 'Done!' and you will receive feedback on your voice.",
                 answering: false,
+                isRecording: false,
           }
       },
       computed: {
         question() {
-          //TODO: pick a random question from a list
+          //pick a random question from a list
           var questions = Array(
             "How is your day going?",
             "What are you looking\nforward to right now?",
@@ -63,9 +73,53 @@
           this.$navigateBack();
         },
         onStart: function() {
-          //Chat bubble appears with "I'm listening"
-          this.answering = true;
-          //Start recording
+          //If not answering yet
+          if (!this.answering) {
+            //Chat bubble appears with "I'm listening"
+            this.answering = true;
+            //Start the recording
+            recorder = new audio.TNSRecorder();
+
+            if (audio.TNSRecorder.CAN_RECORD()) {
+              var recorderOptions = {
+                filename: recordingPath,
+                infoCallback: function () {
+                  console.log('infoCallback');
+                },
+                errorCallback: function () {
+                  console.log('errorCallback');
+                  alert('Error recording.');
+                }
+              };
+              console.log('Recorder options: ' + recorderOptions);
+
+              recorder.start(recorderOptions).then(function(res) {
+                console.log("Recording has started to " + recordingPath);
+                this.isRecording = true;
+              }, function(err) {
+                this.isRecording = false;
+                console.log('ERROR: ' + err);
+              });
+            } else {
+              alert('Unfortunately, this exercise requires a microphone.');
+            }
+
+          } else { //If user is recording and taps "Done"
+            console.log("Done tapped");
+            //Stop recording
+            if (recorder != undefined) {
+              recorder.stop().then(function () {
+                this.isRecording = false;
+                console.log('Audio Recorded Successfully.');
+              }, function (err) {
+                console.log("Error");
+                this.isRecording = true;
+              });
+            }
+
+            //Navigate to new page, do analysis of recording, show visualization, delete recording
+
+          }
         }
       }
 
