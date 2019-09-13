@@ -38,12 +38,33 @@
 
                         <StackLayout style="min-width: 10dp"/>
                         <FlexboxLayout flexDirection="column" justifyContent="space-between"
-                                       :style="pitchIndicatorContainerStyle" backgroundColor="#72C8B2">
+                                       :style="pitchIndicatorContainerStyle">
+
+                            <!--<StackLayout class="hr-dark" style="height: 3dp;"/>
+                            <FlexboxLayout flexDirection="row" alignItems="center">
+                                <StackLayout class="hr-dark" style="background-color: darkgreen; box-shadow: 5px 5px 10px; height: 3dp;"></StackLayout>
+
+                                <FlexboxLayout flexDirection="row" flexGrow="1" :style="noteCircleLegendStyle">
+
+                                    <Label text="D#1" alignSelf="center" style="font-weight: bold; font-size: 15em" />
+
+                                </FlexboxLayout>
+                            </FlexboxLayout>
 
                             <StackLayout class="hr-dark" style="height: 3dp;"/>
-                            <StackLayout class="hr-dark" style="background-color: darkgreen; box-shadow: 5px 5px 10px; height: 3dp;"/>
-                            <StackLayout class="hr-dark" style="height: 3dp;"/>
-                            <StackLayout class="hr-dark" style="height: 3dp;"/>
+                            <StackLayout class="hr-dark" style="height: 3dp;"/>-->
+
+                            <PitchPerfectIndicatorRow :note="this.rungs[0]"
+                                                      :showNote="!hasAccidental(this.rungs[0])" color="black"/>
+                            <PitchPerfectIndicatorRow :note="this.rungs[1]"
+                                                      :showNote="!hasAccidental(this.rungs[1])" :color="this.isPitchAcceptable() ? 'green' : 'red'"/>
+                            <PitchPerfectIndicatorRow :note="this.rungs[2]"
+                                                      :showNote="!hasAccidental(this.rungs[2])" color="black"/>
+                            <PitchPerfectIndicatorRow :note="this.rungs[3]"
+                                                      :showNote="!hasAccidental(this.rungs[3])" color="black"/>
+
+
+
                         </FlexboxLayout>
 
                         <StackLayout style="min-width: 15dp"/>
@@ -71,6 +92,7 @@
     import ActiveExercises from "@/components/ActiveExercises";
     import IntroNotePickerButton from "@/components/ExerciseScreens/PitchPerfectComponents/IntroNotePickerButton";
     import SpectraActionButton from "@/components/UIControls/SpectraActionButton";
+    import PitchPerfectIndicatorRow from "@/components/ExerciseScreens/PitchPerfectComponents/PitchPerfectIndicatorRow";
     import { SpectraPitchPerfectPlugin } from 'nativescript-spectra-pitch-perfect-plugin';
     import {getFrequency} from '@/utils/Utils';
     import {PITCHPERFECT_NOTES} from '@/utils/Constants';
@@ -85,20 +107,38 @@
 
     // import * as THREE from 'three';
     import {MathUtils} from "@/utils/Utils";
-
+    import { transpose, Interval, hasAccidental } from 'music-fns';
+    import {PITCH_PERFECT_RUNG_HEIGHT_DP} from "@/utils/Constants";
 
     let _nativePluginInstance = new SpectraPitchPerfectPlugin();
 
     export default {
         props: ['targetNote'],
-        components: {IntroNotePickerButton, SpectraActionButton},
+        components: {PitchPerfectIndicatorRow, IntroNotePickerButton, SpectraActionButton},
         data() {
+            let targetPitchHz = getFrequency(this.targetNote);
+
+            let whoteNoteBelowTargetPitchHz = getFrequency(transpose(this.targetNote, -Interval.TONE));
+
             return {
+                hasAccidental,
                 screenHeightDIPs: platformModule.screen.mainScreen.heightDIPs,
                 pitchIndicatorContainerHeightDIPs: platformModule.screen.mainScreen.heightDIPs * 0.40,
                 currentNote: this.targetNote,
-                currentPitchHz: getFrequency(this.targetNote),
-                level: 1,
+                targetPitchHz: targetPitchHz,
+
+                /*arrowInterpolateFunction: interpolate({
+                    inputRange: [getFrequency(this.targetNote), getFrequency(this.targetNote) - 50],
+                    // target note should be on the 2nd bar, the bottommost bar should represent some lower frequency
+                    outputRange: [(1/3), 1],
+                    clamp: false,
+                }),*/
+
+                /*arrowInterpolateFunction: MathUtils.interpolateLinear(getFrequency(this.targetNote), getFrequency(this.targetNote) - 55,
+                    (1/3), 1),*/
+
+                currentPitchHz: getFrequency(this.targetNote), // is assigned to
+
                 EXERCISE_STATE_ENUM : {
                     HOLDING_NOTE: 1,
                     NO_NOTE: 2,
@@ -106,7 +146,9 @@
 
                 exerciseState: 2,
 
-                exerciseStopwatch: new Timer()
+                exerciseStopwatch: new Timer(),
+
+                level: 1
             }
         },
 
@@ -119,16 +161,25 @@
                     'color': this.isPitchAcceptable() ? 'darkgreen' : '#bc3141'
                 }
             },
+            // this.currentNote || this.targetNote is used because currentNote is set in the data and isn't accessible upon first navigation
+            rungs() { // each rung on the metaphorical pitch ladder - Transfusion
+                return [transpose(this.currentNote || this.targetNote, Interval.SEMITONE),
+                    this.currentNote || this.targetNote,
+                    transpose(this.currentNote || this.targetNote, -Interval.SEMITONE),
+                    transpose(this.currentNote || this.targetNote, -Interval.TONE)];
+            },
+            // the bottom line should always be two semitones below the green line
+            arrowInterpolateFunction() {
+                return MathUtils.interpolateLinear(getFrequency(this.currentNote), getFrequency(this.currentNote) - 55, (1/3), 1)
+            },
             arrowOffset() {
                 // console.log(this.arrowInterpolateFunction(this.currentPitchHz));
-                let calculatedOffset = (this.pitchIndicatorContainerHeightDIPs - 40 - 40) *
-                    this.arrowInterpolateFunction(this.currentPitchHz) - 25 + 40;
+                // minus padding-top minus padding-bottom - half of the row height twice (one for the top rung and another for the bottom)
+                let calculatedOffset = (this.pitchIndicatorContainerHeightDIPs - 40 - 40 - (PITCH_PERFECT_RUNG_HEIGHT_DP / 2) - (PITCH_PERFECT_RUNG_HEIGHT_DP / 2)) *
+                    this.arrowInterpolateFunction(this.currentPitchHz) - 25 + 40 + (PITCH_PERFECT_RUNG_HEIGHT_DP / 2);
 
                 // indicator shouldn't be higher than the container!
                 return `${ Math.min(   Math.max(-20, calculatedOffset)  ,  this.pitchIndicatorContainerHeightDIPs - 30)     }dp`
-            },
-            arrowInterpolateFunction() {
-                return MathUtils.interpolateLinear(getFrequency(this.currentNote), getFrequency(this.currentNote) - 55, (1/3), 1)
             },
             pitchPerfectLevel1Style() {
                 return {
@@ -151,19 +202,17 @@
                     'padding-bottom': '40dp'
                 }
             },
+
             pitchTrack() {
                 switch(this.targetNote) {
                     case 'D3':
-                        return 'low'
+                        return 'low';
                     case 'F3':
-                        return 'med'
+                        return 'med';
                     case 'G3':
-                        return 'high'
+                        return 'high';
                 }
             },
-            targetPitchHz() {
-                return getFrequency(this.currentNote)
-            }
         },
         methods: {
 
@@ -218,26 +267,26 @@
                             if (this.level < 5) { //User has more levels to go. Navigate to next level
 
                                 dialogs.confirm({
-                                title: timeHeld === 1 ? "Nice, " + timeHeld + " second!" : "Nice, " + timeHeld + " seconds!",
-                                message: "You finished level " + self.level + ", " + name + "! Take a few breaths before continuing on.",
-                                cancelButtonText: "Stop this exercise",
-                                okButtonText: "Continue to the next level"
+                                    title: timeHeld === 1 ? "Nice, " + timeHeld + " second!" : "Nice, " + timeHeld + " seconds!",
+                                    message: "You finished level " + self.level + ", " + name + "! Take a few breaths before continuing on.",
+                                    cancelButtonText: "Stop this exercise",
+                                    okButtonText: "Continue to the next level"
                                 }).then(function (result) {
 
-                                if (!result) { //Stop this exercise
-                                    //Return user to main exercises screen
-                                    _nativePluginInstance.stop();
-                                    self.$navigateTo(ActiveExercises);
-                                } else { //Continue to next level
-                                    //Increase level and note depending on pitch track
-                                    self.level++;
-                                    console.log('Moving up to level ' + self.level)
-                                    console.log(PITCHPERFECT_NOTES.find( ({id}) => id === self.pitchTrack + '_' + self.level).name)
+                                    if (!result) { //Stop this exercise
+                                        //Return user to main exercises screen
+                                        _nativePluginInstance.stop();
+                                        self.$navigateTo(ActiveExercises);
+                                    } else { //Continue to next level
+                                        //Increase level and note depending on pitch track
+                                        self.level++;
+                                        console.log('Moving up to level ' + self.level)
+                                        console.log(PITCHPERFECT_NOTES.find( ({id}) => id === self.pitchTrack + '_' + self.level).name)
 
-                                    //Get the next note from Constants
-                                    self.currentNote = PITCHPERFECT_NOTES.find( ({id}) => id === self.pitchTrack + '_' + self.level).name;
-                                    console.log('Next note is...' + self.currentNote)
-                                }
+                                        //Get the next note from Constants
+                                        self.currentNote = PITCHPERFECT_NOTES.find( ({id}) => id === self.pitchTrack + '_' + self.level).name;
+                                        console.log('Next note is...' + self.currentNote)
+                                    }
                                 });
 
                             } else { //User has reached the final level! Show dialog box to congratulate and increment exercise tracker
