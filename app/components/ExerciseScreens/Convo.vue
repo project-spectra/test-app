@@ -3,24 +3,26 @@
       <FlexboxLayout style="flex: 1;" flexDirection="column" id="container">
             <TextView text="Conversation Practice" editable="false" id="title"/>
 
-            <TextView editable="false" :text="INFO_TEXT" id="desc" />
+            <TextView editable="false" :text="answering ? ANSWERING_TEXT : INFO_TEXT" height="150em" id="desc" />
 
             <!--cat chat goes here !--> 
-            <AbsoluteLayout height="200em" backgroundColor="lightgray" margin="20em">
+            <AbsoluteLayout height="200em" backgroundColor="lightgray" margin="10em">
 
               <Image src="res://cat" left="200em" top="0" width="120em" stretch="aspectFit" />
 
               <TextView left="0" top="30dp" id="chat-bubble" editable="false" :text="question" />
 
-              <Textview left="70" top="100dp" id="chat-bubble" editable="false" text="I'm listening!" v-if="this.answering" />
+              <Textview left="70" top="100dp" id="chat-bubble" editable="false" text="I'm listening!" v-if="answering" />
 
             </AbsoluteLayout>
+
+            <StackLayout flexGrow="1" />
 
             <!--nav buttons--> 
             <FlexboxLayout justifyContent="space-between" flexDirection="row">
                 <SpectraActionButton type='warning' text="Back" @tap="onBack" />
 
-                <SpectraActionButton text="Answer" @tap="onStart" />
+                <SpectraActionButton :text="answering ? 'Done' : 'Answer'" @tap="onStart" />
             </FlexboxLayout>
         </FlexboxLayout>
     </Page>
@@ -36,6 +38,8 @@
           return {
                 INFO_TEXT:
                     "Let's put the skills you've learned into practice, and get a sense of where your voice is at. Respond to the question freely, as though you were talking to someone next to you. When you're ready, tap 'Answer'!",
+                ANSWERING_TEXT:
+                    "Your voice is currently being recorded.\n\nWhen you're done responding to the question, tap 'Done!' and you will receive feedback on your voice.",
                 answering: false,
           }
       },

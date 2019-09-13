@@ -21,8 +21,9 @@
                 return {
                     // '--color': this.color,
                     // 'border-color': '#A7C6BE',
-                    'border-width': '2dp',
-                    'border-radius': '2dp',
+                    'border-width': '1dp',
+                    'border-radius': '4dp',
+                    'border-color': '#E8E8E8',
                     // 'background-color': 'transparent',
                     'font-size': '20em',
                     'font-weight': 'bold',
@@ -78,7 +79,7 @@
     }
 
     Button.settings-button-orange {
-        background-color: #F3D3A9;
+        background-color: #F8AF51;
     }
 
     Button.spectra-action-button:active {
