@@ -182,7 +182,9 @@
                 console.log('grid clipChildren: ' + sliderContainer.android.getClipChildren()); */
             },
             onOK: function(){
-                this.$store.commit("save", {...this.$store.state, specificPitchGoal: this.currentPitchHz, firstLoad: false});
+                this.$store.dispatch('setSpecificPitchGoal',this.currentPitchHz);
+                this.$store.dispatch('setFirstLoad',false);
+                //this.$store.commit("save", {...this.$store.state, specificPitchGoal: this.currentPitchHz, firstLoad: false});
                 this.$navigateTo(App, {clearHistory: true});
             },
 

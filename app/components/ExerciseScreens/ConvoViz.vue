@@ -3,7 +3,7 @@
       <FlexboxLayout style="flex: 1;" flexDirection="column" id="container">
             <TextView text="Done!" editable="false" id="title"/>
 
-            <TextView editable="false" :text="INFO_TEXT" id="desc" />
+            <TextView editable="false" :text="goalNote" id="desc" />
 
             <!--animation goes here !--> 
             <AbsoluteLayout height="400em" backgroundColor="lightgray" margin="20em">
@@ -22,6 +22,7 @@
     import SpectraActionButton from "@/components/UIControls/SpectraActionButton";
     import IntroNotePickerButton from "../ExerciseScreens/PitchPerfectComponents/IntroNotePickerButton";
     import ActiveExercises from "../ActiveExercises";
+    import {noteFromPitch} from '@/utils/Utils';
 
     export default {
         props: ['recPath'],
@@ -32,9 +33,14 @@
           return {
                 INFO_TEXT:
                     "Recording is located at: " + this.recPath,
+                specificPitchGoal: this.$store.state.hz,
           }
         },
-        mounted() {
+        computed: {
+          goalNote: function() {
+            return noteFromPitch(this.specificPitchGoal);
+          }
+          //Need to calculate pitch range and average
         },
         methods: {
           onReturn: function() {
