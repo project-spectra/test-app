@@ -32,6 +32,7 @@
 
     import SpectraActionButton from "@/components/UIControls/SpectraActionButton";
     import { alert } from 'tns-core-modules/ui/dialogs/dialogs';
+    import ConvoViz from '@/components/ExerciseScreens/ConvoViz';
 
     //Initialize recorder
     const fs = require('tns-core-modules/file-system');
@@ -91,7 +92,6 @@
                   alert('Error recording.');
                 }
               };
-              console.log('Recorder options: ' + recorderOptions);
 
               recorder.start(recorderOptions).then(function(res) {
                 console.log("Recording has started to " + recordingPath);
@@ -118,7 +118,9 @@
             }
 
             //Navigate to new page, do analysis of recording, show visualization, delete recording
-
+            var exists = fs.File.exists(recordingPath);
+            console.log("File exists: " + exists + " in " + fs.path.normalize(recordingPath))
+            this.$navigateTo(ConvoViz, {props: {recPath: recordingPath, clearHistory: true}});
           }
         }
       }
