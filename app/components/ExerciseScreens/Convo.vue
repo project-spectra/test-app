@@ -39,8 +39,8 @@
     const fs = require('tns-core-modules/file-system');
     const permissions = require('nativescript-permissions');
     const audio = require('nativescript-audio');
-    const audioFolder = fs.knownFolders.temp();
-    const recordingPath = audioFolder.path + '/recording.mp3';
+    const audioFolder = fs.knownFolders.currentApp();
+    const recordingPath = audioFolder.path + '/recording.wav';
     let recorder;
 
     export default {
@@ -85,6 +85,7 @@
                     if (audio.TNSRecorder.CAN_RECORD()) {
                         let recorderOptions = {
                             filename: recordingPath,
+                            //sampleRate: 44100,
                             infoCallback: function (args) {
                                 console.log('infoCb', JSON.stringify(args));
                             },
@@ -113,6 +114,12 @@
                             this.isRecording = false;
                             this.answering = false;
                             console.log('Audio Recorded Successfully.');
+
+                            //Navigate to new page, do analysis of recording, show visualization, delete recording
+                            let exists = fs.File.exists(recordingPath);
+                            console.log("File exists: " + exists + " in " + fs.path.normalize(recordingPath));
+                            this.$navigateTo(ConvoViz, {props: {recPath: recordingPath, clearHistory: true}});
+
                         }).catch((err) => {
                             console.log(err);
                             console.log('--');
@@ -121,11 +128,6 @@
                             this.answering = false;
                         });
                     }
-
-                    //Navigate to new page, do analysis of recording, show visualization, delete recording
-                    let exists = fs.File.exists(recordingPath);
-                    console.log("File exists: " + exists + " in " + fs.path.normalize(recordingPath));
-                    this.$navigateTo(ConvoViz, {props: {recPath: recordingPath, clearHistory: true}});
                 }
             }
         }
