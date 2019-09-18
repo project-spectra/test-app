@@ -30,10 +30,10 @@
     import ActiveExercises from "../ActiveExercises";
     import {noteFromPitch} from '@/utils/Utils';
 
-    const FileAPI = require('file-api');
-    const FileReader = FileAPI.FileReader;
+    const fs = require("tns-core-modules/file-system");
 
-    //pitchfinder constants
+    require("nativescript-nodeify"); //Trying this, in case the issue is with Node.js package compatibility
+    //pitchfinder
     const WavDecoder = require("wav-decoder");
     const Pitchfinder = require("pitchfinder");
 
@@ -51,19 +51,21 @@
           }
         },
         mounted() {
-          //Load recording file as in https://www.npmjs.com/package/filereader
-          var reader = new FileReader();
+          //Load recording file
+          const recFile = fs.File.fromPath(this.recPath);
+          var source = recFile.readSync((err) => {
+            console.log(err);
+          });
+          var buffer = Uint8Array.from(source).buffer;
+          console.log(buffer);
 
-          reader.readAsArrayBuffer(new File(this.recPath));
+          //show a loading animation?
 
-          //listen for callback and pass data into 'buffer' variable below
+          const decoded = WavDecoder.decode.sync(buffer); //crashes here "Invalid WAV file" line 25 https://github.com/mohayonao/wav-decoder/blob/master/index.js
+          const float32Array = decoded.channelData[0];
 
           //Do pitch analysis as in https://github.com/peterkhayes/pitchfinder
           const detectPitch = new Pitchfinder.YIN();
-
-          const decoded = WavDecoder.decode.sync(buffer); //crash here
-          const float32Array = decoded.channelData[0];
-
           this.calculatedPitch = detectPitch(float32Array);
 
           console.log('Calculated pitch is ' + pitch);
@@ -90,7 +92,7 @@
           onReturn: function() {
             //Nav back to ActiveExercises
             this.$navigateTo(ActiveExercises);
-        }
+          }
       }
     }
 </script>
