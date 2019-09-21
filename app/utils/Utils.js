@@ -40,3 +40,7 @@ export const MathUtils = {
         }
     }
 };
+
+export function truncateDecimal(val, places) {
+    return +((val).toFixed(places));
+}
