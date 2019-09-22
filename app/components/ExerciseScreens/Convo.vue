@@ -32,6 +32,7 @@
 <script>
 
     import SpectraActionButton from "@/components/UIControls/SpectraActionButton";
+    import { SpectraAudioRecorderPlugin } from 'nativescript-spectra-audio-recorder-plugin';
     import {alert} from 'tns-core-modules/ui/dialogs/dialogs';
     import ConvoViz from '@/components/ExerciseScreens/ConvoViz';
 
@@ -42,6 +43,8 @@
     const audioFolder = fs.knownFolders.currentApp();
     const recordingPath = audioFolder.path + '/recording.wav';
     let recorder;
+
+    let _nativePluginInstance = new SpectraAudioRecorderPlugin();
 
     export default {
         components: {SpectraActionButton},
@@ -54,6 +57,9 @@
                 answering: false,
                 isRecording: false,
             }
+        },
+        mounted() {
+            alert(_nativePluginInstance.HelloWorld());
         },
         computed: {
             question() {
