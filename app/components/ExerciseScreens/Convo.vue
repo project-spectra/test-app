@@ -40,8 +40,14 @@
     const fs = require('tns-core-modules/file-system');
     const permissions = require('nativescript-permissions');
     const audio = require('nativescript-audio');
-    const audioFolder = fs.knownFolders.currentApp();
-    const recordingPath = audioFolder.path + '/recording.wav';
+    const audioFolder = fs.knownFolders.currentApp(); //inaccessible to user
+
+    const directory = android.os.Environment.getExternalStorageDirectory().getAbsolutePath().toString();
+    const testFormat = 2;
+    const testEncoder = 3;
+    
+    //path to recording
+    const recordingPath = fs.path.normalize(directory + "/recording" + testFormat + ".mp4");
     let recorder;
 
     let _nativePluginInstance = new SpectraAudioRecorderPlugin();
@@ -83,6 +89,9 @@
             onStart: function () {
                 //If not answering yet
                 if (!this.answering) {
+
+                    permissions.requestPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, "Write a test file");
+
                     //Chat bubble appears with "I'm listening"
                     this.answering = true;
                     //Start the recording
@@ -91,7 +100,9 @@
                     if (audio.TNSRecorder.CAN_RECORD()) {
                         let recorderOptions = {
                             filename: recordingPath,
-                            //sampleRate: 44100,
+                            format: testFormat,
+                            encoder: testEncoder,
+                            sampleRate: 44100,
                             infoCallback: function (args) {
                                 console.log('infoCb', JSON.stringify(args));
                             },
