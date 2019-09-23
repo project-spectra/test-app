@@ -23,7 +23,7 @@
             <FlexboxLayout justifyContent="space-between" flexDirection="row">
                 <SpectraActionButton type='warning' text="Back" @tap="onBack"/>
 
-                <SpectraActionButton :text="answering ? 'Done' : 'Answer'" @tap="onStart"/>
+                <SpectraActionButton :text="answering ? 'Done' : 'Answer'" @tap="onStartPluginTest"/>
             </FlexboxLayout>
         </FlexboxLayout>
     </Page>
@@ -40,8 +40,10 @@
     const fs = require('tns-core-modules/file-system');
     const permissions = require('nativescript-permissions');
     const audio = require('nativescript-audio');
-    const audioFolder = fs.knownFolders.currentApp();
-    const recordingPath = audioFolder.path + '/recording.wav';
+    //const recordingPath = fs.knownFolders.currentApp();
+
+    const recordingPath = android.os.Environment.getExternalStorageDirectory().getAbsolutePath().toString();
+
     let recorder;
 
     let _nativePluginInstance = new SpectraAudioRecorderPlugin();
@@ -79,6 +81,22 @@
         methods: {
             onBack: function () {
                 this.$navigateBack();
+            },
+            onStartPluginTest: function() {
+              if (!this.answering) {
+
+                //Write to accessible directory to test the audio file outputs
+                permissions.requestPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, "Write a test file");
+
+                this.answering = true;
+                
+                _nativePluginInstance.launchTask(recordingPath);
+                this.isRecording = true;
+              } else {
+                this.answering = false;
+
+                _nativePluginInstance.stopTask();
+              }
             },
             onStart: function () {
                 //If not answering yet
