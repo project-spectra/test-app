@@ -42,12 +42,12 @@
     const audio = require('nativescript-audio');
     const audioFolder = fs.knownFolders.currentApp(); //inaccessible to user
 
-    const recordingPath = android.os.Environment.getExternalStorageDirectory().getAbsolutePath().toString();
+    const directory = android.os.Environment.getExternalStorageDirectory().getAbsolutePath().toString();
     const testFormat = 2;
     const testEncoder = 3;
     
     //path to recording
-    //const recordingPath = fs.path.normalize(directory + "/recording" + testFormat + ".mp4");
+    const recordingPath = fs.path.normalize(directory + "/recording.wav");
     let recorder;
 
     let _nativePluginInstance = new SpectraAudioRecorderPlugin();
