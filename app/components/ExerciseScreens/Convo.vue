@@ -40,11 +40,9 @@
     const fs = require('tns-core-modules/file-system');
     const permissions = require('nativescript-permissions');
     const audio = require('nativescript-audio');
-    const audioFolder = fs.knownFolders.currentApp(); //inaccessible to user
+    //const recordingPath = fs.knownFolders.currentApp().path; //inaccessible to user
 
     const recordingPath = android.os.Environment.getExternalStorageDirectory().getAbsolutePath().toString();
-    const testFormat = 2;
-    const testEncoder = 3;
     
     //path to recording
     //const recordingPath = fs.path.normalize(directory + "/recording.wav");
