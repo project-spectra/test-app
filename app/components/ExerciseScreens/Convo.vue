@@ -40,12 +40,12 @@
     const fs = require('tns-core-modules/file-system');
     const permissions = require('nativescript-permissions');
     const audio = require('nativescript-audio');
-    //const recordingPath = fs.knownFolders.currentApp().path; //inaccessible to user
+    const directory = fs.knownFolders.documents().path; //inaccessible to user
 
-    const recordingPath = android.os.Environment.getExternalStorageDirectory().getAbsolutePath().toString();
+    //const recordingPath = android.os.Environment.getExternalStorageDirectory().getAbsolutePath().toString();
     
     //path to recording
-    //const recordingPath = fs.path.normalize(directory + "/recording.wav");
+    const recordingPath = fs.path.normalize(directory + "/recording.wav");
     let recorder;
 
     let _nativePluginInstance = new SpectraAudioRecorderPlugin();
@@ -63,7 +63,7 @@
             }
         },
         mounted() {
-            alert(_nativePluginInstance.HelloWorld());
+            //alert(_nativePluginInstance.HelloWorld());
         },
         computed: {
             question() {
@@ -87,21 +87,36 @@
             onPageLoaded: function(args) {
 
             //Write to accessible directory to test the audio file outputs
-            permissions.requestPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, "Write a test file");
-            
-            permissions.requestPermission(android.Manifest.permission.RECORD_AUDIO, "Record audio");
+            //permissions.requestPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, "Write a test file");
 
             },
             onStartPluginTest: function() {
               if (!this.answering) {
                 this.answering = true;
+
+                permissions.requestPermission(android.Manifest.permission.RECORD_AUDIO, "Record audio").then(() => {
+
+                    _nativePluginInstance.launchTask(recordingPath);
+                    this.isRecording = true;
+
+                }).catch(() => {
+                    console.log("Uh oh, no permissions - plan B time!");
+                    alert('Unfortunately, we need to use your microphone for you to do this exercise.');
+
+                    this.answering = false;
+                })
                 
-                _nativePluginInstance.launchTask(recordingPath);
-                this.isRecording = true;
               } else {
                 this.answering = false;
 
                 _nativePluginInstance.stopTask();
+
+                console.log("Audio recorded successfully!");
+
+                let exists = fs.File.exists(recordingPath);
+                console.log("File exists: " + exists + " in " + fs.path.normalize(recordingPath));
+
+                this.$navigateTo(ConvoViz, {props: {recPath: recordingPath, clearHistory: true}});
               }
             },
             onStart: function () {

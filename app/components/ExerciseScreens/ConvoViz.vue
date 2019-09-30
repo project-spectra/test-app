@@ -183,41 +183,43 @@
         mounted() {
             // return;
 
-            /*//Load recording file
+            //Load recording file
             const recFile = fs.File.fromPath(this.recPath);
             var source = recFile.readSync((err) => {
                 console.log(err);
             });
             var buffer = Uint8Array.from(source).buffer;
-            console.log(buffer);
 
             //show a loading animation?
 
-            const decoded = WavDecoder.decode.sync(buffer); //crashes here "Invalid WAV file" line 25 https://github.com/mohayonao/wav-decoder/blob/master/index.js
+            const decoded = WavDecoder.decode.sync(buffer);
             const float32Array = decoded.channelData[0];
 
             //Do pitch analysis as in https://github.com/peterkhayes/pitchfinder
-            const detectPitch = new Pitchfinder.YIN();
-            this.calculatedPitch = detectPitch(float32Array);
-
-            console.log('Calculated pitch is ' + pitch);*/
-
-            //const detectors = [detectPitch, Pitchfinder.AMDF()];
-            //const frequencies = Pitchfinder.frequencies(detectors, float32Array, {
+            const detectors = [Pitchfinder.AMDF({
+                minFrequency: 50,
+                maxFrequency: 300,
+                //sensitivity: ,
+                //ratio: ,
+            }), Pitchfinder.YIN({
+                probabilityThreshold: 0.5
+            })];
+            const frequencies = Pitchfinder.frequencies(detectors, float32Array, {
             //May need to play with these options to optimize for speech?
-            //tempo: 120, //default BPM
-            //quantization: 4, //default samples per beat
-            //});
+                tempo: 120, //default BPM
+                quantization: 4, //default samples per beat
+            });
 
             // set the state to dismiss the loading indicator
             setTimeout(() => {
+                console.log('Calculated pitch is ' + this.calculatedPitch);
                 this.pitchStats = {
                     max: 170,
                     min: 120,
                     avg: (170 + 120) / 2,
                     median: 140
                 }
-            }, 1000);
+            }, 10000);
         },
         computed: {
             vizAreaHeight: () => platformModule.screen.mainScreen.heightDIPs * 0.55,
