@@ -1,5 +1,5 @@
 <template>
-    <Page actionBarHidden="true" class="page">
+    <Page actionBarHidden="true" class="page" @loaded="onPageLoaded">
         <FlexboxLayout style="flex: 1;" flexDirection="column" id="container">
             <TextView text="Conversation Practice" editable="false" id="title"/>
 
@@ -84,12 +84,16 @@
             onBack: function () {
                 this.$navigateBack();
             },
+            onPageLoaded: function(args) {
+
+            //Write to accessible directory to test the audio file outputs
+            permissions.requestPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, "Write a test file");
+            
+            permissions.requestPermission(android.Manifest.permission.RECORD_AUDIO, "Record audio");
+
+            },
             onStartPluginTest: function() {
               if (!this.answering) {
-
-                //Write to accessible directory to test the audio file outputs
-                permissions.requestPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, "Write a test file");
-
                 this.answering = true;
                 
                 _nativePluginInstance.launchTask(recordingPath);
