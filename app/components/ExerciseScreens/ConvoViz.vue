@@ -18,12 +18,15 @@
 
             <TextView editable="false" style="background-color: transparent;">
                 <Span text="Your average pitch was "/>
-                <Span :text="truncateDecimal(pitchStats.avg, 2) + ' Hz '" style="font-style: italic; font-weight: bold;"/>
+                <Span :text="truncateDecimal(pitchStats.avg, 2) + ' Hz '"
+                      style="font-style: italic; font-weight: bold;"/>
                 <Span text="and your range was "/>
-                <Span :text="`${pitchStats.min}-${pitchStats.max} Hz.`" style="font-style: italic; font-weight: bold;"/>
+                <Span :text="`${truncateDecimal(pitchStats.min, 2)}-${truncateDecimal(pitchStats.max, 2)} Hz.`" style="font-style: italic; font-weight: bold;"/>
 
                 <Span v-if="specificPitchGoal" text=" You were "/>
-                <Span v-if="specificPitchGoal" :text="truncateDecimal(specificPitchGoal - pitchStats.median, 2) + ' Hz '" style="font-style: italic; font-weight: bold;"/>
+                <Span v-if="specificPitchGoal"
+                      :text="truncateDecimal(specificPitchGoal - pitchStats.median, 2) + ' Hz '"
+                      style="font-style: italic; font-weight: bold;"/>
                 <Span v-if="specificPitchGoal" text="away from your goal. "/>
 
             </TextView>
@@ -55,7 +58,8 @@
                              width="vizAreaWidth"
                              class="hr-dark" style="height: 1dp;"/>
 
-                <TextView v-for="index in noRungs" v-bind:key="index.id" :text="`${calculateRungNote(index)} ~${calculateRungHz(index)}Hz`"
+                <TextView v-for="index in noRungs" v-bind:key="index.id"
+                          :text="`${calculateRungNote(index)} ~${calculateRungHz(index)}Hz`"
                           :left="vizAreaWidth - 120" editable="false" fontAttributes="Italic"
                           style="width: 130dp;"
                           :top="0 + (index - 1)*((vizAreaHeight - 5 - firstRungOffsetFromTop) / (noRungs - 1))"
@@ -66,7 +70,7 @@
                                :left="(vizAreaWidth / 2)"
                                flexDirection="column" backgroundColor="white" width="50">
                     <StackLayout :style="a" backgroundColor="white"/>
-                    <StackLayout :style="b"  backgroundColor="red"/>
+                    <StackLayout :style="b" backgroundColor="red"/>
                     <StackLayout :style="c" backgroundColor="white"/>
                 </FlexboxLayout>
                 <!--<StackLayout class="hr-dark" style="height: 1dp;"/>
@@ -107,7 +111,8 @@
                           :left="(vizAreaWidth / 2) - 15 - indicatorBoxWidth"/>
 
 
-                <TextView editable="false" class="legend" :text="legendText" top="10" width="160" :left="vizAreaWidth - 160 - 10"/>
+                <TextView editable="false" class="legend" :text="legendText" top="10" width="160"
+                          :left="vizAreaWidth - 160 - 10"/>
 
                 <StackLayout height="2dp" :width="50 + 15" backgroundColor="purple"
                              :top="getAbsoluteOffsetFromTop(this.specificPitchGoal)"
@@ -134,6 +139,10 @@
     import IntroNotePickerButton from "../ExerciseScreens/PitchPerfectComponents/IntroNotePickerButton";
     import ActiveExercises from "../ActiveExercises";
     import {noteFromPitch, truncateDecimal} from '@/utils/Utils';
+    import {
+        REQUEST_MSG_TYPES,
+        RESPONSE_MSG_TYPES
+    } from "@/components/ExerciseScreens/ConvoVizComponents/PitchDetectionWorker";
 
     const fs = require("tns-core-modules/file-system");
     const maxPitch = 300;
@@ -149,10 +158,12 @@
     const ANDROGYNOUS_BOTTOM_BORDER = 120;
     const ANDROGYNOUS_TOP_BORDER = 160;
 
+    const permissions = require('nativescript-permissions');
     require("nativescript-nodeify"); //Trying this, in case the issue is with Node.js package compatibility
     //pitchfinder
     const WavDecoder = require("wav-decoder");
     const Pitchfinder = require("pitchfinder");
+    const PitchDetectionWorker = require('nativescript-worker-loader!./ConvoVizComponents/PitchDetectionWorker.js');
 
     export default {
         props: ['recPath'],
@@ -182,18 +193,85 @@
         },
         mounted() {
             // return;
+            permissions.requestPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE, "READ a test file").then(() => {
 
-            /*//Load recording file
-            const recFile = fs.File.fromPath(this.recPath);
-            var source = recFile.readSync((err) => {
-                console.log(err);
+                /*console.log('recpath', this.recPath);
+                //Load recording file
+                let recFile = fs.File.fromPath(this.recPath);
+                let source = recFile.readSync((err) => {
+                    console.log(err);
+                });
+                console.log('src!!!', source);
+                // https://stackoverflow.com/questions/41346769/nativescript-is-there-a-way-to-retrieve-the-binary-data-and-process-it-after-be
+                let typedBuffer = new Uint8Array(source);*/
+
+                // console.log('this is the buffer!!');
+                // console.log(buffer);
+
+                try {
+                    // const decoded = WavDecoder.decode.sync(typedBuffer.buffer);
+                    //
+                    // console.log('decode successful');
+                    // const float32Array = decoded.channelData[0];
+
+                    /*const detectPitch = new Pitchfinder.YIN();
+
+                    let calculatedPitch = detectPitch(float32Array);
+
+                    console.log('Calculated pitch is ' + calculatedPitch);*/
+
+
+                    console.log('starting pd worker');
+                    let worker = new PitchDetectionWorker();
+                    worker.onmessage = (msg) => {
+                        console.log("Received message in UI thread from worker", msg);
+                        let payload = msg.data;
+                        switch(payload.type){
+                            case RESPONSE_MSG_TYPES.WAV_FILE_ANALYZED:
+                                let _stats = payload.data;
+                                for (let key of Object.keys(_stats)) {
+                                    _stats[key] = _stats[key] || NaN;
+                                }
+                                this.pitchStats = _stats;
+                                return
+                        }
+                    };
+                    worker.postMessage({type: REQUEST_MSG_TYPES.ANALYZE_WAV_FILE, data: this.recPath});
+
+                    /*let frequencies = Pitchfinder.frequencies(Pitchfinder.AMDF(), float32Array, {
+                        tempo: 130, // in BPM, defaults to 120
+                        quantization: 4, // samples per beat, defaults to 4 (i.e. 16th notes)
+                    });
+
+                    frequencies = frequencies.filter(item => !!item).sort();
+
+                    console.log('pitches ', frequencies);
+
+                    const mid = Math.floor(frequencies.length / 2);
+                    const median = frequencies.length % 2 !== 0 ? frequencies[mid] :
+                        (frequencies[mid - 1] + frequencies[mid]) / 2;
+
+                    // setTimeout(() => {
+                    this.pitchStats = {
+                        max: frequencies[0],
+                        min: frequencies[frequencies.length - 1],
+                        avg: frequencies.reduce((a,b) => a + b, 0) / frequencies.length,
+                        median: median
+                    }*/
+                    // }, 1000);
+                }
+                catch (exception) {
+                    console.log(exception);
+                }
+
+            }).catch(() => {
+
             });
-            var buffer = Uint8Array.from(source).buffer;
-            console.log(buffer);
+
 
             //show a loading animation?
 
-            const decoded = WavDecoder.decode.sync(buffer); //crashes here "Invalid WAV file" line 25 https://github.com/mohayonao/wav-decoder/blob/master/index.js
+            /*const decoded = WavDecoder.decode.sync(buffer); //crashes here "Invalid WAV file" line 25 https://github.com/mohayonao/wav-decoder/blob/master/index.js
             const float32Array = decoded.channelData[0];
 
             //Do pitch analysis as in https://github.com/peterkhayes/pitchfinder
@@ -210,14 +288,7 @@
             //});
 
             // set the state to dismiss the loading indicator
-            setTimeout(() => {
-                this.pitchStats = {
-                    max: 170,
-                    min: 120,
-                    avg: (170 + 120) / 2,
-                    median: 140
-                }
-            }, 1000);
+
         },
         computed: {
             vizAreaHeight: () => platformModule.screen.mainScreen.heightDIPs * 0.55,
@@ -231,30 +302,30 @@
                 }
             },
             legendText: function () {
-                return 'Average: ' + this.pitchStats.avg + ' Hz ' + noteFromPitch(this.pitchStats.avg) + '\n' +
-                    'Highest: ' + this.pitchStats.max + ' Hz '  + noteFromPitch(this.pitchStats.max) + '\n' +
-                    'Lowest: ' + this.pitchStats.min + ' Hz ' + noteFromPitch(this.pitchStats.min)  + '\n' +
-                    'Median: ' + this.pitchStats.median + ' Hz ' + noteFromPitch(this.pitchStats.median);
+                return 'Average: ' + truncateDecimal(this.pitchStats.avg, 2) + ' Hz ' + noteFromPitch(this.pitchStats.avg) + '\n' +
+                    'Highest: ' + truncateDecimal(this.pitchStats.max, 2) + ' Hz ' + noteFromPitch(this.pitchStats.max) + '\n' +
+                    'Lowest: ' + truncateDecimal(this.pitchStats.min, 2) + ' Hz ' + noteFromPitch(this.pitchStats.min) + '\n' +
+                    'Median: ' + truncateDecimal(this.pitchStats.median, 2) + ' Hz ' + noteFromPitch(this.pitchStats.median);
             },
             // for the vertical bar in the middle
-            a: function() {
+            a: function () {
                 return {'flex': String((maxPitch - this.pitchStats.max) / (maxPitch - minPitch))}
             },
-            b: function() {
+            b: function () {
                 return {'flex': String((this.pitchStats.max - this.pitchStats.min) / (maxPitch - minPitch))}
             },
-            c: function() {
+            c: function () {
                 return {'flex': String((this.pitchStats.min - minPitch) / (maxPitch - minPitch))}
             },
             // for the fem, andro, and masc background
             d: function () {
-                return {'flex': String(  (maxPitch - ANDROGYNOUS_TOP_BORDER) / (maxPitch - minPitch) )}
+                return {'flex': String((maxPitch - ANDROGYNOUS_TOP_BORDER) / (maxPitch - minPitch))}
             },
             e: function () {
-                return {'flex': String(  (ANDROGYNOUS_TOP_BORDER - ANDROGYNOUS_BOTTOM_BORDER ) / (maxPitch - minPitch) )}
+                return {'flex': String((ANDROGYNOUS_TOP_BORDER - ANDROGYNOUS_BOTTOM_BORDER) / (maxPitch - minPitch))}
             },
             f: function () {
-                return {'flex': String(  (ANDROGYNOUS_BOTTOM_BORDER - minPitch ) / (maxPitch - minPitch) )}
+                return {'flex': String((ANDROGYNOUS_BOTTOM_BORDER - minPitch) / (maxPitch - minPitch))}
             }
         },
         methods: {

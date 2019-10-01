@@ -32,7 +32,7 @@
 <script>
 
     import SpectraActionButton from "@/components/UIControls/SpectraActionButton";
-    import { SpectraAudioRecorderPlugin } from 'nativescript-spectra-audio-recorder-plugin';
+    import {SpectraAudioRecorderPlugin} from 'nativescript-spectra-audio-recorder-plugin';
     import {alert} from 'tns-core-modules/ui/dialogs/dialogs';
     import ConvoViz from '@/components/ExerciseScreens/ConvoViz';
 
@@ -40,10 +40,16 @@
     const fs = require('tns-core-modules/file-system');
     const permissions = require('nativescript-permissions');
     const audio = require('nativescript-audio');
+    const moment = require("moment");
+
     //const recordingPath = fs.knownFolders.currentApp().path; //inaccessible to user
 
-    const recordingPath = android.os.Environment.getExternalStorageDirectory().getAbsolutePath().toString();
-    
+    function getRecordingPath() {
+        return android.os.Environment.getExternalStorageDirectory().getAbsolutePath().toString() +
+            '/' + "convo_" + moment().format('MMM_DD_h_mm_ss') + '.wav';  // will first record as raw pcm
+    }
+
+
     //path to recording
     //const recordingPath = fs.path.normalize(directory + "/recording.wav");
     let recorder;
@@ -84,23 +90,31 @@
             onBack: function () {
                 this.$navigateBack();
             },
-            onStartPluginTest: function() {
-              if (!this.answering) {
+            onStartPluginTest: function () {
+                if (!this.answering) {
 
-                //Write to accessible directory to test the audio file outputs
-                permissions.requestPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, "Write a test file");
+                    //Write to accessible directory to test the audio file outputs
+                    permissions.requestPermission([android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        android.Manifest.permission.RECORD_AUDIO], "Write a test file").then(() => {
+                        this.answering = true;
 
-                this.answering = true;
-                
-                _nativePluginInstance.launchTask(recordingPath);
-                this.isRecording = true;
-              } else {
-                this.answering = false;
+                        let recordingPath = getRecordingPath();
+                        _nativePluginInstance.launchTask(recordingPath).then(res => {
+                            console.log('Recorded file metadata', res);
+                            this.$navigateTo(ConvoViz, {props: {recPath: recordingPath}});
+                        });
+                        this.isRecording = true;
+                    }).catch(() => {
+                        console.log("Uh oh, no permissions - plan B time!");
+                        alert('Unfortunately, we need to use your microphone for you to do this exercise.');
+                    });
 
-                _nativePluginInstance.stopTask();
-              }
+                } else {
+                    this.answering = false;
+                    _nativePluginInstance.stopTask();
+                }
             },
-            onStart: function () {
+            /*onStart: function () {
                 //If not answering yet
                 if (!this.answering) {
 
@@ -160,7 +174,7 @@
                         });
                     }
                 }
-            }
+            }*/
         }
 
     }
