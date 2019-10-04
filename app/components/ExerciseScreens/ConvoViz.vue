@@ -8,24 +8,16 @@
         <FlexboxLayout v-if="!!this.pitchStats" style="flex: 1;" flexDirection="column" id="container">
             <TextView text="Done!" editable="false" id="title"/>
 
-            <!--<FlexboxLayout flexWrap="wrap" justifyContent="center" flexDirection="row" id="desc">-->
-
-            <!--<TextView editable="false" :text="INFO_TEXT" id="desc"/>-->
-
-            <!--<TextView editable="false" :text="calculatedPitch"/>-->
-
-            <!--</FlexboxLayout>-->
-
             <TextView editable="false" style="background-color: transparent;">
                 <Span text="Your average pitch was "/>
-                <Span :text="truncateDecimal(pitchStats.avg, 2) + ' Hz '"
+                <Span :text="Math.round(pitchStats.avg) + ' Hz ' + '(' + noteFromPitch(pitchStats.avg) + ')'"
                       style="font-style: italic; font-weight: bold;"/>
-                <Span text="and your range was "/>
-                <Span :text="`${truncateDecimal(pitchStats.min, 2)}-${truncateDecimal(pitchStats.max, 2)} Hz.`" style="font-style: italic; font-weight: bold;"/>
+                <Span text=" and your range was "/>
+                <Span :text="`${Math.round(pitchStats.min)} - ${Math.round(pitchStats.max)} Hz.`" style="font-style: italic; font-weight: bold;"/>
 
                 <Span v-if="specificPitchGoal" text=" You were "/>
                 <Span v-if="specificPitchGoal"
-                      :text="truncateDecimal(specificPitchGoal - pitchStats.median, 2) + ' Hz '"
+                      :text="Math.round(specificPitchGoal - pitchStats.median) + ' Hz '"
                       style="font-style: italic; font-weight: bold;"/>
                 <Span v-if="specificPitchGoal" text="away from your goal. "/>
 
@@ -78,6 +70,7 @@
                 <StackLayout class="hr-dark" style="height: 1dp;"/>-->
                 <!--</FlexboxLayout>-->
 
+                <!-- Min indicator !-->
                 <StackLayout height="2dp"
                              :width="50 + 15 + (indicatorBoxWidth + 5) + (indicatorBoxWidth + 5) + (indicatorBoxWidth + 5)"
                              backgroundColor="purple"
@@ -86,8 +79,9 @@
                 <TextView editable="false" class="indicatorLabel" text="Min" :width="indicatorBoxWidth" height="40"
                           :top="getAbsoluteOffsetFromTop(this.pitchStats.min) - (40/2)"
                           :left="(vizAreaWidth / 2) - (15 + indicatorBoxWidth + 5 + (indicatorBoxWidth + 5) + (indicatorBoxWidth + 5)) - indicatorBoxWidth"/>
-
-
+                
+                
+                <!-- Median indicator
                 <StackLayout height="2dp" :width="50 + 15 + (indicatorBoxWidth + 5) + (indicatorBoxWidth + 5)"
                              backgroundColor="purple"
                              :top="getAbsoluteOffsetFromTop(this.pitchStats.median)"
@@ -95,32 +89,39 @@
                 <TextView editable="false" class="indicatorLabel" text="Med" :width="indicatorBoxWidth" height="40"
                           :top="getAbsoluteOffsetFromTop(this.pitchStats.median) - (40/2)"
                           :left="(vizAreaWidth / 2) - (15 + indicatorBoxWidth + 5 + (indicatorBoxWidth + 5)) - indicatorBoxWidth"/>
-
+                !-->
+                
+                <!-- Mean indicator !-->
                 <StackLayout height="2dp" :width="50 + 15 + indicatorBoxWidth + 5" backgroundColor="purple"
                              :top="getAbsoluteOffsetFromTop(this.pitchStats.avg)"
                              :left="(vizAreaWidth / 2) - (15 + indicatorBoxWidth + 5)"/>
                 <TextView editable="false" class="indicatorLabel" text="Avg" :width="indicatorBoxWidth" height="40"
                           :top="getAbsoluteOffsetFromTop(this.pitchStats.avg) - (40/2)"
                           :left="(vizAreaWidth / 2) - (15 + indicatorBoxWidth + 5) - indicatorBoxWidth"/>
+                
 
+                <!-- Max indicator !-->
                 <StackLayout height="2dp" :width="50 + 15" backgroundColor="purple"
                              :top="getAbsoluteOffsetFromTop(this.pitchStats.max)"
                              :left="(vizAreaWidth / 2) - 15"/>
                 <TextView editable="false" class="indicatorLabel" text="Max" :width="indicatorBoxWidth" height="40"
                           :top="getAbsoluteOffsetFromTop(this.pitchStats.max) - (40/2)"
                           :left="(vizAreaWidth / 2) - 15 - indicatorBoxWidth"/>
+                
 
-
+                <!-- Legend
                 <TextView editable="false" class="legend" :text="legendText" top="10" width="160"
                           :left="vizAreaWidth - 160 - 10"/>
+                !-->
 
+                <!-- Specific Pitch Goal !-->
                 <StackLayout height="2dp" :width="50 + 15" backgroundColor="purple"
                              :top="getAbsoluteOffsetFromTop(this.specificPitchGoal)"
                              :left="(vizAreaWidth / 2) "/>
                 <TextView editable="false" class="indicatorLabel" text="Target" width="60" height="40"
                           :top="getAbsoluteOffsetFromTop(this.specificPitchGoal) - (40/2)"
                           :left="(vizAreaWidth / 2) + 2 + 60"/>
-
+                 
 
             </AbsoluteLayout>
 
@@ -159,10 +160,6 @@
     const ANDROGYNOUS_TOP_BORDER = 160;
 
     const permissions = require('nativescript-permissions');
-    require("nativescript-nodeify"); //Trying this, in case the issue is with Node.js package compatibility
-    //pitchfinder
-    const WavDecoder = require("wav-decoder");
-    const Pitchfinder = require("pitchfinder");
     const PitchDetectionWorker = require('nativescript-worker-loader!./ConvoVizComponents/PitchDetectionWorker.js');
 
     export default {
@@ -195,32 +192,7 @@
             // return;
             permissions.requestPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE, "READ a test file").then(() => {
 
-                /*console.log('recpath', this.recPath);
-                //Load recording file
-                let recFile = fs.File.fromPath(this.recPath);
-                let source = recFile.readSync((err) => {
-                    console.log(err);
-                });
-                console.log('src!!!', source);
-                // https://stackoverflow.com/questions/41346769/nativescript-is-there-a-way-to-retrieve-the-binary-data-and-process-it-after-be
-                let typedBuffer = new Uint8Array(source);*/
-
-                // console.log('this is the buffer!!');
-                // console.log(buffer);
-
                 try {
-                    // const decoded = WavDecoder.decode.sync(typedBuffer.buffer);
-                    //
-                    // console.log('decode successful');
-                    // const float32Array = decoded.channelData[0];
-
-                    /*const detectPitch = new Pitchfinder.YIN();
-
-                    let calculatedPitch = detectPitch(float32Array);
-
-                    console.log('Calculated pitch is ' + calculatedPitch);*/
-
-
                     console.log('starting pd worker');
                     let worker = new PitchDetectionWorker();
                     worker.onmessage = (msg) => {
@@ -238,27 +210,6 @@
                     };
                     worker.postMessage({type: REQUEST_MSG_TYPES.ANALYZE_WAV_FILE, data: this.recPath});
 
-                    /*let frequencies = Pitchfinder.frequencies(Pitchfinder.AMDF(), float32Array, {
-                        tempo: 130, // in BPM, defaults to 120
-                        quantization: 4, // samples per beat, defaults to 4 (i.e. 16th notes)
-                    });
-
-                    frequencies = frequencies.filter(item => !!item).sort();
-
-                    console.log('pitches ', frequencies);
-
-                    const mid = Math.floor(frequencies.length / 2);
-                    const median = frequencies.length % 2 !== 0 ? frequencies[mid] :
-                        (frequencies[mid - 1] + frequencies[mid]) / 2;
-
-                    // setTimeout(() => {
-                    this.pitchStats = {
-                        max: frequencies[0],
-                        min: frequencies[frequencies.length - 1],
-                        avg: frequencies.reduce((a,b) => a + b, 0) / frequencies.length,
-                        median: median
-                    }*/
-                    // }, 1000);
                 }
                 catch (exception) {
                     console.log(exception);
@@ -267,28 +218,6 @@
             }).catch(() => {
 
             });
-
-
-            //show a loading animation?
-
-            /*const decoded = WavDecoder.decode.sync(buffer); //crashes here "Invalid WAV file" line 25 https://github.com/mohayonao/wav-decoder/blob/master/index.js
-            const float32Array = decoded.channelData[0];
-
-            //Do pitch analysis as in https://github.com/peterkhayes/pitchfinder
-            const detectPitch = new Pitchfinder.YIN();
-            this.calculatedPitch = detectPitch(float32Array);
-
-            console.log('Calculated pitch is ' + pitch);*/
-
-            //const detectors = [detectPitch, Pitchfinder.AMDF()];
-            //const frequencies = Pitchfinder.frequencies(detectors, float32Array, {
-            //May need to play with these options to optimize for speech?
-            //tempo: 120, //default BPM
-            //quantization: 4, //default samples per beat
-            //});
-
-            // set the state to dismiss the loading indicator
-
         },
         computed: {
             vizAreaHeight: () => platformModule.screen.mainScreen.heightDIPs * 0.55,
@@ -302,10 +231,10 @@
                 }
             },
             legendText: function () {
-                return 'Average: ' + truncateDecimal(this.pitchStats.avg, 2) + ' Hz ' + noteFromPitch(this.pitchStats.avg) + '\n' +
-                    'Highest: ' + truncateDecimal(this.pitchStats.max, 2) + ' Hz ' + noteFromPitch(this.pitchStats.max) + '\n' +
-                    'Lowest: ' + truncateDecimal(this.pitchStats.min, 2) + ' Hz ' + noteFromPitch(this.pitchStats.min) + '\n' +
-                    'Median: ' + truncateDecimal(this.pitchStats.median, 2) + ' Hz ' + noteFromPitch(this.pitchStats.median);
+                return 'Average: ' + Math.round(this.pitchStats.avg) + ' Hz ' + noteFromPitch(this.pitchStats.avg) + '\n' +
+                    'Highest: ' + Math.round(this.pitchStats.max) + ' Hz ' + noteFromPitch(this.pitchStats.max) + '\n' +
+                    'Lowest: ' + Math.round(this.pitchStats.min) + ' Hz ' + noteFromPitch(this.pitchStats.min); //+ '\n' +
+                    //'Median: ' + Math.round(this.pitchStats.median, 2) + ' Hz ' + noteFromPitch(this.pitchStats.median);
             },
             // for the vertical bar in the middle
             a: function () {
@@ -343,7 +272,8 @@
                 // firstRungOffsetFromTop is the distance from the top to accommodate the first rung label
                 return firstRungOffsetFromTop + (1 - (hertz - minPitch) / (maxPitch - minPitch)) * (this.vizAreaHeight - firstRungOffsetFromTop);
             },
-            truncateDecimal
+            truncateDecimal,
+            noteFromPitch
         }
     }
 </script>
@@ -403,7 +333,8 @@
     }
 
     .zoneLabel {
-        font-size: 25em;
+        font-size: 15em;
+        font-style: italic;
         background-color: transparent;
         border-width: 0;
         color: lightgrey;

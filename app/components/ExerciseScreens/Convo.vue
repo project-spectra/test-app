@@ -68,9 +68,6 @@
                 isRecording: false,
             }
         },
-        mounted() {
-            alert(_nativePluginInstance.HelloWorld());
-        },
         computed: {
             question() {
                 //pick a random question from a list
@@ -113,68 +110,7 @@
                     this.answering = false;
                     _nativePluginInstance.stopTask();
                 }
-            },
-            /*onStart: function () {
-                //If not answering yet
-                if (!this.answering) {
-
-                    permissions.requestPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, "Write a test file");
-
-                    //Chat bubble appears with "I'm listening"
-                    this.answering = true;
-                    //Start the recording
-                    recorder = new audio.TNSRecorder();
-
-                    if (audio.TNSRecorder.CAN_RECORD()) {
-                        let recorderOptions = {
-                            filename: recordingPath,
-                            format: testFormat,
-                            encoder: testEncoder,
-                            sampleRate: 44100,
-                            infoCallback: function (args) {
-                                console.log('infoCb', JSON.stringify(args));
-                            },
-                            errorCallback: function () {
-                                console.log('errorCallback');
-                                alert('Error recording.');
-                            }
-                        };
-
-                        recorder.start(recorderOptions).then(function (res) {
-                            console.log("Recording has started to " + recordingPath);
-                            this.isRecording = true;
-                        }, function (err) {
-                            this.isRecording = false;
-                            console.log('ERROR: ' + err);
-                        });
-                    } else {
-                        alert('Unfortunately, this exercise requires a microphone.');
-                    }
-
-                } else { //If user is recording and taps "Done"
-                    console.log("Done tapped");
-                    //Stop recording
-                    if (recorder !== undefined) {
-                        recorder.stop().then(() => {
-                            this.isRecording = false;
-                            this.answering = false;
-                            console.log('Audio Recorded Successfully.');
-
-                            //Navigate to new page, do analysis of recording, show visualization, delete recording
-                            let exists = fs.File.exists(recordingPath);
-                            console.log("File exists: " + exists + " in " + fs.path.normalize(recordingPath));
-                            this.$navigateTo(ConvoViz, {props: {recPath: recordingPath, clearHistory: true}});
-
-                        }).catch((err) => {
-                            console.log(err);
-                            console.log('--');
-                            console.log("Error");
-                            this.isRecording = true;
-                            this.answering = false;
-                        });
-                    }
-                }
-            }*/
+            }
         }
 
     }
