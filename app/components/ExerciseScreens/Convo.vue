@@ -32,7 +32,7 @@
 <script>
 
     import SpectraActionButton from "@/components/UIControls/SpectraActionButton";
-    import { SpectraPitchPerfectPlugin } from 'nativescript-spectra-pitch-perfect-plugin';
+    import {SpectraPitchPerfectPlugin} from 'nativescript-spectra-pitch-perfect-plugin';
     // import {SpectraAudioRecorderPlugin} from 'nativescript-spectra-audio-recorder-plugin';
     import {alert} from 'tns-core-modules/ui/dialogs/dialogs';
     import ConvoViz from '@/components/ExerciseScreens/ConvoViz';
@@ -132,11 +132,14 @@
                     })
 
 
-
                 } else {
                     this.answering = false;
                     _nativePluginInstance.stop();
-                    this.$navigateTo(ConvoViz, {props: {pitchArray: this.pitchArray}});
+                    if (this.pitchArray.length === 0) {
+                        alert("Unfortunately, we weren't able to detect your pitch! Please try getting closer to the mic, or moving somewhere less noisy.")
+                    } else {
+                        this.$navigateTo(ConvoViz, {props: {pitchArray: this.pitchArray}});
+                    }
                 }
             }
         }
