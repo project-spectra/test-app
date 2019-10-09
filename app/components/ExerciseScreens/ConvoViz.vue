@@ -13,7 +13,8 @@
                 <Span :text="Math.round(pitchStats.avg) + ' Hz ' + '(' + noteFromPitch(pitchStats.avg) + ')'"
                       style="font-style: italic; font-weight: bold;"/>
                 <Span text=" and your range was "/>
-                <Span :text="`${Math.round(pitchStats.min)} - ${Math.round(pitchStats.max)} Hz.`" style="font-style: italic; font-weight: bold;"/>
+                <Span :text="`${Math.round(pitchStats.min)} - ${Math.round(pitchStats.max)} Hz.`"
+                      style="font-style: italic; font-weight: bold;"/>
 
                 <Span v-if="specificPitchGoal" text=" You were "/>
                 <Span v-if="specificPitchGoal"
@@ -60,7 +61,7 @@
                 <!-- the middle vertical bar-->
                 <FlexboxLayout :top="firstRungOffsetFromTop" :height="vizAreaHeight - firstRungOffsetFromTop"
                                :left="(vizAreaWidth / 2)"
-                               flexDirection="column" backgroundColor="white" width="50">
+                               flexDirection="column" backgroundColor="white" :width="widthOfMiddleBar">
                     <StackLayout :style="a" backgroundColor="white"/>
                     <StackLayout :style="b" backgroundColor="red"/>
                     <StackLayout :style="c" backgroundColor="white"/>
@@ -72,15 +73,15 @@
 
                 <!-- Min indicator !-->
                 <StackLayout height="2dp"
-                             :width="50 + 15 + (indicatorBoxWidth + 5) + (indicatorBoxWidth + 5) + (indicatorBoxWidth + 5)"
+                             :width="calculateIndicatorLineLength(2)"
                              backgroundColor="purple"
                              :top="getAbsoluteOffsetFromTop(this.pitchStats.min)"
-                             :left="(vizAreaWidth / 2) - (15 + indicatorBoxWidth + 5 + (indicatorBoxWidth + 5) + (indicatorBoxWidth + 5))"/>
+                             :left="calculateIndicatorLineAbsoluteOffset(2)"/>
                 <TextView editable="false" class="indicatorLabel" text="Min" :width="indicatorBoxWidth" height="40"
                           :top="getAbsoluteOffsetFromTop(this.pitchStats.min) - (40/2)"
-                          :left="(vizAreaWidth / 2) - (15 + indicatorBoxWidth + 5 + (indicatorBoxWidth + 5) + (indicatorBoxWidth + 5)) - indicatorBoxWidth"/>
-                
-                
+                          :left="calculateIndicatorLineAbsoluteOffset(2) - indicatorBoxWidth"/>
+
+
                 <!-- Median indicator
                 <StackLayout height="2dp" :width="50 + 15 + (indicatorBoxWidth + 5) + (indicatorBoxWidth + 5)"
                              backgroundColor="purple"
@@ -90,24 +91,24 @@
                           :top="getAbsoluteOffsetFromTop(this.pitchStats.median) - (40/2)"
                           :left="(vizAreaWidth / 2) - (15 + indicatorBoxWidth + 5 + (indicatorBoxWidth + 5)) - indicatorBoxWidth"/>
                 !-->
-                
+
                 <!-- Mean indicator !-->
-                <StackLayout height="2dp" :width="50 + 15 + indicatorBoxWidth + 5" backgroundColor="purple"
+                <StackLayout height="2dp" :width="calculateIndicatorLineLength(1)" backgroundColor="purple"
                              :top="getAbsoluteOffsetFromTop(this.pitchStats.avg)"
-                             :left="(vizAreaWidth / 2) - (15 + indicatorBoxWidth + 5)"/>
+                             :left="calculateIndicatorLineAbsoluteOffset(1)"/>
                 <TextView editable="false" class="indicatorLabel" text="Avg" :width="indicatorBoxWidth" height="40"
                           :top="getAbsoluteOffsetFromTop(this.pitchStats.avg) - (40/2)"
-                          :left="(vizAreaWidth / 2) - (15 + indicatorBoxWidth + 5) - indicatorBoxWidth"/>
-                
+                          :left="calculateIndicatorLineAbsoluteOffset(1) - indicatorBoxWidth"/>
+
 
                 <!-- Max indicator !-->
-                <StackLayout height="2dp" :width="50 + 15" backgroundColor="purple"
+                <StackLayout height="2dp" :width="calculateIndicatorLineLength(0)" backgroundColor="purple"
                              :top="getAbsoluteOffsetFromTop(this.pitchStats.max)"
-                             :left="(vizAreaWidth / 2) - 15"/>
+                             :left="calculateIndicatorLineAbsoluteOffset(0)"/>
                 <TextView editable="false" class="indicatorLabel" text="Max" :width="indicatorBoxWidth" height="40"
                           :top="getAbsoluteOffsetFromTop(this.pitchStats.max) - (40/2)"
-                          :left="(vizAreaWidth / 2) - 15 - indicatorBoxWidth"/>
-                
+                          :left="calculateIndicatorLineAbsoluteOffset(0) - indicatorBoxWidth"/>
+
 
                 <!-- Legend
                 <TextView editable="false" class="legend" :text="legendText" top="10" width="160"
@@ -121,7 +122,7 @@
                 <TextView editable="false" class="indicatorLabel" text="Target" width="60" height="40"
                           :top="getAbsoluteOffsetFromTop(this.specificPitchGoal) - (40/2)"
                           :left="(vizAreaWidth / 2) + 2 + 60"/>
-                 
+
 
             </AbsoluteLayout>
 
@@ -198,7 +199,7 @@
                     worker.onmessage = (msg) => {
                         console.log("Received message in UI thread from worker", msg);
                         let payload = msg.data;
-                        switch(payload.type){
+                        switch (payload.type) {
                             case RESPONSE_MSG_TYPES.WAV_FILE_ANALYZED:
                                 let _stats = payload.data;
                                 for (let key of Object.keys(_stats)) {
@@ -210,8 +211,7 @@
                     };
                     worker.postMessage({type: REQUEST_MSG_TYPES.ANALYZE_WAV_FILE, data: this.recPath});
 
-                }
-                catch (exception) {
+                } catch (exception) {
                     console.log(exception);
                 }
 
@@ -234,7 +234,7 @@
                 return 'Average: ' + Math.round(this.pitchStats.avg) + ' Hz ' + noteFromPitch(this.pitchStats.avg) + '\n' +
                     'Highest: ' + Math.round(this.pitchStats.max) + ' Hz ' + noteFromPitch(this.pitchStats.max) + '\n' +
                     'Lowest: ' + Math.round(this.pitchStats.min) + ' Hz ' + noteFromPitch(this.pitchStats.min); //+ '\n' +
-                    //'Median: ' + Math.round(this.pitchStats.median, 2) + ' Hz ' + noteFromPitch(this.pitchStats.median);
+                //'Median: ' + Math.round(this.pitchStats.median, 2) + ' Hz ' + noteFromPitch(this.pitchStats.median);
             },
             // for the vertical bar in the middle
             a: function () {
@@ -271,6 +271,14 @@
             getAbsoluteOffsetFromTop: function (hertz) {
                 // firstRungOffsetFromTop is the distance from the top to accommodate the first rung label
                 return firstRungOffsetFromTop + (1 - (hertz - minPitch) / (maxPitch - minPitch)) * (this.vizAreaHeight - firstRungOffsetFromTop);
+            },
+            // used for the min, mean, and max indicators.
+            // indexFromLeft starts at 0
+            calculateIndicatorLineLength: function (indexFromRight) {
+                return widthOfMiddleBar + 15 + (indicatorBoxWidth + 5) * indexFromRight;
+            },
+            calculateIndicatorLineAbsoluteOffset: function (indexFromRight) {
+                return (this.vizAreaWidth / 2) - (15 + (indicatorBoxWidth + 5) * indexFromRight);
             },
             truncateDecimal,
             noteFromPitch
