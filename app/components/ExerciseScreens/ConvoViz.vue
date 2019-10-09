@@ -13,13 +13,17 @@
                 <Span :text="Math.round(pitchStats.avg) + ' Hz ' + '(' + noteFromPitch(pitchStats.avg) + ')'"
                       style="font-style: italic; font-weight: bold;"/>
                 <Span text=" and your range was "/>
-                <Span :text="`${Math.round(pitchStats.min)} - ${Math.round(pitchStats.max)} Hz.`" style="font-style: italic; font-weight: bold;"/>
+                <Span :text="`${Math.round(pitchStats.min)} - ${Math.round(pitchStats.max)} Hz. `" style="font-style: italic; font-weight: bold;"/>
 
+                <!-- Show a calculated difference from the pitch goal
                 <Span v-if="specificPitchGoal" text=" You were "/>
                 <Span v-if="specificPitchGoal"
                       :text="Math.round(specificPitchGoal - pitchStats.median) + ' Hz '"
                       style="font-style: italic; font-weight: bold;"/>
                 <Span v-if="specificPitchGoal" text="away from your goal. "/>
+                !-->
+
+                <Span v-if="specificPitchGoal" :text="goalText" />
 
             </TextView>
 
@@ -235,6 +239,25 @@
                     'Highest: ' + Math.round(this.pitchStats.max) + ' Hz ' + noteFromPitch(this.pitchStats.max) + '\n' +
                     'Lowest: ' + Math.round(this.pitchStats.min) + ' Hz ' + noteFromPitch(this.pitchStats.min); //+ '\n' +
                     //'Median: ' + Math.round(this.pitchStats.median, 2) + ' Hz ' + noteFromPitch(this.pitchStats.median);
+            },
+            goalText: function() {
+              //If user is at least one note away from their goal: congrats your average was very close to your goal!
+              //Otherwise, show 
+              if (this.pitchStats.median > this.specificPitchGoal) {
+                if (1200 * Math.log2(this.pitchStats.median / this.specificPitchGoal) < 200) {
+                  return 'Congrats! You were very close to your goal!'
+                } else {
+                  //Say something encouraging
+                  return 'You were above your goal, on average. Keep at it :)'
+                }
+              } else {
+                if (1200 * Math.log2(this.specificPitchGoal / this.pitchStats.median ) < 200) {
+                  return 'Congrats! You were very close to your goal!'
+                } else {
+                  //Say something encouraging
+                  return 'You were below your goal, on average. Keep at it :)'
+                }
+              }
             },
             // for the vertical bar in the middle
             a: function () {
