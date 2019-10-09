@@ -167,7 +167,7 @@
     const PitchDetectionWorker = require('nativescript-worker-loader!./ConvoVizComponents/PitchDetectionWorker.js');
 
     export default {
-        props: ['recPath'],
+        props: ['pitchArray'],
         components: {
             SpectraActionButton
         },
@@ -183,8 +183,11 @@
                 ANDROGYNOUS_BOTTOM_BORDER,
                 ANDROGYNOUS_TOP_BORDER,
 
+                /*INFO_TEXT: //Placeholder, to fill in with text description of calculation result (for accessibility)
+                    "Recording is located at: " + this.recPath + " and the calculated pitch is: ",*/
+
                 INFO_TEXT: //Placeholder, to fill in with text description of calculation result (for accessibility)
-                    "Recording is located at: " + this.recPath + " and the calculated pitch is: ",
+                    "The calculated pitch is: ",
                 specificPitchGoal: this.$store.state.hz,
                 // specificPitchGoal: 150,
                 calculatedPitch: 0,
@@ -193,8 +196,8 @@
             }
         },
         mounted() {
-            // return;
-            permissions.requestPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE, "READ a test file").then(() => {
+            // don't need to read from the filesystem anymore since we calculate the pitch on the fly
+            // permissions.requestPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE, "READ a test file").then(() => {
 
                 try {
                     console.log('starting pd worker');
@@ -203,7 +206,7 @@
                         console.log("Received message in UI thread from worker", msg);
                         let payload = msg.data;
                         switch (payload.type) {
-                            case RESPONSE_MSG_TYPES.WAV_FILE_ANALYZED:
+                            case RESPONSE_MSG_TYPES.PITCH_ARRAY_ANALYZED:
                                 let _stats = payload.data;
                                 for (let key of Object.keys(_stats)) {
                                     _stats[key] = _stats[key] || NaN;
@@ -212,15 +215,16 @@
                                 return
                         }
                     };
-                    worker.postMessage({type: REQUEST_MSG_TYPES.ANALYZE_WAV_FILE, data: this.recPath});
+                    // worker.postMessage({type: REQUEST_MSG_TYPES.ANALYZE_WAV_FILE, data: this.recPath});
+                    worker.postMessage({type: REQUEST_MSG_TYPES.ANALYZE_PITCH_ARRAY, data: this.pitchArray});
 
                 } catch (exception) {
                     console.log(exception);
                 }
 
-            }).catch(() => {
+            /*}).catch(() => {
 
-            });
+            });*/
         },
         computed: {
             vizAreaHeight: () => platformModule.screen.mainScreen.heightDIPs * 0.55,
@@ -241,7 +245,7 @@
             },
             goalText: function() {
               //If user is at least one note away from their goal: congrats your average was very close to your goal!
-              //Otherwise, show 
+              //Otherwise, show
               if (this.pitchStats.median > this.specificPitchGoal) {
                 if (1200 * Math.log2(this.pitchStats.median / this.specificPitchGoal) < 200) {
                   return 'Congrats! You were very close to your goal!'

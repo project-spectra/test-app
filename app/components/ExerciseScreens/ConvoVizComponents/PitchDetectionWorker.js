@@ -3,12 +3,14 @@ require('globals'); // necessary to bootstrap tns modules on the new thread
 
 export const REQUEST_MSG_TYPES = {
     ANALYZE_WAV_FILE: 'ANALYZE_WAV_FILE',
-    ANALYZE_FLOAT32_ARRAY: 'ANALYZE_FLOAT32_ARRAY'
+    ANALYZE_FLOAT32_ARRAY: 'ANALYZE_FLOAT32_ARRAY',
+    ANALYZE_PITCH_ARRAY: 'ANALYZE_PITCH_ARRAY',
 };
 
 export const RESPONSE_MSG_TYPES = {
     WAV_FILE_ANALYZED: 'WAV_FILE_ANALYZED',
-    FLOAT32_ARRAY_ANALYZED: 'FLOAT32_ARRAY_ANALYZED'
+    FLOAT32_ARRAY_ANALYZED: 'FLOAT32_ARRAY_ANALYZED',
+    PITCH_ARRAY_ANALYZED: 'PITCH_ARRAY'
 };
 
 const fs = require("tns-core-modules/file-system");
@@ -65,12 +67,14 @@ global.onmessage = function(msg) {
 
         case REQUEST_MSG_TYPES.ANALYZE_FLOAT32_ARRAY:
             float32Array = payload.data;
-            frequencies = Pitchfinder.frequencies(Pitchfinder.AMDF(), float32Array, {
+            frequencies = Pitchfinder.frequencies(Pitchfinder.YIN(), float32Array, {
                 tempo: 130, // in BPM, defaults to 120
                 quantization: 4, // samples per beat, defaults to 4 (i.e. 16th notes)
             });
 
-            frequencies = frequencies.filter(item => !!item).sort();
+            frequencies = frequencies.filter(item => !!item).sort(function(a, b){
+                return a - b;
+            });
 
             console.log('pitches ', frequencies);
 
@@ -80,14 +84,35 @@ global.onmessage = function(msg) {
 
             // setTimeout(() => {
             postMessage( {type: RESPONSE_MSG_TYPES.FLOAT32_ARRAY_ANALYZED, data: {
-                max: frequencies[0],
-                min: frequencies[frequencies.length - 1],
+                min: frequencies[0],
+                max: frequencies[frequencies.length - 1],
                 avg: frequencies.reduce((a,b) => a + b, 0) / frequencies.length,
                 median: median
             }});
             close();
-            return
+            return;
+        case REQUEST_MSG_TYPES.ANALYZE_PITCH_ARRAY:
+            frequencies = payload.data;
 
+            frequencies = frequencies.filter(item => !!item).sort(function(a, b){
+                return a - b;
+            });
+
+            console.log('pitches ', frequencies);
+
+            mid = Math.floor(frequencies.length / 2);
+            median = frequencies.length % 2 !== 0 ? frequencies[mid] :
+                (frequencies[mid - 1] + frequencies[mid]) / 2;
+
+            // setTimeout(() => {
+            postMessage( {type: RESPONSE_MSG_TYPES.PITCH_ARRAY_ANALYZED, data: {
+                    min: frequencies[0],
+                    max: frequencies[frequencies.length - 1],
+                    avg: frequencies.reduce((a,b) => a + b, 0) / frequencies.length,
+                    median: median
+                }});
+            close();
+            return;
     }
 
     // perform some crazy cpu-intensive task here!

@@ -32,7 +32,8 @@
 <script>
 
     import SpectraActionButton from "@/components/UIControls/SpectraActionButton";
-    import {SpectraAudioRecorderPlugin} from 'nativescript-spectra-audio-recorder-plugin';
+    import { SpectraPitchPerfectPlugin } from 'nativescript-spectra-pitch-perfect-plugin';
+    // import {SpectraAudioRecorderPlugin} from 'nativescript-spectra-audio-recorder-plugin';
     import {alert} from 'tns-core-modules/ui/dialogs/dialogs';
     import ConvoViz from '@/components/ExerciseScreens/ConvoViz';
 
@@ -52,9 +53,10 @@
 
     //path to recording
     //const recordingPath = fs.path.normalize(directory + "/recording.wav");
-    let recorder;
 
-    let _nativePluginInstance = new SpectraAudioRecorderPlugin();
+    // let _nativePluginInstance = new SpectraAudioRecorderPlugin();
+
+    let _nativePluginInstance = new SpectraPitchPerfectPlugin();
 
     export default {
         components: {SpectraActionButton},
@@ -65,7 +67,9 @@
                 ANSWERING_TEXT:
                     "Your voice is currently being recorded.\n\nWhen you're done responding to the question, tap 'Done!' and you will receive feedback on your voice.",
                 answering: false,
-                isRecording: false,
+
+                pitchArray: [],
+                // isRecording: false,
             }
         },
         computed: {
@@ -85,13 +89,21 @@
         },
         methods: {
             onBack: function () {
+                _nativePluginInstance.stop();
                 this.$navigateBack();
+            },
+            onPitchDetectionResult(pitchHz, probability, isPitched) {
+                if (isPitched && probability > 0.8) {
+                    this.pitchArray.push(pitchHz);
+                    // console.log(pitchHz);
+                    // this.continuousNoteStart();
+                }
             },
             onStartPluginTest: function () {
                 if (!this.answering) {
 
                     //Write to accessible directory to test the audio file outputs
-                    permissions.requestPermission([android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    /*permissions.requestPermission([android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         android.Manifest.permission.RECORD_AUDIO], "Write a test file").then(() => {
                         this.answering = true;
 
@@ -104,11 +116,27 @@
                     }).catch(() => {
                         console.log("Uh oh, no permissions - plan B time!");
                         alert('Unfortunately, we need to use your microphone for you to do this exercise.');
-                    });
+                    });*/
+
+                    permissions.requestPermission(android.Manifest.permission.RECORD_AUDIO, "Conversation Exercise").then(() => {
+
+                        this.answering = true;
+                        this.pitchArray = [];
+
+                        _nativePluginInstance.start({
+                            onPitchDetectionResult: this.onPitchDetectionResult.bind(this),
+                        });
+                    }).catch(() => {
+                        console.log("Uh oh, no permissions - plan B time!");
+                        alert('Unfortunately, we need to use your microphone for you to do this exercise.');
+                    })
+
+
 
                 } else {
                     this.answering = false;
-                    _nativePluginInstance.stopTask();
+                    _nativePluginInstance.stop();
+                    this.$navigateTo(ConvoViz, {props: {pitchArray: this.pitchArray}});
                 }
             }
         }
