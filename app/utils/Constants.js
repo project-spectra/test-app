@@ -77,3 +77,5 @@ export const PITCHPERFECT_NOTES = [{
   id: 'high_5',
   name: 'D4',
 }];
+
+export const PITCH_PERFECT_RUNG_HEIGHT_DP = 40;
