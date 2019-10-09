@@ -11,7 +11,7 @@
 
             <Label text="What name should we call you?" style="font-weight: 600; color: #000; font-size: 15em; padding-bottom: 5em;"/>
 
-            <SpectraTextView v-model="name" />
+            <SpectraTextView v-model="name" v-on:return-press="onReady"/>
 
             <Label :text="this.name === '' ? 'You can change your name at any time in the Settings.' : 'Whoa, great name!'"
                    style="font-style: italic"/>

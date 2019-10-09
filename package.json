@@ -22,8 +22,10 @@
     "moment": "^2.24.0",
     "nativescript-audio": "^5.0.1",
     "nativescript-checkbox": "^3.0.3",
+    "nativescript-nodeify": "^0.8.0",
     "nativescript-permissions": "^1.3.6",
     "nativescript-socketio": "^3.3.1",
+    "nativescript-spectra-audio-recorder-plugin": "file:../spectra-audio-recorder-plugin/src",
     "nativescript-spectra-bdsd-plugin": "file:../spectra-bdsd-plugin/src",
     "nativescript-spectra-pitch-perfect-plugin": "file:../spectra-pitch-perfect-plugin/src",
     "nativescript-texttospeech": "^2.0.3",
@@ -32,10 +34,12 @@
     "nativescript-ui-dataform": "5.0.0",
     "nativescript-vue": "^2.0.0",
     "nativescript-vue-devtools": "^1.2.0",
+    "pitchfinder": "^2.1.0",
     "timer-machine": "^1.1.0",
     "tns-android": "^5.0.0",
     "tns-core-modules": "^6.0.1",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "wav-decoder": "^1.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
