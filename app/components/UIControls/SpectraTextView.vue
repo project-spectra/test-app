@@ -1,7 +1,7 @@
 <!--Spectra-themed TextView component for text input.-->
 <template>
     <!--https://stackoverflow.com/questions/44472276/vuejs-pass-all-props-to-child-component-->
-    <TextView v-bind="$props" v-model="inputVal" id="spectra-text-view" />
+    <TextField v-bind="$props" v-model="inputVal" returnKeyType="done" @returnPress="onReturn" id="spectra-text-view" />
 </template>
 
 <script>
@@ -14,6 +14,11 @@
         watch: {
             inputVal(val) {
                 this.$emit('input', val);
+            }
+        },
+        methods: {
+            onReturn() {
+                this.$emit('return-press');
             }
         }
     }

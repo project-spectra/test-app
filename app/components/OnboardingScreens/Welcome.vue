@@ -11,7 +11,7 @@
 
             <Label text="What name should we call you?" style="font-weight: 600; color: #000; font-size: 15em; padding-bottom: 5em;"/>
 
-            <SpectraTextView v-model="name" />
+            <SpectraTextView v-model="name" v-on:return-press="onReady"/>
 
             <Label :text="this.name === '' ? 'You can change your name at any time in the Settings.' : 'Whoa, great name!'"
                    style="font-style: italic"/>
@@ -30,8 +30,7 @@
 <script>
     import SpectraTextView from "@/components/UIControls/SpectraTextView";
     import SpectraActionButton from "@/components/UIControls/SpectraActionButton";
-
-    import VocalHealthWarnings from "@/components/OnboardingScreens/VocalHealthWarnings";
+    import Disclaimer from "@/components/OnboardingScreens/Disclaimer";
 
     export default {
         components: {
@@ -53,7 +52,7 @@
                 this.$store.dispatch("setName", this.name);
                 this.$store.dispatch("setFirstLoad", true);
                 //this.$store.commit("save", {name: this.name, firstLoad: true});
-                this.$navigateTo(VocalHealthWarnings);
+                this.$navigateTo(Disclaimer);
             }
         }
     }
