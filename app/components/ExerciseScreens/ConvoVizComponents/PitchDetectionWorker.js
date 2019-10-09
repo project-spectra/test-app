@@ -43,10 +43,11 @@ global.onmessage = function(msg) {
                 quantization: 4, // samples per beat, defaults to 4 (i.e. 16th notes)
             });
 
-            frequencies = frequencies.filter(item => !!item && item > 50 && item < 1000).sort();
+            frequencies = frequencies.filter(item => !!item && item > 50 && item < 1000).sort(function(a, b){
+                return a - b;
+            });
 
             console.log('pitches ', frequencies);
-
             let mid = Math.floor(frequencies.length / 2);
             let median = frequencies.length % 2 !== 0 ? frequencies[mid] :
                 (frequencies[mid - 1] + frequencies[mid]) / 2;
