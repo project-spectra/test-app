@@ -9,7 +9,7 @@
         // https://stackoverflow.com/questions/42872002/in-vue-js-component-how-to-use-props-in-css
         // https://github.com/NativeScript/NativeScript/issues/4864 (Can't parameterize pseudo selectors without fiddling..)
 
-        props: ['text', 'isEnabled', 'type', /*'color', */'animateOnHover'],
+        props: ['text', 'isEnabled', 'type', 'animateOnHover'],
 
         components: {
 
@@ -17,7 +17,6 @@
 
         computed: {
             style () {
-                // return {'background': 'red'};
                 return {
                     // '--color': this.color,
                     // 'border-color': '#A7C6BE',
@@ -30,7 +29,6 @@
                     'min-height': '60dp',
                     'text-transform': 'none',
                 }
-                // return `border-color: ${this.color}; border-width: 2dp; background-color: transparent; font-size: 20em; min-height: 60dp; text-transform: none; font-weight: bold; borderRadius: 3dp;`
             },
 
             styleClass() {
