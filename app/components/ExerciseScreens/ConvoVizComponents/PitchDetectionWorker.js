@@ -94,7 +94,7 @@ global.onmessage = function(msg) {
         case REQUEST_MSG_TYPES.ANALYZE_PITCH_ARRAY:
             frequencies = payload.data;
 
-            frequencies = frequencies.filter(item => !!item).sort(function(a, b){
+            frequencies = frequencies.filter(item => !!item && item > 50 && item < 1000).sort(function(a, b){
                 return a - b;
             });
 
