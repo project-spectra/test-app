@@ -6,6 +6,15 @@
 </template>
 
 <script>
+    import { TNSPlayer } from "nativescript-audio";
+
+    const player = new TNSPlayer();
+    const audioDirectory = "~/assets/audio/"
+
+    var playerOptions = {
+      audioFile: '',
+      loop: false,
+    };
 
     export default {
         props: ['text'],
@@ -24,8 +33,19 @@
           tap: function() {
             this.$emit('tap');
             //Play the note from asset file...
-            //var note = this.text;
-            
+            var note = this.text;
+
+            //Will need to eventually differentiate between exercises, because there is for example an E3 example on an 'eeeee' sound and an 'oooool' sound.
+            playerOptions.audioFile = audioDirectory + note + '.mp3';
+
+            player
+              .playFromFile(playerOptions)
+              .then(function(res) {
+                console.log(res);
+              })
+              .catch(function(err) {
+                console.log('Something went wrong...', err);
+              });
           }
         }
     }
