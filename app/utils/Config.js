@@ -1,6 +1,7 @@
 
 export const Config = {
-  primaryColor: '#A7C6BE',
-  accentColor: '#F8AF51',
-  mutedColor: '#E8E8E8'
+  //'#A7C6BE', //Muted green
+  primaryColor: '#72C8B2', //Bright green
+  accentColor: '#F7AF51', //Orange
+  mutedColor: '#E8E8E8' //Gray
 };
