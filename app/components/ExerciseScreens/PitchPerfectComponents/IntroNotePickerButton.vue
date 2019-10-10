@@ -17,7 +17,7 @@
     };
 
     export default {
-        props: ['text'],
+        props: ['text', 'sound'],
         computed: {
             style() {
                 return {
@@ -33,10 +33,7 @@
           tap: function() {
             this.$emit('tap');
             //Play the note from asset file...
-            var note = this.text;
-
-            //Will need to eventually differentiate between exercises, because there is for example an E3 example on an 'eeeee' sound and an 'oooool' sound.
-            playerOptions.audioFile = audioDirectory + note + '.mp3';
+            playerOptions.audioFile = audioDirectory + this.text + '_' + this.sound + '.mp3';
 
             player
               .playFromFile(playerOptions)
