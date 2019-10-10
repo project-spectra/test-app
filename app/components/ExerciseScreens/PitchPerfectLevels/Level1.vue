@@ -4,10 +4,10 @@
         <FlexboxLayout style="flex: 1;" flexDirection="column" id="container">
             <TextView :text="'Pitch Perfect: Level ' + level" editable="false" id="pitch-perfect-level-1-title"/>
 
-
+            <!-- TODO: User should have a chance to hear the note and click "ready" before the next level starts !-->
             <FlexboxLayout flexWrap="wrap" justifyContent="center" flexDirection="row" id="holdNoteInfo" >
                 <TextView text="Hold the note " editable="false" id="holdNoteText"/>
-                <IntroNotePickerButton selected="false" :text="currentNote" />
+                <IntroNotePickerButton selected="false" :text="currentNote" sound="o"/>
                 <TextView text=" as long as you can." editable="false" id="holdNoteText"/>
 
             </FlexboxLayout>
