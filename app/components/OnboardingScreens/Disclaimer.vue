@@ -10,7 +10,7 @@
             <StackLayout style="flex-grow: 1"/>
 
             <FlexboxLayout alignSelf="center" flexDirection="row">
-                <SpectraActionButton alignSelf="center" text="I agree" @tap="onReady" />
+                <SpectraActionButton alignSelf="center" text="I agree" @tap="onReady" width="80%" />
             </FlexboxLayout>
         </FlexboxLayout>
     </Page>

@@ -41,9 +41,6 @@
 
             player
               .playFromFile(playerOptions)
-              .then(function(res) {
-                console.log(res);
-              })
               .catch(function(err) {
                 console.log('Something went wrong...', err);
               });
