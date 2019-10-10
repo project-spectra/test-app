@@ -6,9 +6,18 @@
 </template>
 
 <script>
+    import { TNSPlayer } from "nativescript-audio";
+
+    const player = new TNSPlayer();
+    const audioDirectory = "~/assets/audio/"
+
+    var playerOptions = {
+      audioFile: '',
+      loop: false,
+    };
 
     export default {
-        props: ['text'],
+        props: ['text', 'sound'],
         computed: {
             style() {
                 return {
@@ -24,8 +33,16 @@
           tap: function() {
             this.$emit('tap');
             //Play the note from asset file...
-            //var note = this.text;
-            
+            playerOptions.audioFile = audioDirectory + this.text + '_' + this.sound + '.mp3';
+
+            player
+              .playFromFile(playerOptions)
+              .then(function(res) {
+                console.log(res);
+              })
+              .catch(function(err) {
+                console.log('Something went wrong...', err);
+              });
           }
         }
     }

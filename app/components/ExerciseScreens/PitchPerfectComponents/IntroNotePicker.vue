@@ -20,9 +20,9 @@
         <StackLayout height="15dp"/>
 
         <FlexboxLayout flexDirection="row" justifyContent="space-around" >
-            <IntroNotePickerButton text="D3" @tap="onTapLow" :class="[this.lowSelected ? this.selectedClass : '']" />
-            <IntroNotePickerButton text="F3" @tap="onTapMed" :class="[this.medSelected ? this.selectedClass : '']" />
-            <IntroNotePickerButton text="G3" @tap="onTapHigh" :class="[this.highSelected ? this.selectedClass : '']" />
+            <IntroNotePickerButton text="D3" sound="o" @tap="onTapLow" :class="[this.lowSelected ? this.selectedClass : '']" />
+            <IntroNotePickerButton text="F3" sound="o" @tap="onTapMed" :class="[this.medSelected ? this.selectedClass : '']" />
+            <IntroNotePickerButton text="G3" sound="o" @tap="onTapHigh" :class="[this.highSelected ? this.selectedClass : '']" />
         </FlexboxLayout>
     </StackLayout>
 </template>
@@ -99,6 +99,6 @@
 <style scoped>
   .selectedButtonClass {
     border-color: #72C8B2;
-    border-width: 2dp;
+    border-width: 3dp;
   }
 </style>

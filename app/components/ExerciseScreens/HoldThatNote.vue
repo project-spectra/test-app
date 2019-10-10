@@ -8,9 +8,9 @@
             <StackLayout flexGrow="1" />
 
             <FlexboxLayout flexDirection="row" justifyContent="space-around" >
-              <IntroNotePickerButton text="E3" />
-              <IntroNotePickerButton text="F3" />
-              <IntroNotePickerButton text="A3" />
+              <IntroNotePickerButton text="E3" sound="e"/>
+              <IntroNotePickerButton text="F3" sound="e"/>
+              <IntroNotePickerButton text="A3" sound="e"/>
             </FlexboxLayout>
 
             <StackLayout flexGrow="1" />
@@ -47,7 +47,7 @@
                 started: false,
                 timeStarted: 0,
                 INFO_TEXT:
-                    "In this vocal warmup, hold the sound 'eeee' for as long as possible. To hear an example, choose the note below that is most comfortable for you to hold right now.\n\nThis is a warmup, so don't worry about being exactly on pitch!",
+                    "In this vocal warmup, hold the sound 'eeee' for as long as possible. To hear an example, choose the note below that is most comfortable for you to hold right now.\n\nThe tone should be as soft as possible without breathiness. Produce this with an extremely forward and almost nasal sound. This is a warmup, so don't worry about being exactly on pitch!",
           }
         },
         methods: {
