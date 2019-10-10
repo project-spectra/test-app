@@ -9,9 +9,7 @@
 
             <StackLayout style="flex-grow: 1"/>
 
-            <FlexboxLayout alignSelf="center" flexDirection="row">
-                <SpectraActionButton alignSelf="center" text="I agree" @tap="onReady" width="80%" />
-            </FlexboxLayout>
+            <SpectraActionButton alignSelf="center" text="I agree" @tap="onReady" style="width: 80%" />
         </FlexboxLayout>
     </Page>
 

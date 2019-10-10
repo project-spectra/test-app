@@ -51,6 +51,7 @@
                 INFO_TEXT:
                     "Glide from your lowest comfortable note to your highest comfortable note, then back down again.",
                 isPlayingExample: false,
+                name: this.$store.state.name
           }
         },
         mounted() {
@@ -107,7 +108,7 @@
                 //Show a dialog box
                 dialogs.confirm({
                   title: "Done!",
-                  message: "You did it. Take a few deep breaths before continuing.",
+                  message: "You did it, " + self.name + "! Take a few deep breaths before continuing.",
                   cancelButtonText: "Try a new exercise",
                   okButtonText: "Repeat this exercise"
                 }).then(function (result) {

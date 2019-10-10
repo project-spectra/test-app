@@ -2,7 +2,7 @@
 <template>
     <Page actionBarHidden="true" class="page">
         <FlexboxLayout style="flex: 1;" flexDirection="column" id="container">
-            <TextView :text="'Project\nSpectra'" editable="false" id="project-spectra-title"/>
+            <TextView :text="'Project Spectra'" editable="false" id="project-spectra-title"/>
             <TextView editable="false" id="project-spectra-desc">
                 <Span :text="WELCOME_TEXT" />
 
@@ -68,7 +68,7 @@
     }
 
     #project-spectra-title {
-        font-size: 45em;
+        font-size: 40em;
         font-family: 'serif';
         font-weight: 700;
         color: #000;
