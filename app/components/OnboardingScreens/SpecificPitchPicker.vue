@@ -34,9 +34,9 @@
 
                 <FlexboxLayout style="flex: 1; align-items: center;" flexDirection="column" >
                     <!--<TextView text="show up!" editable="false" id="welcome"/>-->
-                    <StackLayout flexGrow="1" backgroundColor="#B6A9D7" style="width: 60%;"/>
-                    <StackLayout flexGrow="1" backgroundColor="#BF99D7" style="width: 60%;"/>
-                    <StackLayout flexGrow="1" backgroundColor="#D7B7DF" style="width: 60%;"/>
+                    <StackLayout :flexGrow="femaleRangeRatio" backgroundColor="#B6A9D7" style="width: 60%;"/>
+                    <StackLayout :flexGrow="androgynousRangeRatio" backgroundColor="#BF99D7" style="width: 60%;"/>
+                    <StackLayout :flexGrow="maleRangeRatio" backgroundColor="#D7B7DF" style="width: 60%;"/>
                 </FlexboxLayout>
             </FlexboxLayout>
 
@@ -112,6 +112,10 @@
             }
         },
         computed: {
+            femaleRangeRatio: () => (MAX_PITCH_HZ - ANDROGYNOUS_TOP_BORDER) / (MAX_PITCH_HZ - MIN_PITCH_HZ),
+            androgynousRangeRatio: () => (ANDROGYNOUS_TOP_BORDER - ANDROGYNOUS_BOTTOM_BORDER) / (MAX_PITCH_HZ - MIN_PITCH_HZ),
+            maleRangeRatio: () => (ANDROGYNOUS_BOTTOM_BORDER - MIN_PITCH_HZ) / (MAX_PITCH_HZ - MIN_PITCH_HZ),
+
             sliderKnobHeight: () => SLIDER_KNOB_HEIGHT,
             sliderAreaHeight: () => platformModule.screen.mainScreen.heightDIPs * 0.4,
             currentNote: function () {
