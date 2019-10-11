@@ -82,7 +82,11 @@
                     "Tell me about a close\nfriend or family member.",
                     "What's something you like\nto do in your free time?",
                     "What was the last movie\nyou saw? What did you think?",
-                    "What's your favorite animal?\n(It's okay if it's not a cat!)"
+                    "What's your favorite animal\nand why?",
+                    "What kind of music do you\nlike to listen to, and why?",
+                    "What's the best thing that\nhappened to you last week?",
+                    "How are you feeling today?",
+                    "What are you up to tomorrow?"
                 );
                 return questions[Math.floor(Math.random() * questions.length)];
             }

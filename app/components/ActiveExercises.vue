@@ -14,7 +14,7 @@
             <!-- Exercises !-->
             <Label style="font-style: italic" text="Do this first to avoid vocal strain" />
             
-            <ExerciseProgressRow @tap="onHoldThatNote" class="exercise-progress-row" text="Warm-up: Hold That Note!" percentage="0" progressText=""/>
+            <ExerciseProgressRow @tap="onHoldThatNote" class="exercise-progress-row" text="Hold That Note: Warm up your voice" percentage="0" progressText=""/>
 
             <Label style="font-style: italic" text="Two times per day" />
             <ExerciseProgressRow @tap="onPitchPerfect" class="exercise-progress-row" text="Pitch Perfect: Strengthen your voice" :percentage="pctPitchPerfectCompleted" :progressText="pitchPerfectCompleted + '/2'" />
@@ -24,7 +24,7 @@
             <ExerciseProgressRow @tap="onBDSDTap" class="exercise-progress-row" text="Big Dog/Small Dog: Larynx Training" :percentage="pctBdsdCompleted" :progressText="bdsdCompleted + '/2'" />
 
             <Label style="font-style: italic" text="Any time" />
-            <ExerciseProgressRow @tap="onConvoTap" percentage="0" class="exercise-progress-row" text="Conversational Practice: Talk to a bot" progressText="" />
+            <ExerciseProgressRow @tap="onConvoTap" percentage="0" class="exercise-progress-row" text="Conversation Practice: Chat with a cat" progressText="" />
 
             <StackLayout style="height: 10dp;"/>
 

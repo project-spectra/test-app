@@ -6,8 +6,10 @@
       <TextView :text="'Project Spectra'" editable="false" id="project-spectra-title"/>
 
       <TextView editable="false" style="background-color: transparent;">
-        <Span text="Current Goal: " />
-        <Span :text="currentGoalName + '\n'" style="font-style: italic; font-weight: bold;" />
+        <Span text="Hi, " />
+        <Span :text="name" />
+        <Span text="! Your current goal is: " />
+        <Span :text="'\n' + currentGoalName + '\n'" style="font-style: italic; font-weight: bold;" />
       </TextView>
 
       <FlexboxLayout flexDirection="row" style="align-self: center;">
