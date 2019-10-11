@@ -3,7 +3,7 @@
 <template>
   <Page @loaded="onPageLoaded" actionBarHidden="true" class="page">
     <FlexboxLayout style="flex: 1;" flexDirection="column" id="container">
-      <TextView :text="'Project\nSpectra'" editable="false" id="project-spectra-title"/>
+      <TextView :text="'Project Spectra'" editable="false" id="project-spectra-title"/>
 
       <TextView editable="false" style="background-color: transparent;">
         <Span text="Current Goal: " />
@@ -14,10 +14,9 @@
         <SpectraProgressBox class="current-progress-box" :percentage=percentExercisesCompleted />
       </FlexboxLayout>
 
-      <Label style="align-self: center; font-style:italic" :text="numExercisesCompleted + '/6 exercises completed!'" />
-      <!-- TODO: dynamic encouragement text
-      <Label style="align-self: center; font-style: italic;" text="Nice, you're on your way." />
-      -->
+      <Label style="align-self: center; font-style:italic" :text="numExercisesCompleted + '/6 exercises completed today'" />
+
+      <Label style="align-self: center; font-weight:bold" :text="encouragementText" />
 
       <!--Empty placeholder (there is no equivalent of div in NS..) -->
       <StackLayout style="flex-grow: 1"/>
@@ -53,6 +52,11 @@
           SpectraMajorButton,
           SpectraProgressBox
       },
+      data() {
+        return {
+          name: this.$store.state.name,
+        }
+      },
       computed: {
         currentGoalName() {
             let currentGoalId = this.$store.state.goal;
@@ -66,6 +70,20 @@
             let completed = this.$store.state.pitchPerfectCompleted + this.$store.state.slideCompleted + this.$store.state.bdsdCompleted;
             console.log("completed " + completed + " exercises");
             return 100*(completed / 6); //at 2 exercises per day
+        },
+        encouragementText() {
+          //Dynamic encouragement text that will appear below the excercise progress bar
+          if (this.percentExercisesCompleted == 0) {
+            return 'Your voice is ready for a workout!'
+          } else if (this.percentExercisesCompleted < 50 && this.percentExercisesCompleted > 0) {
+            return 'Nice, ' + this.name + '! You\'re on your way.'
+          } else if (this.percentExercisesCompleted == 50) {
+            return 'Halfway there :)'
+          } else if (this.percentExercisesCompleted > 50 &&this.percentExercisesCompleted < 100) {
+            return 'You\'re almost done for the day, ' + this.name +  '! Keep at it.'
+          } else {
+            return 'Yay, all done! Great job, ' + this.name + '!'
+          }
         }
       },
       created() {
@@ -110,7 +128,7 @@
   }
 
   #project-spectra-title {
-    font-size: 45em;
+    font-size: 40em;
     font-family: 'serif';
     font-weight: 700;
     color: #000;
