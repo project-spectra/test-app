@@ -6,10 +6,8 @@
       <TextView :text="'Project Spectra'" editable="false" id="project-spectra-title"/>
 
       <TextView editable="false" style="background-color: transparent;">
-        <Span text="Hi, " />
-        <Span :text="name" />
-        <Span text="! Your current goal is: " />
-        <Span :text="'\n' + currentGoalName + '\n'" style="font-style: italic; font-weight: bold;" />
+        <Span text="Your Goal: " />
+        <Span :text="currentGoalName + '\n'" style="font-style: italic; font-weight: bold;" />
       </TextView>
 
       <FlexboxLayout flexDirection="row" style="align-self: center;">
@@ -76,11 +74,11 @@
         encouragementText() {
           //Dynamic encouragement text that will appear below the excercise progress bar
           if (this.percentExercisesCompleted == 0) {
-            return 'Your voice is ready for a workout!'
+            return 'Your voice is ready for a workout, ' + this.name + '!'
           } else if (this.percentExercisesCompleted < 50 && this.percentExercisesCompleted > 0) {
             return 'Nice, ' + this.name + '! You\'re on your way.'
           } else if (this.percentExercisesCompleted == 50) {
-            return 'Halfway there :)'
+            return 'Halfway there, ' + this.name + ' :)'
           } else if (this.percentExercisesCompleted > 50 &&this.percentExercisesCompleted < 100) {
             return 'You\'re almost done for the day, ' + this.name +  '! Keep at it.'
           } else {

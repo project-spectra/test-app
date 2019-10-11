@@ -5,7 +5,7 @@
             <TextView text="Exercises" editable="false" id="welcome"/>
 
             <TextView editable="false" style="background-color: transparent; border-bottom-color: #A7C6BE; border-bottom-width: 2dp;">
-                <Span text="Current Goal: " />
+                <Span text="Your Goal: " />
                 <Span :text="currentGoalName" style="font-style: italic; font-weight: bold;" />
             </TextView>
 
