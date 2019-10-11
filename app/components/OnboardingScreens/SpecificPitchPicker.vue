@@ -15,7 +15,7 @@
                 <FlexboxLayout style="width: 55%; align-items: flex-end; justify-content: center" flexDirection="column" id="container">
 
                     <TextView editable="false" id="selectedPitchLegend">
-                        <Span :text="  this.currentNote + '/' + this.currentPitchHz + ' Hz'"  style="font-size: 25em; font-weight: bold" />
+                        <Span :text="  this.currentNote + '/' + Math.floor(this.currentPitchHz) + ' Hz'"  style="font-size: 20em; font-weight: bold" />
                         <Span :text="'\n'" />
                         <Span :text="`(${currentPitchTextDescription})`" />
                     </TextView>
