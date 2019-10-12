@@ -41,8 +41,8 @@
             </FlexboxLayout>
 
             <FlexboxLayout style="justify-content: center;">
-                <IntroNotePickerButton text="Play this pitch" :sound="'p_' + currentNote" id="play-this-pitch" />
-                <!--
+                <IntroNotePickerButton text="Play this pitch " :sound="'p_' + currentNote" id="play-this-pitch" />
+                <!-- A pure tone synthesizer
                 <FlexboxLayout flexDirection="row" justifyContent="space-between" id="play-this-pitch"
                                @tap="playThisPitchTap" >
                     <Label text="Play this pitch" alignSelf="center" style="font-weight: bold; font-size: 20em" />

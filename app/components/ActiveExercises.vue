@@ -21,7 +21,9 @@
 
             <ExerciseProgressRow @tap="onSlides" class="exercise-progress-row" text="Slides: Move smoothly between notes" :percentage="pctSlideCompleted" :progressText="slideCompleted + '/2'" />
 
+            <!-- Not using BDSD currently 
             <ExerciseProgressRow @tap="onBDSDTap" class="exercise-progress-row" text="Big Dog/Small Dog: Larynx Training" :percentage="pctBdsdCompleted" :progressText="bdsdCompleted + '/2'" />
+            !-->
 
             <Label style="font-style: italic" text="Any time" />
             <ExerciseProgressRow @tap="onConvoTap" percentage="0" class="exercise-progress-row" text="Conversation Practice: Chat with a cat" progressText="" />

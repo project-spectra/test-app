@@ -14,7 +14,7 @@
         <SpectraProgressBox class="current-progress-box" :percentage=percentExercisesCompleted />
       </FlexboxLayout>
 
-      <Label style="align-self: center; font-style:italic" :text="numExercisesCompleted + '/6 exercises completed today'" />
+      <Label style="align-self: center; font-style:italic" :text="numExercisesCompleted + '/' + this.TOTAL_EXERCISES + ' exercises completed today'" />
 
       <Label style="align-self: center; font-weight:bold" :text="encouragementText" />
 
@@ -55,6 +55,7 @@
       data() {
         return {
           name: this.$store.state.name,
+          TOTAL_EXERCISES: 4,
         }
       },
       computed: {
@@ -69,7 +70,7 @@
         percentExercisesCompleted() {
             let completed = this.$store.state.pitchPerfectCompleted + this.$store.state.slideCompleted + this.$store.state.bdsdCompleted;
             console.log("completed " + completed + " exercises");
-            return 100*(completed / 6); //at 2 exercises per day
+            return 100*(completed / this.TOTAL_EXERCISES); //at 2 exercises per day for PP and slides
         },
         encouragementText() {
           //Dynamic encouragement text that will appear below the excercise progress bar
