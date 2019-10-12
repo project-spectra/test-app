@@ -33,9 +33,12 @@
           tap: function() {
             this.$emit('tap');
             //Play the note from asset file...
-            if (this.sound == "slide") {
+            if (this.sound == 'slide') { //Slide sample
               playerOptions.audioFile = audioDirectory + this.sound + '.mp3';
-            } else {
+            } else if (this.sound.charAt(0) == 'p') { //Piano sample
+              playerOptions.audioFile = audioDirectory + this.sound + '.mp3';
+              console.log('Playing ' + playerOptions.audioFile)
+            } else { //Voice sample
               playerOptions.audioFile = audioDirectory + this.text + '_' + this.sound + '.mp3';
             }
 

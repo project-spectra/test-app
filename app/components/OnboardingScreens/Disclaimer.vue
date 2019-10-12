@@ -30,7 +30,7 @@
             return {
                 name: '',
                 INFO_TEXT:
-                    "This app was made by volunteers with input from experienced speech therapists and voice experts, but we are not experts ourselves. By using this app, please agree to not hold us liable for any h arm done to your voice that may result from use.\n\nPlease do not complete the exercises more often than suggested. If  you ever feel prolonged strain or soreness, immediately stop using the app, and if you are able to, seek help from a doctor.\n\nThis app will not save any recordings of your voice to your device.",
+                    "This app was made by volunteers with input from experienced speech therapists and voice experts, but we are not experts ourselves. By using this app, please agree to not hold us liable for any harm done to your voice that may result from use.\n\nPlease do not complete the exercises more often than suggested. If  you ever feel prolonged strain or soreness, immediately stop using the app, and if you are able to, seek help from a doctor.\n\nThis app will not save any recordings of your voice to your device.",
             }
         },
         methods: {

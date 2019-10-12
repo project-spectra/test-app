@@ -41,12 +41,15 @@
             </FlexboxLayout>
 
             <FlexboxLayout style="justify-content: center;">
+                <IntroNotePickerButton text="Play this pitch" :sound="'p_' + currentNote" id="play-this-pitch" />
+                <!--
                 <FlexboxLayout flexDirection="row" justifyContent="space-between" id="play-this-pitch"
                                @tap="playThisPitchTap" >
                     <Label text="Play this pitch" alignSelf="center" style="font-weight: bold; font-size: 20em" />
                     <StackLayout width="10dp"/>
                     <Label :text="'\uf028'" alignSelf="center" style="font-size: 20em;" class="fas" />
                 </FlexboxLayout>
+                !-->
             </FlexboxLayout>
 
 
@@ -83,6 +86,7 @@
 
     import SpectraActionButton from "@/components/UIControls/SpectraActionButton";
     import SpectraTextView from "@/components/UIControls/SpectraTextView";
+    import IntroNotePickerButton from "@/components/ExerciseScreens/PitchPerfectComponents/IntroNotePickerButton";
 
     import {noteFromPitch} from '@/utils/Utils';
     import {isAndroid} from "tns-core-modules/platform";
@@ -99,7 +103,8 @@
         },
         components: {
             SpectraActionButton,
-            SpectraTextView
+            SpectraTextView,
+            IntroNotePickerButton
         },
         data() {
             return {
