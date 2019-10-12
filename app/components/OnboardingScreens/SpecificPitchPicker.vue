@@ -15,7 +15,7 @@
                 <FlexboxLayout style="width: 55%; align-items: flex-end; justify-content: center" flexDirection="column" id="container">
 
                     <TextView editable="false" id="selectedPitchLegend">
-                        <Span :text="  this.currentNote + '/' + this.currentPitchHz + ' Hz'"  style="font-size: 25em; font-weight: bold" />
+                        <Span :text="  this.currentNote + '/' + Math.floor(this.currentPitchHz) + ' Hz'"  style="font-size: 20em; font-weight: bold" />
                         <Span :text="'\n'" />
                         <Span :text="`(${currentPitchTextDescription})`" />
                     </TextView>
@@ -34,19 +34,22 @@
 
                 <FlexboxLayout style="flex: 1; align-items: center;" flexDirection="column" >
                     <!--<TextView text="show up!" editable="false" id="welcome"/>-->
-                    <StackLayout flexGrow="1" backgroundColor="#B6A9D7" style="width: 60%;"/>
-                    <StackLayout flexGrow="1" backgroundColor="#BF99D7" style="width: 60%;"/>
-                    <StackLayout flexGrow="1" backgroundColor="#D7B7DF" style="width: 60%;"/>
+                    <StackLayout :flexGrow="femaleRangeRatio" backgroundColor="#B6A9D7" style="width: 60%;"/>
+                    <StackLayout :flexGrow="androgynousRangeRatio" backgroundColor="#BF99D7" style="width: 60%;"/>
+                    <StackLayout :flexGrow="maleRangeRatio" backgroundColor="#D7B7DF" style="width: 60%;"/>
                 </FlexboxLayout>
             </FlexboxLayout>
 
             <FlexboxLayout style="justify-content: center;">
+                <IntroNotePickerButton text="Play this pitch " :sound="'p_' + currentNote" id="play-this-pitch" />
+                <!-- A pure tone synthesizer
                 <FlexboxLayout flexDirection="row" justifyContent="space-between" id="play-this-pitch"
                                @tap="playThisPitchTap" >
                     <Label text="Play this pitch" alignSelf="center" style="font-weight: bold; font-size: 20em" />
                     <StackLayout width="10dp"/>
                     <Label :text="'\uf028'" alignSelf="center" style="font-size: 20em;" class="fas" />
                 </FlexboxLayout>
+                !-->
             </FlexboxLayout>
 
 
@@ -83,6 +86,7 @@
 
     import SpectraActionButton from "@/components/UIControls/SpectraActionButton";
     import SpectraTextView from "@/components/UIControls/SpectraTextView";
+    import IntroNotePickerButton from "@/components/ExerciseScreens/PitchPerfectComponents/IntroNotePickerButton";
 
     import {noteFromPitch} from '@/utils/Utils';
     import {isAndroid} from "tns-core-modules/platform";
@@ -99,7 +103,8 @@
         },
         components: {
             SpectraActionButton,
-            SpectraTextView
+            SpectraTextView,
+            IntroNotePickerButton
         },
         data() {
             return {
@@ -112,6 +117,10 @@
             }
         },
         computed: {
+            femaleRangeRatio: () => (MAX_PITCH_HZ - ANDROGYNOUS_TOP_BORDER) / (MAX_PITCH_HZ - MIN_PITCH_HZ),
+            androgynousRangeRatio: () => (ANDROGYNOUS_TOP_BORDER - ANDROGYNOUS_BOTTOM_BORDER) / (MAX_PITCH_HZ - MIN_PITCH_HZ),
+            maleRangeRatio: () => (ANDROGYNOUS_BOTTOM_BORDER - MIN_PITCH_HZ) / (MAX_PITCH_HZ - MIN_PITCH_HZ),
+
             sliderKnobHeight: () => SLIDER_KNOB_HEIGHT,
             sliderAreaHeight: () => platformModule.screen.mainScreen.heightDIPs * 0.4,
             currentNote: function () {

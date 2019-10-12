@@ -17,7 +17,7 @@
             </AbsoluteLayout>
 
             <FlexboxLayout flexDirection="row" justifyContent="space-around" >
-              <IntroNotePickerButton text="Play an example  " />
+              <IntroNotePickerButton text="Play an example  " sound="slide" @tap="onExample" :isEnabled=" !this.isPlayingExample " />
             </FlexboxLayout>
 
             <StackLayout flexGrow="1" />
@@ -50,6 +50,8 @@
           return {
                 INFO_TEXT:
                     "Glide from your lowest comfortable note to your highest comfortable note, then back down again.",
+                isPlayingExample: false,
+                name: this.$store.state.name
           }
         },
         mounted() {
@@ -59,7 +61,31 @@
           onBack: function() {
             this.$navigateBack();
           },
-
+          onExample: function() {
+            //Run the animation
+            console.log("Animation running...");
+            this.isPlayingExample = true;
+            cartImage.nativeView.animate({
+              translate: {x: 90, y:-135},
+              rotate: 20,
+              duration: 1800,
+              curve: enums.AnimationCurve.linear
+            }).then( () => {
+              cartImage.nativeView.animate({
+                translate: {x: 200, y: 10},
+                rotate: 20,
+                duration: 1800,
+              }).then( () => {
+                //Reset the cart
+                this.isPlayingExample = false;
+                cartImage.nativeView.animate({
+                  translate: {x: 0, y: 0},
+                  rotate: 0,
+                  duration: 10,
+                })
+              })
+            });
+          },
           onStart: function() {
             var self = this; //so we can navigate from within the dialog function
 
@@ -82,7 +108,7 @@
                 //Show a dialog box
                 dialogs.confirm({
                   title: "Done!",
-                  message: "You did it. Take a few deep breaths before continuing.",
+                  message: "You did it, " + self.name + "! Take a few deep breaths before continuing.",
                   cancelButtonText: "Try a new exercise",
                   okButtonText: "Repeat this exercise"
                 }).then(function (result) {

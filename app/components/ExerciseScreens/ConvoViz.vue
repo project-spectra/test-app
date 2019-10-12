@@ -6,7 +6,6 @@
         </FlexboxLayout>
 
         <FlexboxLayout v-if="!!this.pitchStats" style="flex: 1;" flexDirection="column" id="container">
-            <TextView text="Done!" editable="false" id="title"/>
 
             <TextView editable="false" style="background-color: transparent;">
                 <Span text="Your average pitch was "/>
@@ -28,12 +27,12 @@
             </TextView>
 
             <!--animation goes here !-->
-            <AbsoluteLayout :height="vizAreaHeight" :width="vizAreaWidth" backgroundColor="lightgray" marginTop="20em"
+            <AbsoluteLayout :height="vizAreaHeight" :width="vizAreaWidth" backgroundColor="#E8E8E8" marginTop="20em"
                             marginBottom="20em">
 
                 <FlexboxLayout :top="firstRungOffsetFromTop" :height="vizAreaHeight - firstRungOffsetFromTop"
                                left="0"
-                               flexDirection="column" width="100%">
+                               flexDirection="column" :width="(vizAreaWidth/2)">
                     <AbsoluteLayout backgroundColor="#B6A9D7" width="100%" :style="d">
                         <TextView top="10" left="10" text="feminine" editable="false" class="zoneLabel"/>
 
@@ -51,6 +50,7 @@
                 <!-- 20 is for the line of text above each rung -->
                 <StackLayout v-for="index in noRungs" v-bind:key="index.id" left="0"
                              :top="firstRungOffsetFromTop + (index - 1)*((vizAreaHeight - 5 - firstRungOffsetFromTop) / (noRungs - 1))"
+                             :left="(vizAreaWidth /2) + widthOfMiddleBar"
                              width="vizAreaWidth"
                              class="hr-dark" style="height: 1dp;"/>
 
@@ -66,7 +66,7 @@
                                :left="(vizAreaWidth / 2)"
                                flexDirection="column" backgroundColor="white" :width="widthOfMiddleBar">
                     <StackLayout :style="a" backgroundColor="white"/>
-                    <StackLayout :style="b" backgroundColor="red"/>
+                    <StackLayout :style="b" backgroundColor="#72C8B2"/>
                     <StackLayout :style="c" backgroundColor="white"/>
                 </FlexboxLayout>
                 <!--<StackLayout class="hr-dark" style="height: 1dp;"/>
@@ -122,7 +122,7 @@
                 <StackLayout height="2dp" :width="50 + 15" backgroundColor="purple"
                              :top="getAbsoluteOffsetFromTop(this.specificPitchGoal)"
                              :left="(vizAreaWidth / 2) "/>
-                <TextView editable="false" class="indicatorLabel" text="Target" width="60" height="40"
+                <TextView editable="false" class="indicatorLabel" text="Goal" width="60" height="40"
                           :top="getAbsoluteOffsetFromTop(this.specificPitchGoal) - (40/2)"
                           :left="(vizAreaWidth / 2) + 2 + 60"/>
 

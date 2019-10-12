@@ -72,7 +72,7 @@
       onCredits() {
         dialogs.alert({
               title: "Credits",
-              message: "Project Spectra is a group of independent developers and designers seeking to build free & open-source software for voice training. While we believe that anyone, regardless of identity, should be able to use and benefit from our work, we are specifically interested in supporting the self-determination of transgender & gender non-conforming people.",
+              message: "Project Spectra is a group of independent developers and designers seeking to build free & open-source software for voice training. While we believe that anyone, regardless of identity, should be able to use and benefit from our work, we are specifically interested in supporting the self-determination of transgender & gender non-conforming people. \n\nhttps://github.com/project-spectra",
               okButtonText: "Okay"
             }).then(function () {
               console.log("Dialog closed!");
@@ -81,7 +81,7 @@
       onFeedback() {
         dialogs.alert({
               title: "Share Feedback",
-              message: "Experiencing problems with the app? Have ideas on how it could be improved? Want to join us and help with development?\n\nReach us at projectspectra.app@gmail.com !", //TODO: implement a mail-to link
+              message: "Experiencing problems with the app? Have ideas on how it could be improved? Want to join us and help with development?\n\nReach us at\nprojectspectra.app@gmail.com !", //TODO: implement a mail-to link
               okButtonText: "Okay"
             }).then(function () {
               console.log("Dialog closed!");
