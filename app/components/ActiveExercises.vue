@@ -52,6 +52,29 @@
     import Convo from "@/components/ExerciseScreens/Convo";
 
     import {Config} from "@/utils/Config";
+    import { knownFolders, path, File, Folder } from "tns-core-modules/file-system";
+
+    //Set up usage logging
+    const moment = require("moment");
+    const permissions = require('nativescript-permissions');
+    var logFile;
+
+    function appendFile(file, data) {
+      var contents;
+
+      console.log("data: " + data);
+      file.readText().then(res => {
+        console.log("contents: " + res);
+        contents = res;
+
+        var newContents = contents ? contents + data : data;
+        console.log("newContents: " + newContents)
+
+        file.writeText(newContents);
+      }).catch(err => {
+        console.log(err.stack);
+      });
+    }
 
     export default {
         components: {ExerciseProgressRow, SpectraActionButton},
@@ -92,9 +115,24 @@
             this.bdsdCompleted = this.$store.state.bdsdCompleted;
             this.slideCompleted = this.$store.state.slideCompleted;
         },
+        mounted() {
+          permissions.requestPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE).then(() => {
+            console.log('Write permissions granted.');
+
+            const directory = android.os.Environment.getExternalStorageDirectory().getAbsolutePath().toString();
+            const folder = Folder.fromPath(directory);
+
+            logFile = folder.getFile('spectra-log.txt');
+            console.log("logfile: " + logfile);
+          }).catch(() => {
+            console.log('Write permissions denied!');
+          });
+        },
         methods: {
             onHoldThatNote: function () {
                 this.$navigateTo(HoldThatNote);
+
+                appendFile(logFile,'HoldThatNote started,'+ moment().format() + ',\n');
             },
 
             onSlides: function() {
