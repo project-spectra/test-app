@@ -1,6 +1,6 @@
 
 <template>
-    <Page actionBarHidden="true" class="page">
+    <Page actionBarHidden="true" class="page" @loaded="onLoaded">
         <FlexboxLayout style="flex: 1;" flexDirection="column" id="container">
             <TextView text="Exercises" editable="false" id="welcome"/>
 
@@ -53,28 +53,12 @@
 
     import {Config} from "@/utils/Config";
     import { knownFolders, path, File, Folder } from "tns-core-modules/file-system";
+    import {appendFile} from '@/utils/Utils';
 
     //Set up usage logging
     const moment = require("moment");
     const permissions = require('nativescript-permissions');
     var logFile;
-
-    function appendFile(file, data) {
-      var contents;
-
-      console.log("data: " + data);
-      file.readText().then(res => {
-        console.log("contents: " + res);
-        contents = res;
-
-        var newContents = contents ? contents + data : data;
-        console.log("newContents: " + newContents)
-
-        file.writeText(newContents + '\n');
-      }).catch(err => {
-        console.log(err.stack);
-      });
-    }
 
     export default {
         components: {ExerciseProgressRow, SpectraActionButton},
@@ -124,12 +108,22 @@
             
             //moment().format().substr(0,10) just the date
             logFile = folder.getFile('spectra-log.txt');
-            console.log("logfile: " + logfile);
+            console.log("logfile: " + logFile);
+
           }).catch(() => {
             console.log('Write permissions denied!');
           });
         },
         methods: {
+            onLoaded() {
+              if (this.$store.state.pitchPerfectCompleted + this.$store.state.slideCompleted == 4) {
+                //Completed all exercises for the day!
+                appendFile(logFile,moment().format() + ',' + 'exercisesOpened' + ',' + 'allCompleted' + ',' + '\n');
+              } else {
+                appendFile(logFile,moment().format() + ',' + 'exercisesOpened' + ',' + 'inProgress' + ',' + '\n');                
+              }
+            },
+
             onHoldThatNote: function () {
                 this.$navigateTo(HoldThatNote);
             },
