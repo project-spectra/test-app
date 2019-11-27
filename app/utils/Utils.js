@@ -45,6 +45,23 @@ export function truncateDecimal(val, places) {
     return +((val).toFixed(places));
 }
 
+export function appendFile(file, data) {
+  var contents;
+
+  console.log("data: " + data);
+  file.readText().then(res => {
+    console.log("contents: " + res);
+    contents = res;
+
+    var newContents = contents ? contents + data : data;
+    console.log("newContents: " + newContents)
+
+    file.writeText(newContents + '\n');
+  }).catch(err => {
+    console.log(err.stack);
+  });
+}
+
 export const median = arr => {
     const mid = Math.floor(arr.length / 2),
         nums = [...arr].sort((a, b) => a - b);

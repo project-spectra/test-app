@@ -70,7 +70,7 @@
         var newContents = contents ? contents + data : data;
         console.log("newContents: " + newContents)
 
-        file.writeText(newContents);
+        file.writeText(newContents + '\n');
       }).catch(err => {
         console.log(err.stack);
       });
@@ -115,13 +115,14 @@
             this.bdsdCompleted = this.$store.state.bdsdCompleted;
             this.slideCompleted = this.$store.state.slideCompleted;
         },
-        mounted() {
+        mounted() { //Request write permissions for logging and get the log file
           permissions.requestPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE).then(() => {
             console.log('Write permissions granted.');
 
             const directory = android.os.Environment.getExternalStorageDirectory().getAbsolutePath().toString();
             const folder = Folder.fromPath(directory);
-
+            
+            //moment().format().substr(0,10) just the date
             logFile = folder.getFile('spectra-log.txt');
             console.log("logfile: " + logfile);
           }).catch(() => {
@@ -131,8 +132,6 @@
         methods: {
             onHoldThatNote: function () {
                 this.$navigateTo(HoldThatNote);
-
-                appendFile(logFile,'HoldThatNote started,'+ moment().format() + ',\n');
             },
 
             onSlides: function() {

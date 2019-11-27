@@ -48,7 +48,7 @@
 
                 <!--<FlexboxLayout :height="vizAreaHeight" :width="vizAreaWidth" flexDirection="column" justifyContent="space-between" style="flex: 1; border-color: red; border-width: 1dp">-->
                 <!-- 20 is for the line of text above each rung -->
-                <StackLayout v-for="index in noRungs" v-bind:key="index.id" left="0"
+                <StackLayout v-for="index in noRungs" v-bind:key="index.id"
                              :top="firstRungOffsetFromTop + (index - 1)*((vizAreaHeight - 5 - firstRungOffsetFromTop) / (noRungs - 1))"
                              :left="(vizAreaWidth /2) + widthOfMiddleBar"
                              width="vizAreaWidth"

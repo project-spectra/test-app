@@ -43,18 +43,15 @@
     const audio = require('nativescript-audio');
     const moment = require("moment");
 
-    //const recordingPath = fs.knownFolders.currentApp().path; //inaccessible to user
+    //import filesystem and append functions for logging
+    import {appendFile} from '@/utils/Utils';
+    import { knownFolders, path, File, Folder } from "tns-core-modules/file-system";
+    var logFile;
 
     function getRecordingPath() {
         return android.os.Environment.getExternalStorageDirectory().getAbsolutePath().toString() +
             '/' + "convo_" + moment().format('MMM_DD_h_mm_ss') + '.wav';  // will first record as raw pcm
     }
-
-
-    //path to recording
-    //const recordingPath = fs.path.normalize(directory + "/recording.wav");
-
-    // let _nativePluginInstance = new SpectraAudioRecorderPlugin();
 
     let _nativePluginInstance = new SpectraPitchPerfectPlugin();
 
@@ -71,6 +68,20 @@
                 pitchArray: [],
                 // isRecording: false,
             }
+        },
+        mounted() {
+          permissions.requestPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE).then(() => {
+            console.log('Write permissions granted.');
+
+            const directory = android.os.Environment.getExternalStorageDirectory().getAbsolutePath().toString();
+            const folder = Folder.fromPath(directory);
+            
+            //moment().format().substr(0,10) just the date
+            logFile = folder.getFile('spectra-log.txt');
+            console.log("logfile: " + logfile);
+          }).catch(() => {
+            console.log('Write permissions denied!');
+          });
         },
         computed: {
             question() {
@@ -106,22 +117,6 @@
             onStartPluginTest: function () {
                 if (!this.answering) {
 
-                    //Write to accessible directory to test the audio file outputs
-                    /*permissions.requestPermission([android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        android.Manifest.permission.RECORD_AUDIO], "Write a test file").then(() => {
-                        this.answering = true;
-
-                        let recordingPath = getRecordingPath();
-                        _nativePluginInstance.launchTask(recordingPath).then(res => {
-                            console.log('Recorded file metadata', res);
-                            this.$navigateTo(ConvoViz, {props: {recPath: recordingPath}});
-                        });
-                        this.isRecording = true;
-                    }).catch(() => {
-                        console.log("Uh oh, no permissions - plan B time!");
-                        alert('Unfortunately, we need to use your microphone for you to do this exercise.');
-                    });*/
-
                     permissions.requestPermission(android.Manifest.permission.RECORD_AUDIO, "Conversation Exercise").then(() => {
 
                         this.answering = true;
@@ -135,14 +130,17 @@
                         alert('Unfortunately, we need to use your microphone for you to do this exercise.');
                     })
 
-
                 } else {
                     this.answering = false;
                     _nativePluginInstance.stop();
                     if (this.pitchArray.length === 0) {
                         alert("Unfortunately, we weren't able to detect your pitch! Please try getting closer to the mic, or moving somewhere less noisy.")
                     } else {
-                        this.$navigateTo(ConvoViz, {props: {pitchArray: this.pitchArray}});
+
+                      //Log convo completion
+                      appendFile(logFile,moment().format() + ',' + 'completed' + ',' + 'Convo' + ',' + '\n');
+
+                      this.$navigateTo(ConvoViz, {props: {pitchArray: this.pitchArray}});
                     }
                 }
             }

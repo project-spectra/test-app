@@ -41,6 +41,16 @@
     const dialogs = require("tns-core-modules/ui/dialogs");
     var cartImage;
 
+    //import filesystem and append functions
+    import {appendFile} from '@/utils/Utils';
+    import { knownFolders, path, File, Folder } from "tns-core-modules/file-system";
+
+    const moment = require("moment");
+
+    //Set up usage logging
+    const permissions = require('nativescript-permissions');
+    var logFile;
+
     export default {
         components: {
           SpectraActionButton,
@@ -56,6 +66,21 @@
         },
         mounted() {
           cartImage = this.$refs.cartImage;
+
+          //Request write permissions for logging and get the log file
+          permissions.requestPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE).then(() => {
+            console.log('Write permissions granted.');
+
+            const directory = android.os.Environment.getExternalStorageDirectory().getAbsolutePath().toString();
+            const folder = Folder.fromPath(directory);
+            
+            //moment().format().substr(0,10) just the date
+            logFile = folder.getFile('spectra-log.txt');
+            console.log("logfile: " + logfile);
+          }).catch(() => {
+            console.log('Write permissions denied!');
+          });
+
         },
         methods: {
           onBack: function() {
@@ -104,6 +129,9 @@
               }).then( () => {
                 //increment exercise tracking
                 this.$store.dispatch('setSlideCompletion',this.$store.state.slideCompleted + 1);
+
+                //Log completion
+                appendFile(logFile,moment().format() + ',' + 'completed' + ',' + 'Slides' + ',' + '\n');
 
                 //Show a dialog box
                 dialogs.confirm({

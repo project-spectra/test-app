@@ -99,9 +99,15 @@
 
     const dialogs = require("tns-core-modules/ui/dialogs");
     const Timer = require('timer-machine');
+    const moment = require("moment");
 
     import * as permissions from 'nativescript-permissions';
     import * as platformModule from 'tns-core-modules/platform';
+
+    //import filesystem and append functions for usage logging
+    import {appendFile} from '@/utils/Utils';
+    import { knownFolders, path, File, Folder } from "tns-core-modules/file-system";
+    var logFile;
 
     // import interpolate from 'interpolate-range';
 
@@ -151,7 +157,21 @@
                 level: 1
             }
         },
+        mounted() {
+          //Request write permissions for logging and get the log file
+          permissions.requestPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE).then(() => {
+            console.log('Write permissions granted.');
 
+            const directory = android.os.Environment.getExternalStorageDirectory().getAbsolutePath().toString();
+            const folder = Folder.fromPath(directory);
+            
+            //moment().format().substr(0,10) just the date
+            logFile = folder.getFile('spectra-log.txt');
+            console.log("logfile: " + logfile);
+          }).catch(() => {
+            console.log('Write permissions denied!');
+          });
+        },
         computed: {
 
             arrowStyle() {
@@ -272,7 +292,11 @@
 
                             const self = this; //So we can navigate from inside the dialog
                             let name = this.$store.state.name;
+
                             if (this.level < 5) { //User has more levels to go. Navigate to next level
+
+                                //Log completion
+                                appendFile(logFile,moment().format() + ',' + 'level' + this.level + 'done,' + 'PitchPerfect' + ',' + '\n');
 
                                 dialogs.confirm({
                                     title: timeHeld === 1 ? "Nice, " + timeHeld + " second!" : "Nice, " + timeHeld + " seconds!",
@@ -301,6 +325,9 @@
 
                             } else { //User has reached the final level! Show dialog box to congratulate and increment exercise tracker
                                 this.$store.dispatch('setPitchPerfectCompletion', this.$store.state.pitchPerfectCompleted + 1);
+
+                                //Log completion
+                                appendFile(logFile,moment().format() + ',' + 'completed' + ',' + 'PitchPerfect' + ',' + '\n');
 
                                 dialogs.alert({
                                     title: timeHeld === 1 ? "Nice, " + timeHeld + " second!" : "Nice, " + timeHeld + " seconds!",

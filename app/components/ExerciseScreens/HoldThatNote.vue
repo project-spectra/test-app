@@ -33,8 +33,16 @@
     import IntroNotePickerButton from "../ExerciseScreens/PitchPerfectComponents/IntroNotePickerButton";
     import ActiveExercises from "../ActiveExercises";
 
+    //import filesystem and append functions
+    import {appendFile} from '@/utils/Utils';
+    import { knownFolders, path, File, Folder } from "tns-core-modules/file-system";
+
     const moment = require("moment");
     const dialogs = require("tns-core-modules/ui/dialogs");
+
+    //Set up usage logging
+    const permissions = require('nativescript-permissions');
+    var logFile;
 
     export default {
         components: {
@@ -49,6 +57,20 @@
                 INFO_TEXT:
                     "In this vocal warmup, hold the sound 'eeee' for as long as possible. To hear an example, choose the note below that is most comfortable for you to hold right now.\n\nThe tone should be as soft as possible without breathiness. Produce this with an extremely forward and almost nasal sound. This is a warmup, so don't worry about being exactly on pitch!",
           }
+        },
+        mounted() { //Get the log file
+          permissions.requestPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE).then(() => {
+            console.log('Write permissions granted.');
+
+            const directory = android.os.Environment.getExternalStorageDirectory().getAbsolutePath().toString();
+            const folder = Folder.fromPath(directory);
+            
+            //moment().format().substr(0,10) just the date
+            logFile = folder.getFile('spectra-log.txt');
+            console.log("logfile: " + logfile);
+          }).catch( (error) => {
+            console.error(error);
+          });
         },
         methods: {
           onBack: function() {
@@ -67,6 +89,9 @@
               this.buttonText = "Start!";
               var self = this; //so that we can navigate from within the dialog function
               console.log("Note was held for " + timeHeld + " seconds");
+
+              //Log completion
+              appendFile(logFile,moment().format() + ',' + 'completed' + ',' + 'HoldThatNote' + ',' + '\n');
 
               //Dialog box telling the user how long they held the note for
               dialogs.confirm({
