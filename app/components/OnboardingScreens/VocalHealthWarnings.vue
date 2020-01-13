@@ -29,7 +29,7 @@
             <StackLayout style="flex-grow: 1"/>
 
             <FlexboxLayout justifyContent="space-between" flexDirection="row">
-                <SpectraActionButton type='warning' text="Return" @tap="onReturn" />
+                <SpectraActionButton type='warning' text="Go Back" @tap="onReturn" />
                 <SpectraActionButton :isEnabled="this.boxesChecked === 5" text="OK" @tap="onOK" />
             </FlexboxLayout>
 
@@ -44,6 +44,7 @@
     import SpectraTextView from "@/components/UIControls/SpectraTextView";
     import {Config} from "@/utils/Config";
     import SetAGoal from "@/components/OnboardingScreens/SetAGoal";
+    import Welcome from "@/components/OnboardingScreens/Welcome";
 
     export default {
         components: {
@@ -75,7 +76,7 @@
             },
 
             onReturn: function(){
-                this.$navigateBack();
+                this.$navigateTo(Welcome);
             },
 
             onCheckboxPressed: function($event) {

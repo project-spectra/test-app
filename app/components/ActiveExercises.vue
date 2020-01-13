@@ -1,6 +1,6 @@
 
 <template>
-    <Page actionBarHidden="true" class="page" @loaded="onLoaded">
+    <Page actionBarHidden="true" class="page">
         <FlexboxLayout style="flex: 1;" flexDirection="column" id="container">
             <TextView text="Exercises" editable="false" id="welcome"/>
 
@@ -58,7 +58,16 @@
     //Set up usage logging
     const moment = require("moment");
     const permissions = require('nativescript-permissions');
+    const directory = android.os.Environment.getExternalStorageDirectory().getAbsolutePath().toString();
+    const folder = Folder.fromPath(directory);
     var logFile;
+
+    permissions.requestPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE).then(() => {
+      console.log('Write permissions granted.');
+
+    }).catch(() => {
+      console.log('Write permissions denied!');
+    });
 
     export default {
         components: {ExerciseProgressRow, SpectraActionButton},
@@ -100,30 +109,17 @@
             this.slideCompleted = this.$store.state.slideCompleted;
         },
         mounted() { //Request write permissions for logging and get the log file
-          permissions.requestPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE).then(() => {
-            console.log('Write permissions granted.');
-
-            const directory = android.os.Environment.getExternalStorageDirectory().getAbsolutePath().toString();
-            const folder = Folder.fromPath(directory);
-            
-            //moment().format().substr(0,10) just the date
             logFile = folder.getFile('spectra-log.txt');
             console.log("logfile: " + logFile);
-
-          }).catch(() => {
-            console.log('Write permissions denied!');
-          });
+            
+            if (this.$store.state.pitchPerfectCompleted + this.$store.state.slideCompleted == 4) {
+              //Completed all exercises for the day!
+              appendFile(logFile,moment().format() + ',' + 'exercisesOpened' + ',' + 'allCompleted' + ',' + '\n');
+            } else {
+              appendFile(logFile,moment().format() + ',' + 'exercisesOpened' + ',' + 'inProgress' + ',' + '\n');                
+            }
         },
         methods: {
-            onLoaded() {
-              if (this.$store.state.pitchPerfectCompleted + this.$store.state.slideCompleted == 4) {
-                //Completed all exercises for the day!
-                appendFile(logFile,moment().format() + ',' + 'exercisesOpened' + ',' + 'allCompleted' + ',' + '\n');
-              } else {
-                appendFile(logFile,moment().format() + ',' + 'exercisesOpened' + ',' + 'inProgress' + ',' + '\n');                
-              }
-            },
-
             onHoldThatNote: function () {
                 this.$navigateTo(HoldThatNote);
             },

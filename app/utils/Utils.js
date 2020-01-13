@@ -49,6 +49,7 @@ export function appendFile(file, data) {
   var contents;
 
   console.log("data: " + data);
+
   file.readText().then(res => {
     console.log("contents: " + res);
     contents = res;
