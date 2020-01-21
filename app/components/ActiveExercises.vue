@@ -111,12 +111,14 @@
         mounted() { //Request write permissions for logging and get the log file
             logFile = folder.getFile('spectra-log.txt');
             console.log("logfile: " + logFile);
+
+            var exercisesCompleted = this.$store.state.pitchPerfectCompleted + this.$store.state.slideCompleted;
             
-            if (this.$store.state.pitchPerfectCompleted + this.$store.state.slideCompleted == 4) {
+            if (exercisesCompleted == 4) {
               //Completed all exercises for the day!
-              appendFile(logFile,moment().format() + ',' + 'exercisesOpened' + ',' + 'allCompleted' + ',' + '\n');
+              appendFile(logFile,moment().format() + ',' + 'exercisesOpened' + ',' + 'allExercisesCompleted' + ',' + '\n');
             } else {
-              appendFile(logFile,moment().format() + ',' + 'exercisesOpened' + ',' + 'inProgress' + ',' + '\n');                
+              appendFile(logFile,moment().format() + ',' + 'exercisesOpened' + ',' + exercisesCompleted + 'exercisesCompleted' +  ',' + '\n');
             }
         },
         methods: {

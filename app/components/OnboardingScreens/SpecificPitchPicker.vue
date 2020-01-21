@@ -91,6 +91,16 @@
     import {noteFromPitch} from '@/utils/Utils';
     import {isAndroid} from "tns-core-modules/platform";
 
+    //import filesystem and append functions
+    import {appendFile} from '@/utils/Utils';
+    import { knownFolders, path, File, Folder } from "tns-core-modules/file-system";
+
+    const moment = require("moment");
+    const dialogs = require("tns-core-modules/ui/dialogs");
+
+    //Set up usage logging
+    const permissions = require('nativescript-permissions');
+    var logFile;
 
     export default {
         /*mounted() {
@@ -115,6 +125,20 @@
                 sliderProgress: 0.5,
 
             }
+        },
+        mounted () {
+          permissions.requestPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE).then(() => {
+            console.log('Write permissions granted.');
+
+            const directory = android.os.Environment.getExternalStorageDirectory().getAbsolutePath().toString();
+            const folder = Folder.fromPath(directory);
+            
+            //moment().format().substr(0,10) just the date
+            logFile = folder.getFile('spectra-log.txt');
+            console.log("logfile: " + logfile);
+          }).catch( (error) => {
+            console.error(error);
+          });
         },
         computed: {
             femaleRangeRatio: () => (MAX_PITCH_HZ - ANDROGYNOUS_TOP_BORDER) / (MAX_PITCH_HZ - MIN_PITCH_HZ),
@@ -193,7 +217,10 @@
             onOK: function(){
                 this.$store.dispatch('setSpecificPitchGoal',this.currentPitchHz);
                 this.$store.dispatch('setFirstLoad',false);
-                //this.$store.commit("save", {...this.$store.state, specificPitchGoal: this.currentPitchHz, firstLoad: false});
+
+                //Log goal set
+                appendFile(logFile,moment().format() + ',' + 'pitchGoalSet' + ',' + this.currentPitchHz + ',' + '\n');
+
                 this.$navigateTo(App, {clearHistory: true});
             },
 

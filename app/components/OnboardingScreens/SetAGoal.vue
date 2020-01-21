@@ -44,6 +44,16 @@
     import SpecificPitchPicker from "@/components/OnboardingScreens/SpecificPitchPicker";
     import {PropertyConverter} from 'nativescript-ui-dataform'
 
+    //import filesystem and append functions
+    import {appendFile} from '@/utils/Utils';
+    import { knownFolders, path, File, Folder } from "tns-core-modules/file-system";
+
+    const moment = require("moment");
+
+    //Set up usage logging
+    const permissions = require('nativescript-permissions');
+    var logFile;
+
     /*Sun May 05 2019 01:54:28 GMT+0800 Transfusion: the converter property which transforms the objects backing
     each selection item in the picker into the desired format for the model backing the form doesn't seem to work
     perhaps because it has been intercepted by the onFormPropertyCommitted method*/
@@ -76,6 +86,9 @@
                 } else if (this.form.goal === 'More Androgynous Sound') {
                   this.form.goal = 'androgyn_sound';
                 }
+
+                //Log goal set
+                appendFile(logFile,moment().format() + ',' + 'goalSet' + ',' + this.form.goal + ',' + '\n');
 
                 this.$store.dispatch('setGoal', this.form.goal);
                 this.$store.dispatch('setFirstLoad', this.selectSpecificPitchChecked);
@@ -139,6 +152,20 @@
                     /*converter: new GoalsConverter()*/}
                 ]
             }}
+        },
+        mounted() {
+            permissions.requestPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE).then(() => {
+                console.log('Write permissions granted.');
+
+                const directory = android.os.Environment.getExternalStorageDirectory().getAbsolutePath().toString();
+                const folder = Folder.fromPath(directory);
+                
+                //moment().format().substr(0,10) just the date
+                logFile = folder.getFile('spectra-log.txt');
+                console.log("logfile: " + logfile);
+            }).catch( (error) => {
+                console.error(error);
+            });
         }
     }
 
