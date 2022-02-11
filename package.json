@@ -16,7 +16,7 @@
   "dependencies": {
     "@nstudio/nativescript-checkbox": "^1.0.0",
     "@vue/devtools": "^5.1.1",
-    "ajv": "^6.6.1",
+    "ajv": "^6.12.3",
     "ajv-keywords": "^3.2.0",
     "electron": "^3.0.6",
     "moment": "^2.24.0",
